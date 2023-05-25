@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "268094279133",
+    "project_id": "everysiheung",
+    "storage_bucket": "everysiheung.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:268094279133:android:c3f09156748fdaa689fa34",
+        "android_client_info": {
+          "package_name": "com.sangwon.example.everysiheung"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "268094279133-k4sk1fa02d8mm2s5mg40i8rom01r2hqi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKs5HtWFFrXo9cBnZtQJV1e9luPafCd5c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "268094279133-k4sk1fa02d8mm2s5mg40i8rom01r2hqi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

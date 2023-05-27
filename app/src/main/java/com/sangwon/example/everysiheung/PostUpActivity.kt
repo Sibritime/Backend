@@ -2,6 +2,8 @@ package com.sangwon.example.everysiheung
 
 import android.app.Activity
 import android.content.Intent
+import android.location.Geocoder
+import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,10 +14,12 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.util.Date
+import java.util.*
 
 class PostUpActivity : AppCompatActivity() {
     val db = Firebase.firestore
+    var latitude : Double = 1.0
+    var longitude : Double= 1.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +50,9 @@ class PostUpActivity : AppCompatActivity() {
                 image, // 재밌는거
                 timestamp, // 딱히 노터치
                 uid, //카톡으로 변경시 얻어오는 방법이 따로 있겠지
+                latitude,
+                longitude
+
             )
 
             db.collection("Posts")
@@ -86,9 +93,35 @@ class PostUpActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            var latitude = data!!.getStringArrayExtra("latitude")
-            var longitude = data!!.getStringArrayExtra("longitude")
+            latitude = data!!.getDoubleExtra("latitude", 0.0)
+            longitude = data!!.getDoubleExtra("longitude", 0.0)
+            Log.e("Wow","${latitude} ${longitude}")
 
+            var geocoder = Geocoder(this)
+            val addressList = geocoder.getFromLocation(latitude,longitude,1)
+            for (addrres in addressList!!) {
+                findViewById<EditText>(R.id.locateText).setText("${addrres.getAddressLine(0)}")
+                Log.e("address","${addrres.getAddressLine(0)}")
+            }
+
+        }
+    }
+
+    //좌표를
+    fun geoCoding(address: String): Location {
+        return try {
+            Geocoder(this, Locale.KOREA).getFromLocationName(address, 1)?.let{
+                Location("").apply {
+                    latitude =  it[0].latitude
+                    longitude = it[0].longitude
+                }
+            }?: Location("").apply {
+                latitude = 0.0
+                longitude = 0.0
+            }
+        }catch (e:Exception) {
+            e.printStackTrace()
+            geoCoding(address) //재시도
         }
     }
 }

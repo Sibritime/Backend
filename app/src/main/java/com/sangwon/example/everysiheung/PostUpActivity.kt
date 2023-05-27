@@ -18,6 +18,8 @@ import java.util.*
 
 class PostUpActivity : AppCompatActivity() {
     val db = Firebase.firestore
+    var latitude : Double = 1.0
+    var longitude : Double= 1.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,9 @@ class PostUpActivity : AppCompatActivity() {
                 image, // 재밌는거
                 timestamp, // 딱히 노터치
                 uid, //카톡으로 변경시 얻어오는 방법이 따로 있겠지
+                latitude,
+                longitude
+
             )
 
             db.collection("Posts")
@@ -88,8 +93,8 @@ class PostUpActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            var latitude = data!!.getDoubleExtra("latitude", 0.0)
-            var longitude = data!!.getDoubleExtra("longitude", 0.0)
+            latitude = data!!.getDoubleExtra("latitude", 0.0)
+            longitude = data!!.getDoubleExtra("longitude", 0.0)
             Log.e("Wow","${latitude} ${longitude}")
 
             var geocoder = Geocoder(this)

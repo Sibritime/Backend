@@ -1,6 +1,7 @@
 package com.sangwon.example.everysiheung
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -38,6 +39,8 @@ class MapsActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.
             var outIntent = Intent(applicationContext,MapsActivity::class.java)
             outIntent.putExtra("latitude", latitude)
             outIntent.putExtra("longitude", longitude)
+            setResult(Activity.RESULT_OK, outIntent)
+            finish()
         }
 
     }

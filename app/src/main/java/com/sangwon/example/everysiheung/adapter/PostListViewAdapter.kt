@@ -28,11 +28,12 @@ class PostListViewAdapter: BaseAdapter() {
 
     override fun getView(p0: Int, view: View?, parent: ViewGroup?): View {
         val context = parent?.context
-        var convertView:View = view!!
 
-        if(view==null) {
+        val convertView:View = if(view==null) {
             val inflater:LayoutInflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            convertView = inflater.inflate(R.layout.post_item, parent, false)
+            inflater.inflate(R.layout.post_item, parent, false)
+        }else{
+            view
         }
 
         val iconImageView:ImageView = convertView.findViewById<ImageView>(R.id.poster)
@@ -50,5 +51,9 @@ class PostListViewAdapter: BaseAdapter() {
         timeTextView.text = item.time
 
         return convertView
+    }
+
+    fun addPost(post:PostItem){
+        items.add(post)
     }
 }

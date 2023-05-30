@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sangwon.example.everysiheung.R
 import com.sangwon.example.everysiheung.model.CalendarDateModel
+import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -22,15 +23,17 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
 
 
     private val list = ArrayList<CalendarDateModel>()
-
+    private val current = Calendar.getInstance(Locale.KOREAN)
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(calendarDateModel: CalendarDateModel) {
-            val calendarDay = itemView.findViewById<TextView>(R.id.tv_calendar_day)
-            val calendarDate = itemView.findViewById<TextView>(R.id.tv_calendar_date)
+            val calendarDay = itemView.findViewById<TextView>(R.id.tv_calendar_day) // 월
+            val calendarDate = itemView.findViewById<TextView>(R.id.tv_calendar_date) // 일
             val calendartext = itemView.findViewById<TextView>(R.id.tv_calendar_text)
             val cardView = itemView.findViewById<CardView>(R.id.card_calendar)
 
+
+            current.get(Calendar.MONTH) + 1 == 12
 
             if (calendarDateModel.isSelected) {
                 calendarDay.setTextColor(
@@ -51,7 +54,28 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                         R.color.colorPrimary
                     )
                 )
-            } else {
+            } else if (((current.get(Calendar.MONTH) + 1).toString() == calendarDateModel.calendarMonth) && (current.get(Calendar.DAY_OF_MONTH).toString() == calendarDateModel.calendarDate)) {
+                calendarDay.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.black
+                    )
+                )
+                calendarDate.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.black
+                    )
+                )
+                cardView.setCardBackgroundColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.orange
+                    )
+                )
+            } else if ((current.get(Calendar.MONTH) + 1) > Integer.parseInt(calendarDateModel.calendarMonth) ||
+                ((current.get(Calendar.MONTH) + 1) == Integer.parseInt(calendarDateModel.calendarMonth) &&
+                        current.get(Calendar.DAY_OF_MONTH) > Integer.parseInt(calendarDateModel.calendarDate))) {
                 calendarDay.setTextColor(
                     ContextCompat.getColor(
                         itemView.context,
@@ -70,14 +94,30 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                         R.color.gray
                     )
                 )
-            }
-
-
+            } else {
+                    calendarDay.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context,
+                            R.color.black
+                        )
+                    )
+                    calendarDate.setTextColor(
+                        ContextCompat.getColor(
+                            itemView.context,
+                            R.color.black
+                        )
+                    )
+                    cardView.setCardBackgroundColor(
+                        ContextCompat.getColor(
+                            itemView.context,
+                            R.color.yellow_gray
+                        )
+                    )
+                }
 
 
             calendarDay.text = calendarDateModel.calendarDay
             calendarDate.text = calendarDateModel.calendarDate
-
             calendartext.text = calendarDateModel.calendarMonth
             calendartext.setTextColor(ContextCompat.getColor(itemView.context, R.color.teal_700))
 

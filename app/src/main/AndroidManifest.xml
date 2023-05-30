@@ -40,7 +40,7 @@
             android:value="YOUR_API_KEY" />
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="0272df0de0ac0b5316dc14c4e4e15362" />
+            android:value="ca2357cd6d6add44b837112ffe1fef0f" />
 
         <activity
             android:name=".SplashActivity"
@@ -54,6 +54,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <activity android:name="com.sangwon.example.everysiheung.TableActivity"/>
     </application>
 
 </manifest>

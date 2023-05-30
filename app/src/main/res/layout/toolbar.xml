@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@color/white"
+    
+    app:menu="@menu/menu">
+    <!--app:title="@string/app_name"-->
+    <!-- https://velog.io/@yamamamo/%EC%95%88%EB%93%9C%EB%A1%9C%EC%9D%B4%EB%93%9C-ActionBar-ToolBar-%EC%BB%A4%EC%8A%A4%ED%85%80 -->
+
+</androidx.appcompat.widget.Toolbar>

@@ -14,12 +14,17 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import java.util.*
 
 class PostUpActivity : AppCompatActivity() {
     val db = Firebase.firestore
     var latitude : Double = 1.0
     var longitude : Double= 1.0
+
+    var storage = Firebase.storage
+    // Create a storage reference from our app
+    var storageRef = storage.reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,8 +87,16 @@ class PostUpActivity : AppCompatActivity() {
                 }
         }
 
+        //지도 버튼 누를 때
         findViewById<Button>(R.id.mapbtn).setOnClickListener {
             var intent = Intent(application, MapsActivity::class.java)
+            startActivityForResult(intent, 0)
+            // finish()
+        }
+
+        //이미지 버튼 누를 때
+        findViewById<Button>(R.id.ImgBtn).setOnClickListener {
+            var intent = Intent(application, ImgActivity::class.java)
             startActivityForResult(intent, 0)
             // finish()
         }

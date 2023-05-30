@@ -113,7 +113,8 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.list -> {
-                    startActivity(Intent(this, PostUpActivity::class.java))
+                    //startActivity(Intent(this, PostUpActivity::class.java))
+                    startActivity(Intent(this, PostListActivity::class.java))
                     true
                 }
                 else -> false

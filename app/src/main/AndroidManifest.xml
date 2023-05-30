@@ -15,6 +15,7 @@
         android:theme="@style/Theme.EverySiheung"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity android:name=".PostListActivity"/>
         <activity
             android:name=".MapsActivity"
             android:exported="false" />

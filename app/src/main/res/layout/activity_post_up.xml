@@ -167,8 +167,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.395"
         app:layout_constraintStart_toEndOf="@+id/locateText"
-        tools:layout_editor_absoluteY="138dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="0dp" />
 
     <Button
         android:id="@+id/ImgBtn"
@@ -181,12 +181,7 @@
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteY="0dp" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/readBtn"
-        tools:srcCompat="@tools:sample/avatars" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

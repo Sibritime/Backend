@@ -5,6 +5,6 @@
         android:id="@+id/login"
         android:enabled="true"
         android:title="메뉴"
-        android:icon="@drawable/baseline_menu_24"
+        android:icon="@drawable/baseline_menu_24_white"
         app:showAsAction="always"/>
 </menu>

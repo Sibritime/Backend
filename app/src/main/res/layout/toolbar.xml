@@ -4,7 +4,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@color/white"
+    android:background="@color/skyblue"
     
     app:menu="@menu/menu">
     <!--app:title="@string/app_name"-->

@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.map -> {
                     // 아이템 2에 대한 동작
+                    moveMap()
                     true
                 }
                 R.id.event -> {
@@ -176,6 +177,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun moveTable(){
         val intent = Intent(this, TableActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun moveMap(){
+        var intent = Intent(this, FestivalLocationActicity::class.java)
         startActivity(intent)
     }
 

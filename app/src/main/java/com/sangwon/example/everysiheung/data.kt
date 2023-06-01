@@ -1,5 +1,4 @@
 package com.sangwon.example.everysiheung
-import java.util.*
 
 data class Posts(
     val Title: String? = null,
@@ -9,7 +8,7 @@ data class Posts(
     val Fee: String? = null,
     val Subscript: String? = null,
     val Image: String? = null, //이거 어캐하냐?
-    val timestamp: Date? = null, //이 자료형 맞나?
+    val timestamp: com.google.firebase.Timestamp? = null, //이 자료형 맞나?
     val uid: String? = null,
     val latitude: Double? = null,
     val longitude: Double? = null,

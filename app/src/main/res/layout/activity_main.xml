@@ -46,7 +46,6 @@
             android:id="@+id/linear_layout_see_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-<<<<<<< HEAD
             android:layout_marginBottom="3dp"
             android:background="@drawable/gray_ellipse"
             android:orientation="horizontal"
@@ -108,9 +107,9 @@
             android:layout_marginTop="610dp"
             android:contentDescription="@string/cd_previous"
             android:src="@drawable/ic_previous"
-            android:tint="#000000"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#000000" />
 
         <ImageView
             android:id="@+id/iv_calendar_next"
@@ -145,10 +144,10 @@
             android:layout_height="36dp"
             android:layout_marginStart="44dp"
             android:layout_marginTop="604dp"
-            android:tint="@color/colorPrimary"
             app:layout_constraintStart_toEndOf="@+id/tv_date_month"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_today" />
+            app:srcCompat="@android:drawable/ic_menu_today"
+            app:tint="@color/colorPrimary" />
 
         <TextView
             android:id="@+id/textView"
@@ -172,15 +171,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/footer_menu" />
-=======
-            android:text="1 / 5"
-            android:textColor="#FFFFFF"
-            android:textSize="10dp" />
-
-    </LinearLayout>
-
->>>>>>> detailFunction
-
+        
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView

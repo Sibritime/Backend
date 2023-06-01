@@ -167,5 +167,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.395"
         app:layout_constraintStart_toEndOf="@+id/locateText"
-        tools:layout_editor_absoluteY="138dp" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <Button
+        android:id="@+id/ImgBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이미지 등록"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.562"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="0dp" />
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

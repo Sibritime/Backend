@@ -4,22 +4,31 @@ import android.app.Activity
 import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import java.util.*
 
 class PostUpActivity : AppCompatActivity() {
     val db = Firebase.firestore
     var latitude : Double = 1.0
     var longitude : Double= 1.0
+
+    var storage = Firebase.storage
+    // Reference to an image file in Cloud Storage
+    var storageReference = storage.reference
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,26 +91,65 @@ class PostUpActivity : AppCompatActivity() {
                 }
         }
 
+        //지도 버튼 누를 때
         findViewById<Button>(R.id.mapbtn).setOnClickListener {
             var intent = Intent(application, MapsActivity::class.java)
             startActivityForResult(intent, 0)
             // finish()
         }
 
+        //이미지 버튼 누를 때
+        findViewById<Button>(R.id.ImgBtn).setOnClickListener {
+            var intent = Intent(application, ImgActivity::class.java)
+            startActivityForResult(intent, 2)
+            // finish()
+        }
+
+
+
+//        //시험
+//        //FirebaseStorage 인스턴스를 생성
+//        val firebaseStorage = FirebaseStorage.getInstance()
+//        var imagePath = "images/1685512146006.jpg"
+//        val storageReference1 = firebaseStorage.getReference().child(imagePath)
+//
+//        var imageCheck = findViewById<ImageView>(R.id.imageView)
+//
+//        storageReference1.downloadUrl.addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                // Glide 이용하여 이미지뷰에 로딩
+//                Glide.with(this)
+//                    .load(task.result)
+//                    .override(250, 300)
+//                    .into(imageCheck)
+//            } else {
+//                // URL을 가져오지 못하면 토스트 메세지
+//                Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
+//            }
+//        }
+
+
+
+
 
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?){
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            latitude = data!!.getDoubleExtra("latitude", 0.0)
-            longitude = data!!.getDoubleExtra("longitude", 0.0)
-            Log.e("Wow","${latitude} ${longitude}")
+            if (requestCode == 0) {
+                latitude = data!!.getDoubleExtra("latitude", 0.0)
+                longitude = data!!.getDoubleExtra("longitude", 0.0)
 
-            var geocoder = Geocoder(this)
-            val addressList = geocoder.getFromLocation(latitude,longitude,1)
-            for (addrres in addressList!!) {
-                findViewById<EditText>(R.id.locateText).setText("${addrres.getAddressLine(0)}")
-                Log.e("address","${addrres.getAddressLine(0)}")
+                var geocoder = Geocoder(this)
+                var addressList = geocoder.getFromLocation(latitude, longitude, 1)
+                for (addrres in addressList!!) {
+                    findViewById<EditText>(R.id.locateText).setText("${addrres.getAddressLine(0)}")
+                    Log.e("address", "${addrres.getAddressLine(0)}")
+                }
+            }
+            else if (requestCode == 2){
+                var imagePath = data!!.getStringExtra("imagePath")
+                findViewById<EditText>(R.id.imageText).setText("${imagePath}")
             }
 
         }

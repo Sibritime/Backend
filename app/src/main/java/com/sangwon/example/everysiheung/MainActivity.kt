@@ -2,35 +2,39 @@ package com.sangwon.example.everysiheung
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.util.Base64
 import android.util.Log
-import android.widget.Button
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
+import android.widget.Toolbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.SnapHelper
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.navigation.NavigationView
+import com.sangwon.example.everysiheung.adapter.CalendarAdapter
+import com.sangwon.example.everysiheung.adapter.ViewPagerAdapter
 import com.sangwon.example.everysiheung.databinding.ActivityMainBinding
+import com.sangwon.example.everysiheung.model.CalendarDateModel
+import com.sangwon.example.everysiheung.utils.HorizontalItemDecoration
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import android.net.Uri
-import android.os.Handler
-import android.os.Message
-import android.view.View
-import android.widget.Toast
-import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.SnapHelper
-import androidx.viewpager2.widget.ViewPager2
-import com.sangwon.example.everysiheung.adapter.CalendarAdapter
-import com.sangwon.example.everysiheung.adapter.ViewPagerAdapter
-import com.sangwon.example.everysiheung.model.CalendarDateModel
-import com.sangwon.example.everysiheung.utils.HorizontalItemDecoration
 
 private val MIN_SCALE = 0.85f // 뷰가 몇퍼센트로 줄어들 것인지
 private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
     private val sdf = SimpleDateFormat("yyyy년 MMMM", Locale.KOREAN)
     private val sdf2 = SimpleDateFormat("오늘은 MMMM dd일 EEEE입니다.", Locale.KOREAN)
@@ -40,16 +44,31 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: CalendarAdapter
     private val calendarList2 = ArrayList<CalendarDateModel>()
 
+
     private var numBanner = 3 // 배너 갯수
     private var currentPosition = Int.MAX_VALUE / 3
     private var myHandler = MyHandler()
     private val intervalTime = 5000.toLong() // 몇초 간격으로 페이지를 넘길것인지 (1500 = 1.5초)
+
+    private lateinit var navigationView: NavigationView
+    private lateinit var drawerLayout: DrawerLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 네비게이션 바
+        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24_white)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
+
 
         // 게시판 등록 버튼 그냥 이동만 담당
         //findViewById<Button>(R.id.postbtn).setOnClickListener {
@@ -102,6 +121,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.map -> {
                     // 아이템 2에 대한 동작
+                    moveMap()
                     true
                 }
                 R.id.event -> {
@@ -113,14 +133,42 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.list -> {
-                    startActivity(Intent(this, PostUpActivity::class.java))
+                    //startActivity(Intent(this, PostUpActivity::class.java))
+                    startActivity(Intent(this, PostListActivity::class.java))
                     true
                 }
                 else -> false
             }
         }
-
     }
+
+    // 툴바 메뉴 버튼이 클릭 됐을 때 실행하는 함수
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // 클릭한 툴바 메뉴 아이템 id 마다 다르게 실행하도록 설정
+        when(item!!.itemId){
+            android.R.id.home->{
+                // 햄버거 버튼 클릭시 네비게이션 드로어 열기
+                drawerLayout.openDrawer(GravityCompat.START)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    // 드로어 내 아이템 클릭 이벤트 처리하는 함수
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.post-> {
+                Toast.makeText(this,"menu_item1 실행",Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, PostListActivity::class.java))
+                true
+            }
+            R.id.bookmark-> Toast.makeText(this,"menu_item2 실행",Toast.LENGTH_SHORT).show()
+            R.id.diary-> Toast.makeText(this,"menu_item3 실행",Toast.LENGTH_SHORT).show()
+        }
+        return false
+    }
+
+
     fun getKeyHash() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val packageInfo =
@@ -178,6 +226,11 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun moveMap(){
+        var intent = Intent(this, FestivalLocationActicity::class.java)
+        startActivity(intent)
+    }
+
     inner class ZoomOutPageTransformer : ViewPager2.PageTransformer {
         override fun transformPage(view: View, position: Float) {
             view.apply {
@@ -216,7 +269,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     /**
      * Set up click listener
      */
@@ -243,96 +295,31 @@ class MainActivity : AppCompatActivity() {
             else
                 setUpCalendar()
         }
+
+        val monthUrlMap = mapOf( // 1 ~ 6월까지 행사 일정표
+            1 to "https://blog.naver.com/csiheung/222970240186",
+            2 to "https://blog.naver.com/csiheung/223003096138",
+            3 to "https://blog.naver.com/csiheung/223032419482",
+            4 to "https://blog.naver.com/siheungblog?Redirect=Log&logNo=223065558869&from=postView",
+            5 to "https://blog.naver.com/PostView.naver?blogId=siheungblog&logNo=223087428882&categoryNo=90&parentCategoryNo=71&viewDate=&currentPage=&postListTopCurrentPage=&isAfterWrite=true",
+            6 to "https://blog.naver.com/siheungblog/223116423530"
+        )
+
         binding.imageView2.setOnClickListener {
-            if (cal.get(Calendar.MONTH) + 1 == 1) {
-                Toast.makeText(applicationContext, "1월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url = "https://blog.naver.com/csiheung/222970240186"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (cal.get(Calendar.MONTH) + 1 == 2) {
-                Toast.makeText(applicationContext, "2월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url = "https://blog.naver.com/csiheung/223003096138"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (cal.get(Calendar.MONTH) + 1 == 3) {
-                Toast.makeText(applicationContext, "3월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url = "https://blog.naver.com/csiheung/223032419482"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (cal.get(Calendar.MONTH) + 1 == 4) {
-                Toast.makeText(applicationContext, "4월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url = "https://blog.naver.com/siheungblog?Redirect=Log&logNo=223065558869&from=postView"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (cal.get(Calendar.MONTH) + 1 == 5) {
-                Toast.makeText(applicationContext, "5월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url =
-                    "https://blog.naver.com/PostView.naver?blogId=siheungblog&logNo=223087428882&categoryNo=90&parentCategoryNo=71&viewDate=&currentPage=&postListTopCurrentPage=&isAfterWrite=true"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (cal.get(Calendar.MONTH) + 1 == 6) { // 시흥시 동네소식알리미
-                Toast.makeText(applicationContext, "6월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url =
-                    "https://www.siheung.go.kr/event/main.do"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (currentDate.get(Calendar.MONTH) + 1 == 7) { // 시흥시 동네소식알리미
-                Toast.makeText(applicationContext, "7월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url =
-                    "https://www.siheung.go.kr/event/main.do"
+            val month = cal.get(Calendar.MONTH) + 1
+            val url = monthUrlMap[month]
+            if (url != null) {
+                Toast.makeText(applicationContext, "$month 월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 it.context.startActivity(intent)
             }
         }
+
         binding.tvDateMonth.setOnClickListener {
-            if (cal.get(Calendar.MONTH) + 1 == 1) {
-                Toast.makeText(applicationContext, "1월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url = "https://blog.naver.com/csiheung/222970240186"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (cal.get(Calendar.MONTH) + 1 == 2) {
-                Toast.makeText(applicationContext, "2월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url = "https://blog.naver.com/csiheung/223003096138"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (cal.get(Calendar.MONTH) + 1 == 3) {
-                Toast.makeText(applicationContext, "3월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url = "https://blog.naver.com/csiheung/223032419482"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (cal.get(Calendar.MONTH) + 1 == 4) {
-                Toast.makeText(applicationContext, "4월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url = "https://blog.naver.com/siheungblog?Redirect=Log&logNo=223065558869&from=postView"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (cal.get(Calendar.MONTH) + 1 == 5) {
-                Toast.makeText(applicationContext, "5월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url =
-                    "https://blog.naver.com/PostView.naver?blogId=siheungblog&logNo=223087428882&categoryNo=90&parentCategoryNo=71&viewDate=&currentPage=&postListTopCurrentPage=&isAfterWrite=true"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (cal.get(Calendar.MONTH) + 1 == 6) { // 시흥시 동네소식알리미
-                Toast.makeText(applicationContext, "6월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url =
-                    "https://www.siheung.go.kr/event/main.do"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-            if (currentDate.get(Calendar.MONTH) + 1 == 7) { // 시흥시 동네소식알리미
-                Toast.makeText(applicationContext, "7월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val url =
-                    "https://www.siheung.go.kr/event/main.do"
+            val month = cal.get(Calendar.MONTH) + 1
+            val url = monthUrlMap[month]
+            if (url != null) {
+                Toast.makeText(applicationContext, "$month 월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 it.context.startActivity(intent)
             }
@@ -387,3 +374,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+
+

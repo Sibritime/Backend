@@ -95,25 +95,25 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                     )
                 )
             } else {
-                    calendarDay.setTextColor(
-                        ContextCompat.getColor(
-                            itemView.context,
-                            R.color.black
-                        )
+                calendarDay.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.black
                     )
-                    calendarDate.setTextColor(
-                        ContextCompat.getColor(
-                            itemView.context,
-                            R.color.black
-                        )
+                )
+                calendarDate.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.black
                     )
-                    cardView.setCardBackgroundColor(
-                        ContextCompat.getColor(
-                            itemView.context,
-                            R.color.yellow_gray
-                        )
+                )
+                cardView.setCardBackgroundColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.yellow_gray
                     )
-                }
+                )
+            }
 
 
             calendarDay.text = calendarDateModel.calendarDay

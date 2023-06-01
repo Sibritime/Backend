@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    binding.textViewCurrentBanner.text = "[${(currentDate.get(Calendar.MONTH) + 1)}월 행사 포스터]   ${(position % numBanner) + 1} / $numBanner" // 하드코딩. 현재 포스터 수는 3개이다.
+                    binding.textViewBanner.text = "[${(currentDate.get(Calendar.MONTH) + 1)}월 행사 포스터]   ${(position % numBanner) + 1} / $numBanner" // 하드코딩. 현재 포스터 수는 3개이다.
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {

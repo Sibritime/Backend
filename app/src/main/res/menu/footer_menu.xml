@@ -26,4 +26,6 @@
         android:title="홍보게시판"
         app:showAsAction="always"
         android:icon="@drawable/ic_outline_chat_24"/>
+
+
 </menu>

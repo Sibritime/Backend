@@ -113,29 +113,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setUpClickListener()
         setUpCalendar()
 
+
         binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
                     // 아이템 1에 대한 동작
-                    true
+                    false
                 }
                 R.id.map -> {
                     // 아이템 2에 대한 동작
                     moveMap()
-                    true
+                    false
                 }
                 R.id.event -> {
                     moveTable()
-                    true
+                    false
                 }
                 R.id.search -> {
                     // 아이템 3에 대한 동작
-                    true
+                    false
                 }
                 R.id.list -> {
                     //startActivity(Intent(this, PostUpActivity::class.java))
                     startActivity(Intent(this, PostListActivity::class.java))
-                    true
+                    false
                 }
                 else -> false
             }

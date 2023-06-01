@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.sangwon.example.everysiheung.R
 import com.sangwon.example.everysiheung.model.PostItem
 
@@ -44,7 +45,10 @@ class PostListViewAdapter: BaseAdapter() {
 
         val item:PostItem = items.get(p0)
 
-        iconImageView.setImageResource(item.img)
+        Glide.with(context!!)
+            .load(item.img)
+            .into(iconImageView)
+        //iconImageView.setImageResource(item.img)
         titleTextView.text = item.title
         locationTextView.text = item.location
         dateTextView.text = item.date

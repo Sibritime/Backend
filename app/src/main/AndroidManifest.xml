@@ -55,6 +55,7 @@
             android:name=".MainActivity"
             android:exported="true" />
         <activity android:name="com.sangwon.example.everysiheung.TableActivity"/>
+        <activity android:name="com.sangwon.example.everysiheung.BlogActivity"/>
     </application>
 
 </manifest>

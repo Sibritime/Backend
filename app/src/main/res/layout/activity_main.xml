@@ -46,6 +46,7 @@
             android:id="@+id/linear_layout_see_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_marginBottom="3dp"
             android:background="@drawable/gray_ellipse"
             android:orientation="horizontal"
@@ -171,6 +172,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/footer_menu" />
+=======
+            android:text="1 / 5"
+            android:textColor="#FFFFFF"
+            android:textSize="10dp" />
+
+    </LinearLayout>
+
+>>>>>>> detailFunction
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

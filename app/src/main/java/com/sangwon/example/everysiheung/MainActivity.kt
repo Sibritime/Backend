@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private val calendarList2 = ArrayList<CalendarDateModel>()
 
     private var numBanner = 3 // 배너 갯수
-    private var currentPosition = Int.MAX_VALUE / 3
+    private var currentPosition = Int.MAX_VALUE / numBanner
     private var myHandler = MyHandler()
     private val intervalTime = 5000.toLong() // 몇초 간격으로 페이지를 넘길것인지 (1500 = 1.5초)
 
@@ -68,14 +68,13 @@ class MainActivity : AppCompatActivity() {
         binding.posterViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.posterViewpager.setCurrentItem(currentPosition, false) // 현재 위치를 지정
         binding.posterViewpager.setPageTransformer(ZoomOutPageTransformer())
-        binding.textViewTotalBanner.text = numBanner.toString()
 
         // 현재 몇번째 배너인지 보여주는 숫자를 변경함
         binding.posterViewpager.apply {
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    binding.textViewCurrentBanner.text = "[" + (currentDate.get(Calendar.MONTH) + 1).toString() + "월 행사 포스터]" + "   ${(position % 3) + 1}" // 하드코딩. 현재 포스터 수는 3개이다.
+                    binding.textViewCurrentBanner.text = "[${(currentDate.get(Calendar.MONTH) + 1)}월 행사 포스터]   ${(position % numBanner) + 1} / $numBanner" // 하드코딩. 현재 포스터 수는 3개이다.
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
@@ -171,8 +170,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     //추가한 내용
-    private fun getIdolList(): ArrayList<Int> {
-        return arrayListOf<Int>(R.drawable.pic1, R.drawable.pic2, R.drawable.pic3)
+    private fun getIdolList(): ArrayList<String> {
+        //return arrayListOf<Int>(R.drawable.pic1, R.drawable.pic2, R.drawable.pic3)
+        return arrayListOf<String>("https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c6111c4314f80b6b967aa9fccff04d2e1&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c42076e7d19cdb7974115393f2eb97c1a&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c7564eebd039cc288b9ce14bedce381ab&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin")
     }
 
     private fun moveTable(){

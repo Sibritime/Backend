@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
@@ -36,8 +37,6 @@ private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
-    private val sdf = SimpleDateFormat("yyyy년 MMMM", Locale.KOREAN)
-    private val sdf2 = SimpleDateFormat("오늘은 MMMM dd일 EEEE입니다.", Locale.KOREAN)
     private val cal = Calendar.getInstance(Locale.KOREAN)
     private val currentDate = Calendar.getInstance(Locale.KOREAN)
     private val dates = ArrayList<Date>()
@@ -113,7 +112,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setUpCalendar()
 
 
-        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
                     // 아이템 1에 대한 동작
@@ -145,7 +144,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     // 툴바 메뉴 버튼이 클릭 됐을 때 실행하는 함수
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // 클릭한 툴바 메뉴 아이템 id 마다 다르게 실행하도록 설정
-        when(item!!.itemId){
+        when(item.itemId){
             android.R.id.home->{
                 // 햄버거 버튼 클릭시 네비게이션 드로어 열기
                 drawerLayout.openDrawer(GravityCompat.START)
@@ -281,7 +280,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 setUpCalendar()
             }
             else {
-                binding.ivCalendarPrevious.setVisibility(View.VISIBLE)
+                binding.ivCalendarPrevious.visibility = View.VISIBLE
                 cal.add(Calendar.MONTH, 1)
                 setUpCalendar()
             }
@@ -289,7 +288,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.ivCalendarPrevious.setOnClickListener {
             cal.add(Calendar.MONTH, -1)
             if (cal.get(Calendar.MONTH) + 1 == 1) {
-                binding.ivCalendarPrevious.setVisibility(View.GONE)
+                binding.ivCalendarPrevious.visibility = View.GONE
             }
             if (cal == currentDate)
                 setUpCalendar()
@@ -306,7 +305,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             6 to "https://blog.naver.com/siheungblog/223116423530"
         )
 
-        binding.imageView2.setOnClickListener {
+        val calendarClickListener = OnClickListener {
             val month = cal.get(Calendar.MONTH) + 1
             val url = monthUrlMap[month]
             if (url != null) {
@@ -316,15 +315,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        binding.tvDateMonth.setOnClickListener {
-            val month = cal.get(Calendar.MONTH) + 1
-            val url = monthUrlMap[month]
-            if (url != null) {
-                Toast.makeText(applicationContext, "$month 월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
-            }
-        }
+        binding.iVCalendar.setOnClickListener (calendarClickListener)
+
+        binding.tvDateMonth.setOnClickListener (calendarClickListener)
     }
 
 
@@ -350,8 +343,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      */
     private fun setUpCalendar() {
         val calendarList = ArrayList<CalendarDateModel>()
-        binding.textView.text = sdf2.format(currentDate.time)
-        binding.tvDateMonth.text = sdf.format(cal.time)
+        binding.textView.text = SimpleDateFormat("오늘은 MMMM dd일 EEEE입니다.", Locale.KOREAN).format(currentDate.time)
+        binding.tvDateMonth.text = SimpleDateFormat("yyyy년 MMMM", Locale.KOREAN).format(cal.time)
         val monthCalendar = cal.clone() as Calendar
         val maxDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
         dates.clear()
@@ -368,10 +361,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         adapter.setData(calendarList)
 
         if (cal.get(Calendar.MONTH) + 1 >= 1 && cal.get(Calendar.MONTH) + 1 <= currentDate.get(Calendar.MONTH) + 1) {
-            binding.imageView2.setVisibility(View.VISIBLE);
+            binding.iVCalendar.visibility = View.VISIBLE;
         }
         else {
-            binding.imageView2.setVisibility(View.GONE)
+            binding.iVCalendar.visibility = View.GONE
         }
     }
 }

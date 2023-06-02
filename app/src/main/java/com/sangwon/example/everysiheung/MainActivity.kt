@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.SnapHelper
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationView
 import com.sangwon.example.everysiheung.adapter.CalendarAdapter
+import com.sangwon.example.everysiheung.adapter.ImageData
 import com.sangwon.example.everysiheung.adapter.ViewPagerAdapter
 import com.sangwon.example.everysiheung.databinding.ActivityMainBinding
 import com.sangwon.example.everysiheung.model.CalendarDateModel
@@ -32,8 +33,17 @@ import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
 
-private val MIN_SCALE = 0.85f // 뷰가 몇퍼센트로 줄어들 것인지
+private val MIN_SCALE = 0.85f // 뷰가 몇 퍼센트로 줄어들 것인지
 private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
+
+val monthUrlMap = mapOf( // 1 ~ 6월까지 행사 일정표
+    1 to "https://blog.naver.com/csiheung/222970240186",
+    2 to "https://blog.naver.com/csiheung/223003096138",
+    3 to "https://blog.naver.com/csiheung/223032419482",
+    4 to "https://blog.naver.com/siheungblog?Redirect=Log&logNo=223065558869&from=postView",
+    5 to "https://blog.naver.com/PostView.naver?blogId=siheungblog&logNo=223087428882&categoryNo=90&parentCategoryNo=71&viewDate=&currentPage=&postListTopCurrentPage=&isAfterWrite=true",
+    6 to "https://blog.naver.com/siheungblog/223116423530"
+)
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -43,14 +53,68 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var adapter: CalendarAdapter
     private val calendarList2 = ArrayList<CalendarDateModel>()
 
+    private val idolList: ArrayList<ImageData> = getIdolList()
+    private val numBanner: Int = idolList.size
+    private var currentPosition = numBanner * 1000
 
-    private var numBanner = 3 // 배너 갯수
-    private var currentPosition = Int.MAX_VALUE / numBanner
     private var myHandler = MyHandler()
     private val intervalTime = 5000.toLong() // 몇초 간격으로 페이지를 넘길것인지 (1500 = 1.5초)
 
     private lateinit var navigationView: NavigationView
     private lateinit var drawerLayout: DrawerLayout
+
+    /**
+     * (230602기준) 6월 포스터 표시됨. 이미지 데이터 추가해서 포스터 추가 가능.
+     */
+    private fun getIdolList(): ArrayList<ImageData> {
+        val idolList = ArrayList<ImageData>()
+
+        val imageData1 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c42076e7d19cdb7974115393f2eb97c1a&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6277&year=2023&month=6&stateFlag=calendar")
+        val imageData2 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c91995d2aad34f5a69ce6a53d0e720bb6&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6276&year=2023&month=6&stateFlag=calendar")
+        val imageData3 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c37415ce797b610c5d717a5b8e6d87f74&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6275&year=2023&month=6&stateFlag=calendar")
+        val imageData4 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c23d5d53603818a0c7bc591e475634fbc&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6215&year=2023&month=6&stateFlag=calendar")
+        val imageData5 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c7564eebd039cc288b9ce14bedce381ab&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6098&year=2023&month=6&stateFlag=calendar")
+        val imageData6 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771cab62a6bdb36afc5d7135aef1ef6c8580&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6304&year=2023&month=6&stateFlag=calendar")
+        val imageData7 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c676b5464ed1b6ea919802b8a931af345&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6251&year=2023&month=6&stateFlag=calendar")
+        val imageData8 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c8972f79b8c4c374bf9e4420bc35a0f6c&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6133&year=2023&month=6&stateFlag=calendar")
+        val imageData9 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c39ea3d9ce5696b8dc08e7dd5aadcfbae&fileSn=3743fa93046d4584eb9e93f9fe62c66e",
+            "https://www.siheung.go.kr/event/main.do?idx=6115&year=2023&month=6&stateFlag=calendar")
+        val imageData10 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c87abc44a2384319b02953a94634a14b4&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6062&year=2023&month=6&stateFlag=calendar")
+        val imageData11 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c2f754a6fb67d873b1c3245380485b46b&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6111&year=2023&month=6&stateFlag=calendar")
+        val imageData12 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771ce730bf53712b80a331263ef6e9d56931&fileSn=f9a1967c526603d17ab488b9d2747cda",
+            "https://www.siheung.go.kr/event/main.do?idx=6075&year=2023&month=6&stateFlag=calendar")
+
+        idolList.add(imageData1)
+        idolList.add(imageData2)
+        idolList.add(imageData3)
+        idolList.add(imageData4)
+        idolList.add(imageData5)
+        idolList.add(imageData6)
+        idolList.add(imageData7)
+        idolList.add(imageData8)
+        idolList.add(imageData9)
+        idolList.add(imageData10)
+        idolList.add(imageData11)
+        idolList.add(imageData12)
+
+        return idolList
+    }
+
+    //추가한 내용
+    /*private fun getIdolList(): ArrayList<String> {
+        //return arrayListOf<Int>(R.drawable.pic1, R.drawable.pic2, R.drawable.pic3)
+        return arrayListOf<String>("https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c6111c4314f80b6b967aa9fccff04d2e1&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c42076e7d19cdb7974115393f2eb97c1a&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c7564eebd039cc288b9ce14bedce381ab&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin")
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,13 +150,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.posterViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.posterViewpager.setCurrentItem(currentPosition, false) // 현재 위치를 지정
         binding.posterViewpager.setPageTransformer(ZoomOutPageTransformer())
+        binding.textViewBanner.text = "[${(currentDate.get(Calendar.MONTH) + 1)}월 행사 포스터]   1 / $numBanner"
+
 
         // 현재 몇번째 배너인지 보여주는 숫자를 변경함
         binding.posterViewpager.apply {
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    binding.textViewBanner.text = "[${(currentDate.get(Calendar.MONTH) + 1)}월 행사 포스터]   ${(position % numBanner) + 1} / $numBanner" // 하드코딩. 현재 포스터 수는 3개이다.
+                    binding.textViewBanner.text = "[${(currentDate.get(Calendar.MONTH) + 1)}월 행사 포스터]   ${(position % numBanner) + 1} / $numBanner"
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
@@ -111,8 +177,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setUpClickListener()
         setUpCalendar()
 
-
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
+        /**
+         * 하단 네비게이션바
+         */
             when (item.itemId) {
                 R.id.home -> {
                     // 아이템 1에 대한 동작
@@ -141,6 +209,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * 상단 네비게이션바
+     */
     // 툴바 메뉴 버튼이 클릭 됐을 때 실행하는 함수
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // 클릭한 툴바 메뉴 아이템 id 마다 다르게 실행하도록 설정
@@ -215,15 +286,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         autoScrollStop()
     }
 
-    //추가한 내용
-    private fun getIdolList(): ArrayList<String> {
-        //return arrayListOf<Int>(R.drawable.pic1, R.drawable.pic2, R.drawable.pic3)
-        return arrayListOf<String>("https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c6111c4314f80b6b967aa9fccff04d2e1&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c42076e7d19cdb7974115393f2eb97c1a&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c7564eebd039cc288b9ce14bedce381ab&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin")
-    }
 
-    private fun moveTable(){
+    private fun moveTable() {
+        val url = "https://www.siheung.go.kr/event/main.do?stateFlag=list"
         val intent = Intent(this, TableActivity::class.java)
+        intent.putExtra("url", url)
         startActivity(intent)
+        Toast.makeText(applicationContext, "페이지 로드 중...", Toast.LENGTH_SHORT).show()
     }
 
     private fun moveMap(){
@@ -231,6 +300,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startActivity(intent)
     }
 
+    /**
+     * 포스터 애니메이션
+     */
     inner class ZoomOutPageTransformer : ViewPager2.PageTransformer {
         override fun transformPage(view: View, position: Float) {
             view.apply {
@@ -290,10 +362,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (cal.get(Calendar.MONTH) + 1 == 1) {
                 binding.ivCalendarPrevious.visibility = View.GONE
             }
-            if (cal == currentDate)
-                setUpCalendar()
-            else
-                setUpCalendar()
+            setUpCalendar()
         }
 
         val monthUrlMap = mapOf( // 1 ~ 6월까지 행사 일정표
@@ -310,8 +379,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val url = monthUrlMap[month]
             if (url != null) {
                 Toast.makeText(applicationContext, "$month 월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
+                val intent = Intent(this, TableActivity::class.java)
+                intent.putExtra("url", url)
+                startActivity(intent)
             }
         }
 

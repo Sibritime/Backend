@@ -28,14 +28,15 @@ class TableActivity : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun init(){
-        binding.webView1.settings.javaScriptEnabled = true
-        binding.webView1.webChromeClient = WebChromeClient()
-        binding.webView1.webViewClient = WebViewClient()
-        binding.webView1.settings.cacheMode = WebSettings.LOAD_DEFAULT
-        binding.webView1.settings.domStorageEnabled = true // DOM Storage 활성화
-        val url = "https://www.siheung.go.kr/event/main.do?stateFlag=list"
-        Toast.makeText(applicationContext, "페이지 로드 중...", Toast.LENGTH_SHORT).show()
-        binding.webView1.loadUrl(url)
+        val url = intent.getStringExtra("url")
+        if (url != null) {
+            binding.webView1.settings.javaScriptEnabled = true
+            binding.webView1.webChromeClient = WebChromeClient()
+            binding.webView1.webViewClient = WebViewClient()
+            binding.webView1.settings.cacheMode = WebSettings.LOAD_DEFAULT
+            binding.webView1.settings.domStorageEnabled = true // DOM Storage 활성화
+            binding.webView1.loadUrl(url)
+        }
 
     }
 

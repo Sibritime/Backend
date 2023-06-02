@@ -79,7 +79,8 @@ class PostListActivity : AppCompatActivity() {
                                 title = title ?: "",
                                 location = location ?: "",
                                 date = date ?: "",
-                                time = "18:00~20:00"
+                                time = "18:00~20:00",
+                                isFavorites = false
                             )
                             postItems.add(postItem)
                         } else {

@@ -31,8 +31,17 @@ import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
 
-private val MIN_SCALE = 0.85f // 뷰가 몇퍼센트로 줄어들 것인지
+private val MIN_SCALE = 0.85f // 뷰가 몇 퍼센트로 줄어들 것인지
 private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
+
+val monthUrlMap = mapOf( // 1 ~ 6월까지 행사 일정표
+    1 to "https://blog.naver.com/csiheung/222970240186",
+    2 to "https://blog.naver.com/csiheung/223003096138",
+    3 to "https://blog.naver.com/csiheung/223032419482",
+    4 to "https://blog.naver.com/siheungblog?Redirect=Log&logNo=223065558869&from=postView",
+    5 to "https://blog.naver.com/PostView.naver?blogId=siheungblog&logNo=223087428882&categoryNo=90&parentCategoryNo=71&viewDate=&currentPage=&postListTopCurrentPage=&isAfterWrite=true",
+    6 to "https://blog.naver.com/siheungblog/223116423530"
+)
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -43,7 +52,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val dates = ArrayList<Date>()
     private lateinit var adapter: CalendarAdapter
     private val calendarList2 = ArrayList<CalendarDateModel>()
-
 
     private var numBanner = 3 // 배너 갯수
     private var currentPosition = Int.MAX_VALUE / numBanner
@@ -112,7 +120,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setUpClickListener()
         setUpCalendar()
 
-
+        /**
+         * 하단 네비게이션바
+         */
         binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
@@ -142,6 +152,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * 상단 네비게이션바
+     */
     // 툴바 메뉴 버튼이 클릭 됐을 때 실행하는 함수
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // 클릭한 툴바 메뉴 아이템 id 마다 다르게 실행하도록 설정
@@ -221,10 +234,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //return arrayListOf<Int>(R.drawable.pic1, R.drawable.pic2, R.drawable.pic3)
         return arrayListOf<String>("https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c6111c4314f80b6b967aa9fccff04d2e1&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c42076e7d19cdb7974115393f2eb97c1a&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c7564eebd039cc288b9ce14bedce381ab&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin")
     }
-
-    private fun moveTable(){
+    private fun moveTable() {
+        val url = "https://www.siheung.go.kr/event/main.do?stateFlag=list"
         val intent = Intent(this, TableActivity::class.java)
+        intent.putExtra("url", url)
         startActivity(intent)
+        Toast.makeText(applicationContext, "페이지 로드 중...", Toast.LENGTH_SHORT).show()
     }
 
     private fun moveMap(){
@@ -232,6 +247,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startActivity(intent)
     }
 
+    /**
+     * 포스터 애니메이션
+     */
     inner class ZoomOutPageTransformer : ViewPager2.PageTransformer {
         override fun transformPage(view: View, position: Float) {
             view.apply {
@@ -291,32 +309,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (cal.get(Calendar.MONTH) + 1 == 1) {
                 binding.ivCalendarPrevious.setVisibility(View.GONE)
             }
-            if (cal == currentDate)
-                setUpCalendar()
-            else
-                setUpCalendar()
+            setUpCalendar()
         }
-
-        val monthUrlMap = mapOf( // 1 ~ 6월까지 행사 일정표
-            1 to "https://blog.naver.com/csiheung/222970240186",
-            2 to "https://blog.naver.com/csiheung/223003096138",
-            3 to "https://blog.naver.com/csiheung/223032419482",
-            4 to "https://blog.naver.com/siheungblog?Redirect=Log&logNo=223065558869&from=postView",
-            5 to "https://blog.naver.com/PostView.naver?blogId=siheungblog&logNo=223087428882&categoryNo=90&parentCategoryNo=71&viewDate=&currentPage=&postListTopCurrentPage=&isAfterWrite=true",
-            6 to "https://blog.naver.com/siheungblog/223116423530"
-        )
 
         binding.imageView2.setOnClickListener {
             val month = cal.get(Calendar.MONTH) + 1
             val url = monthUrlMap[month]
             if (url != null) {
                 Toast.makeText(applicationContext, "$month 월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                it.context.startActivity(intent)
+                val intent = Intent(this, TableActivity::class.java)
+                intent.putExtra("url", url)
+                startActivity(intent)
             }
         }
 
-        binding.tvDateMonth.setOnClickListener {
+        /*binding.tvDateMonth.setOnClickListener {
             val month = cal.get(Calendar.MONTH) + 1
             val url = monthUrlMap[month]
             if (url != null) {
@@ -324,7 +331,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
                 it.context.startActivity(intent)
             }
-        }
+        }*/
     }
 
 

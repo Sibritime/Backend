@@ -13,14 +13,14 @@ import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.everysiheung.adapter.PostListViewAdapter
 import com.sangwon.example.everysiheung.model.PostItem
 
-class PostListActivity : AppCompatActivity() {
+class PostBoardActivity : AppCompatActivity() {
     lateinit var listview:ListView
     lateinit var adapter:PostListViewAdapter
     var db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_post_list)
+        setContentView(R.layout.activity_post_board)
 
         listview = findViewById(R.id.listview)
         adapter = PostListViewAdapter()

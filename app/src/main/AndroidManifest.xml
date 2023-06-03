@@ -26,7 +26,7 @@
         <activity
             android:name=".PosterActivity"
             android:exported="false" />
-        <activity android:name=".PostListActivity" />
+        <activity android:name=".PostBoardActivity" />
         <activity
             android:name=".MapsActivity"
             android:exported="false" />

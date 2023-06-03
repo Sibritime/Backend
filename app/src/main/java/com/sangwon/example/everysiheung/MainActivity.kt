@@ -2,19 +2,16 @@ package com.sangwon.example.everysiheung
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Base64
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -201,7 +198,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 R.id.list -> {
                     //startActivity(Intent(this, PostUpActivity::class.java))
-                    startActivity(Intent(this, PostListActivity::class.java))
+                    startActivity(Intent(this, PostBoardActivity::class.java))
                     false
                 }
                 else -> false
@@ -229,7 +226,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when(item.itemId){
             R.id.post-> {
                 Toast.makeText(this,"menu_item1 실행",Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, PostListActivity::class.java))
+                startActivity(Intent(this, PostBoardActivity::class.java))
                 true
             }
             R.id.bookmark-> Toast.makeText(this,"menu_item2 실행",Toast.LENGTH_SHORT).show()

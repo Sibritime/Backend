@@ -8,6 +8,25 @@
     tools:context=".PostUpActivity">
 
     <EditText
+        android:id="@+id/timeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/imageText" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="60dp"
+        android:text="time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <EditText
         android:id="@+id/feeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -143,20 +162,21 @@
         android:id="@+id/makePostBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="16dp"
         android:text="등록하기"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageText" />
+        app:layout_constraintTop_toBottomOf="@+id/timeText" />
 
     <Button
         android:id="@+id/readBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="64dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="44dp"
         android:text="읽기"
         app:layout_constraintEnd_toStartOf="@+id/makePostBtn"
-        app:layout_constraintTop_toBottomOf="@+id/imageText" />
+        app:layout_constraintTop_toBottomOf="@+id/timeText" />
 
     <Button
         android:id="@+id/mapbtn"

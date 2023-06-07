@@ -12,6 +12,8 @@ data class Posts(
     val uid: String? = null,
     val latitude: Double? = null,
     val longitude: Double? = null,
+    val time: String? = null,
+    var bookmarks: Int? = null
 
     )
 class Model {

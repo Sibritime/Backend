@@ -6,12 +6,18 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ListView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.everysiheung.adapter.PostListViewAdapter
 import com.sangwon.example.everysiheung.model.PostItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class PostBoardActivity : AppCompatActivity() {
     lateinit var listview:ListView
@@ -51,41 +57,56 @@ class PostBoardActivity : AppCompatActivity() {
         val firebaseStorage = FirebaseStorage.getInstance()
         var imagePath: String = ""
 
+        GlobalScope.launch(Dispatchers.Main) {
+            val postItems = arrayListOf<PostItem>() // 데이터를 임시로 저장할 리스트
 
-        db.collection("Posts")
-            .orderBy("timestamp", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { result ->
-                val postItems = arrayListOf<PostItem>() // 데이터를 임시로 저장할 리스트
+            val result = withContext(Dispatchers.IO) {
+                db.collection("Posts")
+                    .orderBy("timestamp", Query.Direction.DESCENDING)
+                    .get()
+                    .await()
+            }
+            for (document in result) {
+                Log.e("document","${document.id}")
+            }
 
-                for (document in result) {
-                    val title = document.getString("title")
-                    val location = document.getString("location")
-                    val date = document.getString("date")
-                    imagePath = document.getString("image").toString()
-                    Log.e("order","${title}")
-                    //이미지를 등록하지 않은 경우 default 이미지
-                    if (imagePath == "") {
-                        imagePath = "images/default.png"
-                    }
-                    Log.e("imgPath","${imagePath}")
-                    val storageReference = firebaseStorage.getReference().child(imagePath.toString())
+            for (document in result) {
+                val title = document.getString("title")
+                val location = document.getString("location")
+                val date = document.getString("date")
+                val id = document.id
+                imagePath = document.getString("image").toString()
+                Log.e("order", "${title}")
+                // 이미지를 등록하지 않은 경우 default 이미지
+                if (imagePath == "") {
+                    imagePath = "images/default.png"
+                }
+                Log.e("imgPath", "${imagePath}")
+                val storageReference = firebaseStorage.getReference().child(imagePath.toString())
 
-                    storageReference.downloadUrl.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val imageData = task.result
-                            val postItem = PostItem(
-                                img = imageData,
-                                title = title ?: "",
-                                location = location ?: "",
-                                date = date ?: "",
-                                time = "18:00~20:00",
-                                isFavorites = false
-                            )
-                            postItems.add(postItem)
-                        } else {
-                            Log.e("downloadUrl", "failed..")
-                        }
+                val isFavorites = withContext(Dispatchers.IO) {
+                    val bookmarkQuerySnapshot = db.collection("MyPage")
+                        .document("${Firebase.auth.currentUser?.uid}")
+                        .collection("BookMarks")
+                        .get()
+                        .await()
+
+                    bookmarkQuerySnapshot.documents.any { it.id == id }
+                }
+
+                storageReference.downloadUrl.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val imageData = task.result
+                        val postItem = PostItem(
+                            img = imageData,
+                            title = title ?: "",
+                            location = location ?: "",
+                            date = date ?: "",
+                            time = "18:00~20:00",
+                            isFavorites = isFavorites,
+                            id = id
+                        )
+                        postItems.add(postItem)
 
                         // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
                         if (postItems.size == result.size()) {
@@ -94,18 +115,12 @@ class PostBoardActivity : AppCompatActivity() {
                             }
                             adapter.notifyDataSetChanged()
                         }
+                    } else {
+                        Log.e("downloadUrl", "failed..")
                     }
                 }
-
-    }
-//
-//        val post = arrayListOf<PostItem>(
-//            PostItem(R.drawable.pic1, "홈파티", "우리집", "내일", "지금"), PostItem(R.drawable.pic2, "집들이", "이사간 집", "다음주", "하루 종일"), PostItem(R.drawable.pic3, "종강 파티", "49블럭 고인돌", "6월 22일", "18:00 ~ 22:00")
-//        ).forEach {
-//            adapter.addPost(it)
-//        }
-//        adapter.notifyDataSetChanged()
-
+            }
+        }
     }
 
 

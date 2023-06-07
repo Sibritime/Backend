@@ -45,6 +45,8 @@ class PostUpActivity : AppCompatActivity() {
             val fee = findViewById<EditText>(R.id.feeText).text.toString()
             val subscript = findViewById<EditText>(R.id.subscriptText).text.toString()
             val image = findViewById<EditText>(R.id.imageText).text.toString()
+            val time = findViewById<EditText>(R.id.timeText).text.toString()
+            var bookmark: Int = 0
 
             val Post = Posts (// 된겨?
                 title,
@@ -57,7 +59,9 @@ class PostUpActivity : AppCompatActivity() {
                 timestamp, // 딱히 노터치
                 uid, //카톡으로 변경시 얻어오는 방법이 따로 있겠지
                 latitude,
-                longitude
+                longitude,
+                time,
+                bookmark
 
             )
 

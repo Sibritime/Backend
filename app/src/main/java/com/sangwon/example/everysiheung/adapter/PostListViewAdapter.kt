@@ -2,6 +2,7 @@ package com.sangwon.example.everysiheung.adapter
 
 import android.content.Context
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +11,17 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.ktx.auth
 import com.sangwon.example.everysiheung.R
 import com.sangwon.example.everysiheung.model.PostItem
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 
 
 class PostListViewAdapter: BaseAdapter() {
+    var db = Firebase.firestore
     private val items = ArrayList<PostItem>()
     override fun getCount(): Int {
         return items.size
@@ -55,7 +62,31 @@ class PostListViewAdapter: BaseAdapter() {
         locationTextView.text = item.location
         dateTextView.text = item.date
         timeTextView.text = item.time
-        isFavoriteCheckBox.isSelected = item.isFavorites
+        isFavoriteCheckBox.isChecked = item.isFavorites
+
+
+        // CheckBox의 선택 상태가 변경될 때 실행되는 코드
+        isFavoriteCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            item.isFavorites = isChecked
+            val emptyData = hashMapOf<String, Any>() // 빈 데이터 맵
+            var documentId = item.id
+            var Mypage = db.collection("MyPage")
+                .document("${Firebase.auth.currentUser?.uid}") //없으면 만드는 걸까?
+            //북마크 추가
+            if(isChecked == true) {
+                //Mypage 컬렉션 안에 uid 문서 안에 BookMarks 컬렉션안에 있는 북마크 문서(게시물 ID)
+                Mypage.collection("BookMarks").document(documentId)
+                    .set(emptyData)
+            }
+            //북마크 삭제
+            else {
+                Mypage.collection("BookMarks").document(documentId)
+                    .delete()
+                    .addOnSuccessListener { Log.e("delete", "DocumentSnapshot successfully deleted!") }
+                    .addOnFailureListener { e -> Log.e("delete", "Error deleting document", e) }
+            }
+
+        }
 
         return convertView
     }
@@ -63,4 +94,6 @@ class PostListViewAdapter: BaseAdapter() {
     fun addPost(post:PostItem){
         items.add(post)
     }
+
+
 }

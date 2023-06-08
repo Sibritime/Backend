@@ -1,7 +1,6 @@
 package com.sangwon.example.everysiheung.adapter
 
 import android.content.Context
-import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +13,8 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
 import com.sangwon.example.everysiheung.R
 import com.sangwon.example.everysiheung.model.PostItem
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 
 
 class PostListViewAdapter: BaseAdapter() {
@@ -69,11 +66,11 @@ class PostListViewAdapter: BaseAdapter() {
         isFavoriteCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
             item.isFavorites = isChecked
             val emptyData = hashMapOf<String, Any>() // 빈 데이터 맵
-            var documentId = item.id
-            var Mypage = db.collection("MyPage")
+            val documentId = item.id
+            val Mypage = db.collection("MyPage")
                 .document("${Firebase.auth.currentUser?.uid}") //없으면 만드는 걸까?
             //북마크 추가
-            if(isChecked == true) {
+            if(isChecked) {
                 //Mypage 컬렉션 안에 uid 문서 안에 BookMarks 컬렉션안에 있는 북마크 문서(게시물 ID)
                 Mypage.collection("BookMarks").document(documentId)
                     .set(emptyData)
@@ -85,7 +82,6 @@ class PostListViewAdapter: BaseAdapter() {
                     .addOnSuccessListener { Log.e("delete", "DocumentSnapshot successfully deleted!") }
                     .addOnFailureListener { e -> Log.e("delete", "Error deleting document", e) }
             }
-
         }
 
         return convertView

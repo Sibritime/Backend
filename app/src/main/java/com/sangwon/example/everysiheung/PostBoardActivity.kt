@@ -20,8 +20,8 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class PostBoardActivity : AppCompatActivity() {
-    lateinit var listview:ListView
-    lateinit var adapter:PostListViewAdapter
+    lateinit var listview: ListView
+    lateinit var adapter: PostListViewAdapter
     var db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +42,7 @@ class PostBoardActivity : AppCompatActivity() {
         listview.setOnItemClickListener { adapterView, view, i, l ->
             val item = adapterView.getItemAtPosition(i) as PostItem
 
-            val intent:Intent = Intent(applicationContext, PosterActivity::class.java)
+            val intent: Intent = Intent(applicationContext, PosterActivity::class.java)
 
             intent.putExtra("title", item.title)
             intent.putExtra("location", item.location)
@@ -67,7 +67,7 @@ class PostBoardActivity : AppCompatActivity() {
                     .await()
             }
             for (document in result) {
-                Log.e("document","${document.id}")
+                Log.e("document", "${document.id}")
             }
 
             for (document in result) {
@@ -77,8 +77,9 @@ class PostBoardActivity : AppCompatActivity() {
                 val id = document.id
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
-                val timestamp = document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
-                Log.e("timestamp","${timestamp}")
+                // 2023년 6월 2일 오전 11시 15분 31초 UTC+9
+                val timestamp = document.getTimestamp("timestamp")
+                //Log.e("timestamp","${timestamp}")
                 imagePath = document.getString("image").toString()
                 Log.e("order", "${title}")
                 // 이미지를 등록하지 않은 경우 default 이미지
@@ -108,9 +109,10 @@ class PostBoardActivity : AppCompatActivity() {
                             date = date ?: "",
                             time = "18:00~20:00",
                             isFavorites = isFavorites,
-                            id = id
+                            id = id,
+                            timestamp = timestamp?.seconds ?: 0
                         )
-                        postItems.add(postItem)
+                        postItems.add(addPostItem(postItems, postItem, postItems.size), postItem)
 
                         // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
                         if (postItems.size == result.size()) {
@@ -128,7 +130,11 @@ class PostBoardActivity : AppCompatActivity() {
     }
 
 
-    fun addPostListTemp(){
-
+    private fun addPostItem(items: ArrayList<PostItem>, item: PostItem, index: Int): Int {
+        if(index==0)
+            return 0
+        if (items[index].timestamp > item.timestamp)
+            return addPostItem(items, item, index - 1)
+        return index
     }
 }

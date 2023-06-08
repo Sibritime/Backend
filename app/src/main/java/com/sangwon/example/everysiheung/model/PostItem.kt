@@ -13,5 +13,5 @@ data class PostItem(
     var time: String,
     var isFavorites:Boolean,
     var id: String, //게시물의 고유값 저장
-
+    var timestamp: Long, //게시물 정렬할 떄만 사용
 )

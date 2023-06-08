@@ -76,7 +76,7 @@ class PostUpActivity : AppCompatActivity() {
 
 
         }
-
+        //업로드 버튼
         findViewById<Button>(R.id.readBtn).setOnClickListener{
             db.collection("Posts")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -90,6 +90,7 @@ class PostUpActivity : AppCompatActivity() {
                 .addOnFailureListener { exception ->
                     Log.d("PostInfoFailed", "Error getting documents: ", exception)
                 }
+                val intent:Intent = Intent(this, PostBoardActivity::class.java)
         }
 
         //지도 버튼 누를 때

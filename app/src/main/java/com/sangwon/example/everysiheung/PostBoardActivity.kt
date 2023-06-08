@@ -75,6 +75,10 @@ class PostBoardActivity : AppCompatActivity() {
                 val location = document.getString("location")
                 val date = document.getString("date")
                 val id = document.id
+
+                //Timestamp(seconds=1686128427, nanoseconds=894000000)
+                val timestamp = document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
+                Log.e("timestamp","${timestamp}")
                 imagePath = document.getString("image").toString()
                 Log.e("order", "${title}")
                 // 이미지를 등록하지 않은 경우 default 이미지

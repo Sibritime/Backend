@@ -197,8 +197,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.list -> {
-                    //startActivity(Intent(this, PostUpActivity::class.java))
-                    startActivity(Intent(this, PostBoardActivity::class.java))
+                    // intent를 통해 돌아가는 함수를 달리함
+                    val intent = Intent(this, PostBoardActivity::class.java)
+                    intent.putExtra("Role","Posts" )
+                    startActivity(intent)
                     false
                 }
                 else -> false
@@ -225,11 +227,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.post-> {
-                Toast.makeText(this,"menu_item1 실행",Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, PostBoardActivity::class.java))
+                val intent = Intent(this, PostBoardActivity::class.java)
+                intent.putExtra("Role","Posts" )
+                startActivity(intent)
+
                 true
             }
-            R.id.bookmark-> Toast.makeText(this,"menu_item2 실행",Toast.LENGTH_SHORT).show()
+            R.id.bookmark-> {
+                val intent = Intent(this, PostBoardActivity::class.java)
+                intent.putExtra("Role","BookMarks" )
+                startActivity(intent)
+            }
             R.id.diary-> Toast.makeText(this,"menu_item3 실행",Toast.LENGTH_SHORT).show()
         }
         return false

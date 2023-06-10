@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="subscript_spinner">
+        <item>행사</item>
+        <item>공지</item>
+        <item>교육</item>
+    </array>
+</resources>

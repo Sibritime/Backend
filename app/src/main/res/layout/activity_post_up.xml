@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingHorizontal="10dp">
+
             <EditText
                 android:id="@+id/titleText"
                 android:layout_width="match_parent"
@@ -44,8 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/titleText"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="100dp"
-                android:layout_marginBottom="0dp" />
+                android:layout_marginStart="100dp" />
 
             <TextView
                 android:id="@+id/textSubscript"
@@ -53,8 +53,10 @@
                 android:layout_height="40dp"
                 android:gravity="center_vertical"
                 android:layout_below="@id/titleText"
+                android:textSize="18dp"
                 android:text="행사 종류"
-                android:textColor="#000" />
+                android:textColor="#000"
+                android:layout_marginBottom="5dp" />
 
             <View
                 android:layout_width="match_parent"
@@ -67,11 +69,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_below="@id/textSubscript"
-                android:layout_marginTop="3dp"
                 android:gravity="center_vertical"
+                android:textSize="18dp"
                 android:text="행사 기간"
                 android:textColor="#000" />
-
 
             <RelativeLayout
                 android:id="@+id/datePicker"
@@ -118,7 +119,6 @@
                     android:gravity="center"
                     android:textSize="30dp"
                     android:text="-->"/>
-
             </RelativeLayout>
 
             <View
@@ -133,6 +133,7 @@
                 android:layout_height="50dp"
                 android:layout_below="@id/datePicker"
                 android:gravity="center_vertical"
+                android:textSize="18dp"
                 android:text="운영 시간"
                 android:textColor="#000" />
 
@@ -181,7 +182,6 @@
                     android:gravity="center"
                     android:textSize="30dp"
                     android:text="-->"/>
-
             </RelativeLayout>
 
             <View
@@ -190,6 +190,54 @@
                 android:background="#c0c0c0"
                 android:layout_below="@id/timePicker"/>
 
+            <TextView
+                android:id="@+id/textFee"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:layout_below="@id/textTarget"
+                android:textSize="18dp"
+                android:text="요금"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/locateText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textFee"
+                android:layout_toStartOf="@id/mapBtn"
+                android:hint="행사 장소"/>
+
+            <ImageButton
+                android:id="@+id/mapBtn"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/locateText"
+                android:layout_alignBottom="@id/locateText"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ic_baseline_location_on_24"
+                tools:ignore="MissingConstraints" />
+
+            <EditText
+                android:id="@+id/feeText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textTarget"
+                android:layout_toStartOf="@id/mapBtn"
+               android:layout_toEndOf="@id/textFee"
+                android:layout_marginStart="10dp"
+                android:textAlignment="textStart"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignEnd="@id/feeText"
+                android:gravity="center_vertical"
+                android:layout_below="@id/groupTarget"
+                android:textSize="22dp"
+                android:text="₩"
+                android:textColor="#000" />
 
             <EditText
                 android:id="@+id/imageText"
@@ -210,32 +258,14 @@
                 android:background="@drawable/baseline_image_24"
                 tools:ignore="MissingConstraints" />
 
-            <EditText
-                android:id="@+id/locateText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/feeText"
-                android:layout_toStartOf="@id/mapBtn"
-                android:hint="행사 장소"/>
-
-            <ImageButton
-                android:id="@+id/mapBtn"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/locateText"
-                android:layout_alignBottom="@id/locateText"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/ic_baseline_location_on_24"
-                tools:ignore="MissingConstraints" />
-
-
-
             <RadioGroup
                 android:id="@+id/groupTarget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@id/textTarget"
+                android:layout_alignBottom="@id/textTarget"
                 android:layout_toEndOf="@id/textTarget"
+                android:gravity="center"
                 android:layout_marginHorizontal="12dp"
                 android:orientation="horizontal">
                 <RadioButton
@@ -268,34 +298,8 @@
                 android:layout_below="@id/timePicker"
                 android:layout_marginTop="12dp"
                 android:textColor="#000"
+                android:textSize="18dp"
                 android:text="대상" />
-
-            <EditText
-                android:id="@+id/feeText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="100dp"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@id/groupTarget"
-                android:inputType="number" />
-
-            <TextView
-                android:id="@+id/textFee"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:layout_below="@id/groupTarget"
-                android:text="요금"
-                android:textColor="#000" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignParentEnd="true"
-                android:gravity="center_vertical"
-                android:layout_below="@id/groupTarget"
-                android:textSize="20dp"
-                android:text="₩"
-                android:textColor="#000" />
 
             <EditText
                 android:id="@+id/contentText"
@@ -311,8 +315,6 @@
                 android:hint="게시물 내용을 작성해주세요"
                 android:gravity="top"
                 android:background="#eee"/>
-
         </RelativeLayout>
-
     </ScrollView>
 </RelativeLayout>

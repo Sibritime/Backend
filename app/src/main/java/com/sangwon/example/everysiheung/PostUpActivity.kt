@@ -62,14 +62,14 @@ class PostUpActivity : AppCompatActivity() {
                 findViewById<EditText>(R.id.startDate).text.toString() + findViewById<EditText>(R.id.endDate).text.toString()
             val locate = findViewById<EditText>(R.id.locateText).text.toString()
             val targets = findViewById<RadioGroup>(R.id.groupTarget)
-            val target = if (findViewById<RadioButton>(R.id.아무나).isChecked) {
-                findViewById<RadioButton>(R.id.아무나).text.toString()
-            } else if (findViewById<RadioButton>(R.id.성인).isChecked) {
-                findViewById<RadioButton>(R.id.성인).text.toString()
-            } else if (findViewById<RadioButton>(R.id.청년).isChecked) {
-                findViewById<RadioButton>(R.id.청년).text.toString()
+            val target = if (findViewById<RadioButton>(R.id.anybody).isChecked) {
+                findViewById<RadioButton>(R.id.anybody).text.toString()
+            } else if (findViewById<RadioButton>(R.id.adult).isChecked) {
+                findViewById<RadioButton>(R.id.adult).text.toString()
+            } else if (findViewById<RadioButton>(R.id.youth).isChecked) {
+                findViewById<RadioButton>(R.id.youth).text.toString()
             } else {
-                findViewById<RadioButton>(R.id.어린이).text.toString()
+                findViewById<RadioButton>(R.id.child).text.toString()
             }
             val fee = findViewById<EditText>(R.id.feeText).text.toString()
             val subscript = findViewById<Spinner>(R.id.subscriptSpinner).selectedItem.toString()

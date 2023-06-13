@@ -191,6 +191,17 @@
                 android:layout_below="@id/timePicker"/>
 
             <TextView
+                android:id="@+id/textTarget"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:layout_below="@id/timePicker"
+                android:layout_marginTop="12dp"
+                android:textColor="#000"
+                android:textSize="18dp"
+                android:text="대상" />
+
+            <TextView
                 android:id="@+id/textFee"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
@@ -200,20 +211,11 @@
                 android:text="요금"
                 android:textColor="#000" />
 
-            <EditText
-                android:id="@+id/locateText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textFee"
-                android:layout_toStartOf="@id/mapBtn"
-                android:hint="행사 장소"/>
-
             <ImageButton
                 android:id="@+id/mapBtn"
                 android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/locateText"
-                android:layout_alignBottom="@id/locateText"
+                android:layout_height="50dp"
+                android:layout_below="@id/textFee"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/ic_baseline_location_on_24"
                 tools:ignore="MissingConstraints" />
@@ -229,34 +231,13 @@
                 android:textAlignment="textStart"
                 android:inputType="number" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_alignEnd="@id/feeText"
-                android:gravity="center_vertical"
-                android:layout_below="@id/groupTarget"
-                android:textSize="22dp"
-                android:text="₩"
-                android:textColor="#000" />
-
             <EditText
-                android:id="@+id/imageText"
+                android:id="@+id/locateText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/imgBtn"
-                android:layout_below="@id/mapBtn"
-                android:layout_marginVertical="10dp"
-                android:hint="행사 포스터"/>
-
-            <ImageButton
-                android:id="@+id/imgBtn"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/imageText"
-                android:layout_alignBottom="@id/imageText"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/baseline_image_24"
-                tools:ignore="MissingConstraints" />
+                android:layout_below="@id/textFee"
+                android:layout_toStartOf="@id/mapBtn"
+                android:hint="행사 장소"/>
 
             <RadioGroup
                 android:id="@+id/groupTarget"
@@ -269,37 +250,54 @@
                 android:layout_marginHorizontal="12dp"
                 android:orientation="horizontal">
                 <RadioButton
-                    android:id="@+id/아무나"
+                    android:id="@+id/anybody"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="아무나"/>
                 <RadioButton
-                    android:id="@+id/성인"
+                    android:id="@+id/adult"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="성인"/>
                 <RadioButton
-                    android:id="@+id/청년"
+                    android:id="@+id/youth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="청년"/>
                 <RadioButton
-                    android:id="@+id/어린이"
+                    android:id="@+id/child"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="어린이"/>
             </RadioGroup>
 
             <TextView
-                android:id="@+id/textTarget"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
+                android:layout_alignEnd="@id/feeText"
                 android:gravity="center_vertical"
-                android:layout_below="@id/timePicker"
-                android:layout_marginTop="12dp"
-                android:textColor="#000"
-                android:textSize="18dp"
-                android:text="대상" />
+                android:layout_below="@id/groupTarget"
+                android:textSize="22dp"
+                android:text="₩"
+                android:textColor="#000" />
+
+            <ImageButton
+                android:id="@+id/imgBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/mapBtn"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/baseline_image_24"
+                tools:ignore="MissingConstraints" />
+
+            <EditText
+                android:id="@+id/imageText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/imgBtn"
+                android:layout_below="@id/mapBtn"
+                android:layout_marginVertical="10dp"
+                android:hint="행사 포스터"/>
 
             <EditText
                 android:id="@+id/contentText"

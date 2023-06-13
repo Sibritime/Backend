@@ -274,7 +274,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2023 <시흥 물수제비 영화제> 상영작 시민투표 결과알림"
+                            android:text="2023 시흥 물수제비 영화제 상영작 시민투표 결과알림"
                             android:textColor="#000"
                             android:textSize="20dp" />
 

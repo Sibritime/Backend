@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
@@ -123,14 +124,14 @@ class PostUpActivity : AppCompatActivity() {
         }
 
         //지도 버튼 누를 때
-        findViewById<Button>(R.id.mapBtn).setOnClickListener {
+        findViewById<ImageButton>(R.id.mapBtn).setOnClickListener {
             var intent = Intent(application, MapsActivity::class.java)
             startActivityForResult(intent, 0)
             // finish()
         }
 
         //이미지 버튼 누를 때
-        findViewById<Button>(R.id.imgBtn).setOnClickListener {
+        findViewById<ImageButton>(R.id.imgBtn).setOnClickListener {
             var intent = Intent(application, ImgActivity::class.java)
             startActivityForResult(intent, 2)
             // finish()

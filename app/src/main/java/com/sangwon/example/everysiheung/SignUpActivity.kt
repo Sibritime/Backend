@@ -24,59 +24,16 @@ class SignUpActivity : AppCompatActivity(),View. OnClickListener {
     data class User(val userId: String? = null, val userNickname: String? = null) { }
     private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
     private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-        if (error != null) {
-            Log.e("T6hvTeqOVQkFuP5J8EP41LHy+9o=", "로그인 실패 $error")
-        } else if (token != null) {
-            Log.d("T6hvTeqOVQkFuP5J8EP41LHy+9o=", "로그인 성공 ${token.accessToken}")
-            nextMainActivity()
+        if (token != null) {
+            Log.d("login", "로그인 성공 ${token.accessToken}")
+            //nextMainActivity()
+        }else if (error != null) {
+            Log.e("login", "로그인 실패 $error")
         }
     }
-
-    override fun onClick(v: View?) {
-        database = Firebase.database.reference
-        when (v?.id) {
-            binding.btnLogin.id -> {
-                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-                    UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-                        if (error != null) {
-                            Log.e("T6hvTeqOVQkFuP5J8EP41LHy+9o=", "로그인 실패 $error")
-                            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                                return@loginWithKakaoTalk
-                            } else {
-                                UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
-                            }
-                        } else if (token != null) {
-                            Log.d("T6hvTeqOVQkFuP5J8EP41LHy+9o=", "로그인 성공 ${token.accessToken}")
-                            Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
-                            UserApiClient.instance.me { user, error ->
-                                if (error != null) {
-                                } else if (user != null) {
-                                    Log.d("T6hvTeqOVQkFuP5J8EP41LHy+9o=", "사용자 정보 요청 성공 : $user")
-                                    writeNewUser(user.id.toString(), user.kakaoAccount?.profile?.nickname.toString())
-                                }
-                            }
-                            nextMainActivity()
-                        }
-                    }
-                } else {
-                    UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
-                }
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("T6hvTeqOVQkFuP5J8EP41LHy+9o=", "keyhash : ${Utility.getKeyHash(this)}")
-
-        KakaoSdk.init(this, "3c11d37a2f25b21423e44277c0af3700")
-        if (AuthApiClient.instance.hasToken()) {
-            UserApiClient.instance.accessTokenInfo { _, error ->
-                if (error == null) {
-                    nextMainActivity()
-                }
-            }
-        }
+        Log.d("login", "keyhash : ${Utility.getKeyHash(this)}")
 
         setContentView(binding.root)
 
@@ -91,5 +48,40 @@ class SignUpActivity : AppCompatActivity(),View. OnClickListener {
         val user = User(userId, userNickname)
         database.child("users").child(userId).setValue(user)
     }
+
+    override fun onClick(v: View?) {
+        database = Firebase.database.reference
+        when (v?.id) {
+            binding.btnLogin.id -> {
+                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+                    UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
+                        if (error != null) {
+                            Log.e("login", "로그인 실패 $error")
+                            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                                return@loginWithKakaoTalk
+                            } else {
+                                UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
+                            }
+                        } else if (token != null) {
+                            Log.d("login", "로그인 성공 ${token.accessToken}")
+                            Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                            UserApiClient.instance.me { user, error ->
+                                if (user != null) {
+                                    Log.d("login", "사용자 정보 요청 성공 : $user")
+                                    writeNewUser(user.id.toString(), user.kakaoAccount?.profile?.nickname.toString())
+                                }else if (error != null) {
+                                    Log.e("login", "사용자 정보 요청 실패 $error")
+                                }
+                            }
+                            nextMainActivity()
+                        }
+                    }
+                } else {
+                    UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
+                }
+            }
+        }
+    }
+
 
 }

@@ -33,14 +33,7 @@ import java.util.*
 private val MIN_SCALE = 0.85f // 뷰가 몇 퍼센트로 줄어들 것인지
 private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
 
-val monthUrlMap = mapOf( // 1 ~ 6월까지 행사 일정표
-    1 to "https://blog.naver.com/csiheung/222970240186",
-    2 to "https://blog.naver.com/csiheung/223003096138",
-    3 to "https://blog.naver.com/csiheung/223032419482",
-    4 to "https://blog.naver.com/siheungblog?Redirect=Log&logNo=223065558869&from=postView",
-    5 to "https://blog.naver.com/PostView.naver?blogId=siheungblog&logNo=223087428882&categoryNo=90&parentCategoryNo=71&viewDate=&currentPage=&postListTopCurrentPage=&isAfterWrite=true",
-    6 to "https://blog.naver.com/siheungblog/223116423530"
-)
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -243,7 +236,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return false
     }
 
-
     fun getKeyHash() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val packageInfo =
@@ -259,6 +251,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
     }
+
     private fun autoScrollStart(intervalTime: Long) {
         myHandler.removeMessages(0) // 이거 안하면 핸들러가 1개, 2개, 3개 ... n개 만큼 계속 늘어남
         myHandler.sendEmptyMessageDelayed(0, intervalTime) // intervalTime 만큼 반복해서 핸들러를 실행하게 함
@@ -290,7 +283,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onPause()
         autoScrollStop()
     }
-
 
     private fun moveTable() {
         val url = "https://www.siheung.go.kr/event/main.do?stateFlag=list"

@@ -7,6 +7,9 @@ buildscript {
 
         mavenCentral()  // Maven Central repository
 
+        jcenter()
+
+        maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/'}
     }
     dependencies {
         // Add the dependency for the Google services Gradle plugin

@@ -27,7 +27,6 @@ class SplashActivity : AppCompatActivity() {
         KakaoSdk.init(this, "0272df0de0ac0b5316dc14c4e4e15362")
 
 
-
         //auth = Firebase.auth
 
         // 회원가입이 안되어있으므로, joinActivity
@@ -42,9 +41,10 @@ class SplashActivity : AppCompatActivity() {
                     if (error == null) {
                         //nextMainActivity()
                         startActivity(Intent(this, MainActivity::class.java))
-                        finish()
                     }
                 }
+            } else {
+                startActivity(Intent(this, SignUpActivity::class.java))
             }
             finish()
         }, 3000)

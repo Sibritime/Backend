@@ -29,7 +29,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         fun bind(calendarDateModel: CalendarDateModel) {
             val calendarDay = itemView.findViewById<TextView>(R.id.tv_calendar_day) // 월
             val calendarDate = itemView.findViewById<TextView>(R.id.tv_calendar_date) // 일
-            val calendartext = itemView.findViewById<TextView>(R.id.tv_calendar_text)
+            val calendarText = itemView.findViewById<TextView>(R.id.tv_calendar_text)
             val cardView = itemView.findViewById<CardView>(R.id.card_calendar)
 
 
@@ -118,8 +118,8 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
 
             calendarDay.text = calendarDateModel.calendarDay
             calendarDate.text = calendarDateModel.calendarDate
-            calendartext.text = calendarDateModel.calendarMonth
-            calendartext.setTextColor(ContextCompat.getColor(itemView.context, R.color.teal_700))
+            calendarText.text = calendarDateModel.calendarMonth
+            calendarText.setTextColor(ContextCompat.getColor(itemView.context, R.color.teal_700))
 
             /*if(calendarDate.text.toString() == "16" && calendarDay.text.toString() == "화") {
                 calendartext.text = "1 건"
@@ -162,6 +162,4 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         list.addAll(calendarList)
         notifyDataSetChanged()
     }
-
-
 }

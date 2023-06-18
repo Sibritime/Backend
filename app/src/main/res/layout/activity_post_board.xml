@@ -28,5 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/ic_baseline_person_24" />
+        android:layout_margin="15dp"
+        android:padding="5dp"
+        android:src="@drawable/baseline_pen_24" />
 </RelativeLayout>

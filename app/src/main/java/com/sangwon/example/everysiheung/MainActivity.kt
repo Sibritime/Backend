@@ -224,7 +224,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 intent.putExtra("Role","Posts" )
                 startActivity(intent)
 
-                true
+                return true
             }
             R.id.bookmark-> {
                 val intent = Intent(this, PostBoardActivity::class.java)
@@ -266,6 +266,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             super.handleMessage(msg)
 
             if(msg.what == 0) {
+                currentPosition = binding.posterViewpager.currentItem
                 binding.posterViewpager.setCurrentItem(++currentPosition, true) // 다음 페이지로 이동
                 autoScrollStart(intervalTime) // 스크롤을 계속 이어서 한다.
             }

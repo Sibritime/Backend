@@ -2,4 +2,56 @@
     <string name="app_name">에브리시흥</string>
     <string name="cd_previous">Previous</string>
     <string name="cd_next">Next</string>
+
+    <string name="ok">확인</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_7">7</string>
+    <string name="_8">8</string>
+    <string name="_9">9</string>
+    <string name="_0">0</string>
+    <string name="del">del</string>
+    <string name="_blank" />
+
+    <string name="logo">logo</string>
+    <string name="move_to_back">move to back</string>
+
+    <!--diary-->
+    <string name="diary_date">yyyy.mm.dd.date</string>
+    <string name="diary_text_hint">오늘 하루는 어땠나요?</string>
+    <string name="diary_save">save</string>
+    <string name="diary_image">image</string>
+    <string name="diary_option">option</string>
+    <string name="diary_not_exist">일기가 존재하지 않습니다.</string>
+
+
+    <!--Main-->
+    <string name="main_year">2021</string>
+    <string name="main_month">0</string>
+    <string name="main_write">write diary</string>
+    <string name="main_change_year">change year</string>
+
+
+    <!--backup-->
+    <string name="backup_save">일기 저장하기</string>
+    <string name="backup_load">일기 불러오기</string>
+    <string name="backup_failed">백업 실패</string>
+    <string name="backup_authorization_failed">권한 거절로 인해 백업이 실패했습니다.</string>
+    <string name="backup_success">백업 성공</string>
+    <string name="restore_failed">복구 실패</string>
+    <string name="restore_authorization_failed">권한 거절로 인해 복구가 실패했습니다.</string>
+    <string name="restore_success">복구 성공</string>
+
+    <!--capture-->
+    <string name="capture_save">일기를 저장했습니다.</string>
+    <string name="capture_cancel">일기 저장을 취소했습니다.</string>
+
+    <string name="select_date">날짜 선택</string>
+    <string name="year">년</string>
+    <string name="month">월</string>
+    <string name="day">DAY</string>
 </resources>

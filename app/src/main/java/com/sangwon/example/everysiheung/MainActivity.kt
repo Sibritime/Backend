@@ -2,10 +2,7 @@ package com.sangwon.example.everysiheung
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
+import android.os.*
 import android.util.Base64
 import android.util.Log
 import android.view.MenuItem
@@ -25,6 +22,7 @@ import com.sangwon.example.everysiheung.adapter.ViewPagerAdapter
 import com.sangwon.example.everysiheung.databinding.ActivityMainBinding
 import com.sangwon.example.everysiheung.model.CalendarDateModel
 import com.sangwon.example.everysiheung.utils.HorizontalItemDecoration
+import com.sangwon.example.everysiheung.view.activity.DiaryActivity
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -186,7 +184,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.search -> {
-                    // 아이템 3에 대한 동작
                     false
                 }
                 R.id.list -> {
@@ -197,6 +194,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 else -> false
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 300) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) finish() else finish()
             }
         }
     }
@@ -231,7 +237,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 intent.putExtra("Role","BookMarks" )
                 startActivity(intent)
             }
-            R.id.diary-> Toast.makeText(this,"menu_item3 실행",Toast.LENGTH_SHORT).show()
+            R.id.diary-> startActivity(Intent(this@MainActivity, DiaryActivity::class.java))
         }
         return false
     }
@@ -345,7 +351,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setUpClickListener() {
         binding.ivCalendarNext.setOnClickListener {
             if (cal.get(Calendar.MONTH) + 1 == 12 && cal.get(Calendar.YEAR) == 2023) {
-                Toast.makeText(applicationContext, "2024년 행사는 확정되지 않았습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "현재 월로 이동합니다.", Toast.LENGTH_SHORT).show()
                 cal.set(Calendar.MONTH, currentDate.get(Calendar.MONTH))
                 setUpCalendar()
             }

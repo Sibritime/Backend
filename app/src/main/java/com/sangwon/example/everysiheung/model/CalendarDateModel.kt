@@ -15,7 +15,7 @@ data class CalendarDateModel(var data: Date, var isSelected: Boolean = false) {
             return cal[Calendar.DAY_OF_MONTH].toString()
         }
 
-    val calendarMonth: String
+    var calendarMonth: String = ""
         get() {
             val cal = Calendar.getInstance()
             cal.time = data

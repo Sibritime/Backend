@@ -60,7 +60,7 @@ class PostUpActivity : AppCompatActivity() {
             // 버튼 누르면 객체를 만들어
             val title = findViewById<EditText>(R.id.titleText).text.toString()
             val date =
-                findViewById<EditText>(R.id.startDate).text.toString() + findViewById<EditText>(R.id.endDate).text.toString()
+                findViewById<Button>(R.id.startDate).text.toString() + findViewById<Button>(R.id.endDate).text.toString()
             val locate = findViewById<EditText>(R.id.locateText).text.toString()
             val targets = findViewById<RadioGroup>(R.id.groupTarget)
             val target = if (findViewById<RadioButton>(R.id.anybody).isChecked) {
@@ -76,7 +76,7 @@ class PostUpActivity : AppCompatActivity() {
             val subscript = findViewById<Spinner>(R.id.subscriptSpinner).selectedItem.toString()
             val image = findViewById<EditText>(R.id.imageText).text.toString()
             val time =
-                findViewById<EditText>(R.id.startTime).text.toString() + findViewById<EditText>(R.id.endTime).text.toString()
+                findViewById<Button>(R.id.startTime).text.toString() + findViewById<Button>(R.id.endTime).text.toString()
             var bookmark: Int = 0
 
             val Post = Posts(// 된겨?
@@ -137,26 +137,7 @@ class PostUpActivity : AppCompatActivity() {
             // finish()
         }
 
-//        //시험
-//        //FirebaseStorage 인스턴스를 생성
-//        val firebaseStorage = FirebaseStorage.getInstance()
-//        var imagePath = "images/1685512146006.jpg"
-//        val storageReference1 = firebaseStorage.getReference().child(imagePath)
-//
-//        var imageCheck = findViewById<ImageView>(R.id.imageView)
-//
-//        storageReference1.downloadUrl.addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                // Glide 이용하여 이미지뷰에 로딩
-//                Glide.with(this)
-//                    .load(task.result)
-//                    .override(250, 300)
-//                    .into(imageCheck)
-//            } else {
-//                // URL을 가져오지 못하면 토스트 메세지
-//                Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
-//            }
-//        }
+
 
     }
 

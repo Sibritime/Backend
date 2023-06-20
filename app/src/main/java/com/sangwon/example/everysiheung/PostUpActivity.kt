@@ -105,23 +105,12 @@ class PostUpActivity : AppCompatActivity() {
                     Log.w("db", "Error adding document", e)
                 }
 
+            var outIntent = Intent(applicationContext, PostUpActivity::class.java)
+            setResult(RESULT_OK, outIntent)
 
+            finish()
         }
 
-        findViewById<Button>(R.id.readBtn).setOnClickListener {
-            db.collection("Posts")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        val title = document.getString("title")
-                        Log.d("PostInfo", "title : $title")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d("PostInfoFailed", "Error getting documents: ", exception)
-                }
-        }
 
         //지도 버튼 누를 때
         findViewById<ImageButton>(R.id.mapBtn).setOnClickListener {

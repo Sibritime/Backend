@@ -1,9 +1,11 @@
 package com.sangwon.example.everysiheung
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
 import android.widget.ListView
 import android.widget.Toast
 import androidx.constraintlayout.widget.Placeholder
@@ -36,7 +38,7 @@ class PostBoardActivity : AppCompatActivity() {
 
         findViewById<FloatingActionButton>(R.id.posting).setOnClickListener {
             val intent: Intent = Intent(this, PostUpActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, 0)
         }
         //어떤 함수 사용해야 하는지 정하기
         val intent = intent
@@ -218,4 +220,17 @@ class PostBoardActivity : AppCompatActivity() {
     fun addPostListTemp(){
 
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 0) {
+                recreate()
+                Log.e("recreate","True")
+            }
+
+
+
+
+            }
+            }
 }

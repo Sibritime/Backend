@@ -1,21 +1,16 @@
 package com.sangwon.example.everysiheung.adapter
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.text.Editable
-import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sangwon.example.everysiheung.R
-import com.sangwon.example.everysiheung.database.Diary
 import com.sangwon.example.everysiheung.database.DiaryDao
+import com.sangwon.example.everysiheung.database.DiaryDatabase
 import com.sangwon.example.everysiheung.model.CalendarDateModel
 import com.sangwon.example.everysiheung.view.activity.DiaryActivity
 import java.text.SimpleDateFormat
@@ -27,7 +22,6 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
 
     private val list = ArrayList<CalendarDateModel>()
     private val current = Calendar.getInstance(Locale.KOREAN)
-    private lateinit var mDiaryDao: DiaryDao
 
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(calendarDateModel: CalendarDateModel) {
@@ -35,7 +29,6 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
             val calendarDate = itemView.findViewById<TextView>(R.id.tv_calendar_date) // 일
             val calendarText = itemView.findViewById<TextView>(R.id.tv_calendar_text)
             val cardView = itemView.findViewById<CardView>(R.id.card_calendar)
-
 
             current.get(Calendar.MONTH) + 1 == 12
 
@@ -125,6 +118,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
             calendarText.setTextColor(ContextCompat.getColor(itemView.context, R.color.teal_700))
 
 
+
             cardView.setOnClickListener {
                 val itemCal: Calendar = Calendar.getInstance()
                 itemCal.set(Calendar.DAY_OF_MONTH, list[adapterPosition].calendarDate.toInt())
@@ -165,7 +159,4 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         notifyDataSetChanged()
     }
 
-    fun getImageInBitmap(image: ByteArray): Bitmap? {
-        return BitmapFactory.decodeByteArray(image, 0, image.size)
-    }
 }

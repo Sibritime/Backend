@@ -23,7 +23,9 @@
             android:id="@+id/ivLogo"
             android:layout_width="387dp"
             android:layout_height="61dp"
-            android:src="@drawable/every_siheung"/>
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/every_siheung" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigationView"
@@ -50,10 +52,10 @@
 
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/posterViewpager"
-                        android:layout_width="378dp"
-                        android:layout_height="497dp"
+                        android:layout_width="377dp"
+                        android:layout_height="498dp"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="88dp"
+                        android:layout_marginBottom="16dp"
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -69,10 +71,9 @@
                         android:paddingTop="4dp"
                         android:paddingRight="8dp"
                         android:paddingBottom="4dp"
+                        app:layout_constraintEnd_toEndOf="@+id/posterViewpager"
+                        app:layout_constraintStart_toStartOf="@+id/posterViewpager"
                         app:layout_constraintBottom_toTopOf="@+id/posterViewpager"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="parent"
                         app:layout_constraintVertical_bias="0.907">
 
                         <TextView

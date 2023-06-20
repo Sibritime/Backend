@@ -9,9 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.common.util.Utility
@@ -69,11 +67,15 @@ class SignUpActivity : AppCompatActivity(),View. OnClickListener {
                                 if (user != null) {
                                     Log.d("login", "사용자 정보 요청 성공 : $user")
                                     writeNewUser(user.id.toString(), user.kakaoAccount?.profile?.nickname.toString())
-                                }else if (error != null) {
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    intent.putExtra("name", user.kakaoAccount?.profile?.nickname.toString())
+                                    intent.putExtra("profileImg", user.kakaoAccount?.profile?.profileImageUrl.toString())
+                                    startActivity(intent)
+                                } else if (error != null) {
                                     Log.e("login", "사용자 정보 요청 실패 $error")
                                 }
                             }
-                            nextMainActivity()
+                            //nextMainActivity()
                         }
                     }
                 } else {

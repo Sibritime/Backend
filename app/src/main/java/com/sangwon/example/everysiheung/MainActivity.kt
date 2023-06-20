@@ -1,6 +1,8 @@
 package com.sangwon.example.everysiheung
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.*
 import android.util.Base64
@@ -8,8 +10,11 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.browser.trusted.sharing.ShareTarget.FileFormField.KEY_NAME
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -20,6 +25,7 @@ import com.sangwon.example.everysiheung.adapter.CalendarAdapter
 import com.sangwon.example.everysiheung.adapter.ImageData
 import com.sangwon.example.everysiheung.adapter.ViewPagerAdapter
 import com.sangwon.example.everysiheung.databinding.ActivityMainBinding
+import com.sangwon.example.everysiheung.databinding.ToolbarHeaderBinding
 import com.sangwon.example.everysiheung.model.CalendarDateModel
 import com.sangwon.example.everysiheung.utils.HorizontalItemDecoration
 import com.sangwon.example.everysiheung.view.activity.DiaryActivity
@@ -98,11 +104,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return idolList
     }
 
-    //추가한 내용
-    /*private fun getIdolList(): ArrayList<String> {
-        //return arrayListOf<Int>(R.drawable.pic1, R.drawable.pic2, R.drawable.pic3)
-        return arrayListOf<String>("https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c6111c4314f80b6b967aa9fccff04d2e1&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c42076e7d19cdb7974115393f2eb97c1a&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c7564eebd039cc288b9ce14bedce381ab&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin")
-    }*/
+    private val PREF_NAME = "MyPrefs"
+    private val KEY_NAME = "name"
+
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,8 +115,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         // 네비게이션 바
-        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24_white)
@@ -119,6 +126,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
+
+
+        /**
+         * 상단 네비게이션바 헤더 부분에 이름 출력 및 저장
+         */
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val headerView = navigationView.getHeaderView(0)
+        val headerTextView = headerView.findViewById<TextView>(R.id.text_name)
+        val name = intent.getStringExtra("name")
+
+        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val savedName = sharedPreferences.getString(KEY_NAME, "")
+        if (name != null) {
+            val editor = sharedPreferences.edit()
+            editor.putString(KEY_NAME, name)
+            editor.apply()
+        }
+        if (savedName != null && savedName.isNotEmpty()) {
+            headerTextView.setText(savedName)
+        } else {
+            headerTextView.setText(name)
+        }
 
 
         // 게시판 등록 버튼 그냥 이동만 담당
@@ -257,6 +286,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
     }
+
+
 
     private fun autoScrollStart(intervalTime: Long) {
         myHandler.removeMessages(0) // 이거 안하면 핸들러가 1개, 2개, 3개 ... n개 만큼 계속 늘어남

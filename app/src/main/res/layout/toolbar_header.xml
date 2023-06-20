@@ -9,10 +9,10 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/text_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="홍길동"
+        android:text="게스트"
         android:textSize="50dp" />
 
 </LinearLayout>

@@ -25,6 +25,7 @@
             android:layout_gravity="center"
             android:letterSpacing="0.2"
             android:text="@string/diary_date"
+            android:textSize="20dp"
             android:textAlignment="center"
             android:textColor="#8D6E63" />
 

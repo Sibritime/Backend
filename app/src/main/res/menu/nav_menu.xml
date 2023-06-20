@@ -17,6 +17,6 @@
             android:id="@+id/diary"
             android:icon="@drawable/baseline_article_24"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            android:title="다이어리" />
+            android:title="오늘의 다이어리" />
     </group>
 </menu>

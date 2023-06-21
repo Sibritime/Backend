@@ -23,6 +23,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.everysiheung.PosterActivity
+import com.kakao.sdk.user.UserApiClient
 
 
 class PostListViewAdapter: BaseAdapter() {
@@ -42,6 +43,15 @@ class PostListViewAdapter: BaseAdapter() {
 
     override fun getView(p0: Int, view: View?, parent: ViewGroup?): View {
         val context = parent?.context
+        lateinit var uid:String
+        // 카카오 사용자 ID 요청
+        UserApiClient.instance.me { user, error ->
+            if (error != null) {
+                // 사용자 정보 요청 실패
+            } else if (user != null) {
+                uid = user.id.toString()
+            }
+        }
 
         val convertView:View = if(view==null) {
             val inflater:LayoutInflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -75,7 +85,7 @@ class PostListViewAdapter: BaseAdapter() {
             val emptyData = hashMapOf<String, Any>() // 빈 데이터 맵
             var documentId = item.id
             var Mypage = db.collection("MyPage")
-                .document("${Firebase.auth.currentUser?.uid}") //없으면 만드는 걸까?
+                .document("${uid}") //없으면 만드는 걸까?
             //북마크 추가
             if(isChecked == true) {
                 //Mypage 컬렉션 안에 uid 문서 안에 BookMarks 컬렉션안에 있는 북마크 문서(게시물 ID)

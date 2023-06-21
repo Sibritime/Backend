@@ -34,6 +34,15 @@ class PostBoardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_board)
 
+        // 카카오 사용자 ID 요청
+        UserApiClient.instance.me { user, error ->
+            if (error != null) {
+                // 사용자 정보 요청 실패
+            } else if (user != null) {
+                uid = user.id.toString()
+            }
+        }
+
         listview = findViewById(R.id.listview)
         adapter = PostListViewAdapter()
         listview.adapter = adapter
@@ -72,14 +81,7 @@ class PostBoardActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // 카카오 사용자 ID 요청
-        UserApiClient.instance.me { user, error ->
-            if (error != null) {
-                // 사용자 정보 요청 실패
-            } else if (user != null) {
-                uid = user.id.toString()
-            }
-        }
+
     }
 
     private fun addPostList() {

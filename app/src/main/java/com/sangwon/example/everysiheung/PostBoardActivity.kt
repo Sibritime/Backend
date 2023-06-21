@@ -5,7 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageButton
+import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.Toast
 import androidx.constraintlayout.widget.Placeholder
@@ -50,10 +50,13 @@ class PostBoardActivity : AppCompatActivity() {
             BookMarksList()
         }
 
+        listview.onItemClickListener = AdapterView.OnItemClickListener(){ adapterView, view, i, l ->
+            Toast.makeText(this, "toaofksdfk", Toast.LENGTH_SHORT).show()
+        }
         listview.setOnItemClickListener { adapterView, view, i, l ->
             val item = adapterView.getItemAtPosition(i) as PostItem
 
-            val intent:Intent = Intent(applicationContext, PosterActivity::class.java)
+            val intent = Intent(applicationContext, PosterActivity::class.java)
 
             intent.putExtra("title", item.title)
             intent.putExtra("location", item.location)

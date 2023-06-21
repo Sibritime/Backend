@@ -221,7 +221,6 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:layout_below="@id/timePicker"
                         android:background="#c0c0c0" />
 
                     <LinearLayout
@@ -264,7 +263,6 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:layout_below="@id/timePicker"
                         android:background="#c0c0c0" />
 
                     <LinearLayout
@@ -307,7 +305,6 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:layout_below="@id/timePicker"
                         android:background="#c0c0c0" />
 
                     <LinearLayout

@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.bumptech.glide.Glide
 
 class PosterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +28,10 @@ class PosterActivity : AppCompatActivity() {
         val src = intent.getIntExtra("post", 0)
         if(src != 0){
             val poster = ImageView(this)
-            poster.setImageResource(src)
+
+            Glide.with(this)
+                .load(src)
+                .into(poster)
             val imageContainer: RelativeLayout = findViewById<RelativeLayout>(R.id.imageContainer)
             imageContainer.addView(poster)
         }

@@ -257,6 +257,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 if (Environment.isExternalStorageManager()) finish() else finish()
             }
         }
+=======
+        binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH)-2)
+>>>>>>> 다이어리 현재 날짜가 화면 중간에 오도록 수정
     }
 
     /**

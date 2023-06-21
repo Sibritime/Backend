@@ -94,15 +94,27 @@ class DiaryActivity : AppCompatActivity() {
         iv_photo.setOnClickListener { pickFromGallery() }
 
         btn_save_back.setOnClickListener {
+            val diaryRecord = isExist()
+
             if (diaryRecord == null) {
-                insertRecord()
-                Toast.makeText(applicationContext, "저장 완료", Toast.LENGTH_SHORT).show()
-            } else {
+                if (iv_photo.drawable == null && et_diary.text.toString().isEmpty()) {
+                    finish()
+                    startActivity(Intent(this, MainActivity::class.java))
+                } else {
+                    if (iv_photo.drawable != null || et_diary.text.toString().isNotEmpty()) {
+                        insertRecord()
+                        finish()
+                        startActivity(Intent(this, MainActivity::class.java))
+                    }
+                }
+            } else if (diaryRecord.text != et_diary.text.toString() || isImgUpdated) {
                 updateRecord()
-                Toast.makeText(applicationContext, "저장 완료", Toast.LENGTH_SHORT).show()
+                finish()
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                finish()
+                startActivity(Intent(this, MainActivity::class.java))
             }
-            finish()
-            startActivity(Intent(this, MainActivity::class.java))
         }
 
         btn_diary_options?.setOnClickListener(View.OnClickListener { v: View? ->
@@ -121,17 +133,29 @@ class DiaryActivity : AppCompatActivity() {
      * 뒤로가기 버튼으로 diaryActivity 나가도 저장
      */
     override fun onBackPressed() {
-        super.onBackPressed()
         val diaryRecord = isExist()
 
         if (diaryRecord == null) {
-            insertRecord()
-        } else {
+            if (iv_photo.drawable == null && et_diary.text.toString().isEmpty()) {
+                finish()
+                startActivity(Intent(this, MainActivity::class.java))
+            } else {
+                if (iv_photo.drawable != null || et_diary.text.toString().isNotEmpty()) {
+                    Toast.makeText(applicationContext, "저장 완료", Toast.LENGTH_SHORT).show()
+                    insertRecord()
+                    finish()
+                    startActivity(Intent(this, MainActivity::class.java))
+                }
+            }
+        } else if (diaryRecord.text != et_diary.text.toString() || isImgUpdated) {
             updateRecord()
+            finish()
+            Toast.makeText(applicationContext, "저장 완료", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, MainActivity::class.java))
+        } else {
+            finish()
+            startActivity(Intent(this, MainActivity::class.java))
         }
-        Toast.makeText(applicationContext, "저장 완료", Toast.LENGTH_SHORT).show()
-        finish()
-        startActivity(Intent(this, MainActivity::class.java))
     }
 
     /***

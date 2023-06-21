@@ -1,187 +1,319 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="50dp"
+    android:padding="14dp"
+
     tools:context=".PostUpActivity">
-
-    <EditText
-        android:id="@+id/feeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/textView6"
-        app:layout_constraintTop_toBottomOf="@+id/targetText" />
-
-    <EditText
-        android:id="@+id/subscriptText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toBottomOf="@+id/feeText" />
-
-    <EditText
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="48dp"
-        android:text="Title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/imageText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/subscriptText" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
-        android:text="locate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
-        android:text="Target"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
-        android:text="Fee"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
-        android:text="Subscript"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
-        android:text="Image"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_marginLeft="50dp"
-        android:text="date"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-    <EditText
-        android:id="@+id/dateText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/titleText" />
-
-    <EditText
-        android:id="@+id/locateText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/dateText" />
-
-    <EditText
-        android:id="@+id/targetText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintStart_toEndOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/locateText" />
 
     <Button
         android:id="@+id/makePostBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="등록하기"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageText" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:text="등록하기" />
 
     <Button
         android:id="@+id/readBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="64dp"
-        android:text="읽기"
-        app:layout_constraintEnd_toStartOf="@+id/makePostBtn"
-        app:layout_constraintTop_toBottomOf="@+id/imageText" />
+        android:layout_alignParentBottom="true"
+        android:text="읽기" />
 
-    <Button
-        android:id="@+id/mapbtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="지도"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.395"
-        app:layout_constraintStart_toEndOf="@+id/locateText"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="0dp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/makePostBtn">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="10dp">
 
-    <Button
-        android:id="@+id/ImgBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="이미지 등록"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.562"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="0dp" />
+            <EditText
+                android:id="@+id/titleText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:textSize="18dp"
+                android:hint="제목"/>
 
+            <Spinner
+                android:id="@+id/subscriptSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleText"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="100dp" />
 
+            <TextView
+                android:id="@+id/textSubscript"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:layout_below="@id/titleText"
+                android:textSize="18dp"
+                android:text="행사 종류"
+                android:textColor="#000"
+                android:layout_marginBottom="5dp" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_below="@id/textSubscript"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/textDate"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_below="@id/textSubscript"
+                android:gravity="center_vertical"
+                android:textSize="18dp"
+                android:text="행사 기간"
+                android:textColor="#000" />
+
+            <RelativeLayout
+                android:id="@+id/datePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textDate"
+                android:layout_marginBottom="10dp">
+
+                <!--
+                <DatePicker
+                    android:id="@+id/startDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner"/>
+
+                <DatePicker
+                    android:id="@+id/finishDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_below="@id/startDate"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner"/>
+                    -->
+
+                <Button
+                    android:id="@+id/startDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2023년 06월 10일" />
+
+                <Button
+                    android:id="@+id/endDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="2023년 06월 10일" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/startDate"
+                    android:layout_toStartOf="@id/endDate"
+                    android:gravity="center"
+                    android:textSize="30dp"
+                    android:text="-->"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_below="@id/datePicker"/>
+
+            <TextView
+                android:id="@+id/textTime"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_below="@id/datePicker"
+                android:gravity="center_vertical"
+                android:textSize="18dp"
+                android:text="운영 시간"
+                android:textColor="#000" />
+
+            <RelativeLayout
+                android:id="@+id/timePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textTime"
+                android:layout_marginBottom="12dp">
+
+                <!--
+                <DatePicker
+                    android:id="@+id/startDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner"/>
+
+                <DatePicker
+                    android:id="@+id/finishDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_below="@id/startDate"
+                    android:calendarViewShown="false"
+                    android:datePickerMode="spinner"/>
+                    -->
+
+                <Button
+                    android:id="@+id/startTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="오전 8:00" />
+
+                <Button
+                    android:id="@+id/endTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="오후 12:00" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/startTime"
+                    android:layout_toStartOf="@id/endTime"
+                    android:gravity="center"
+                    android:textSize="30dp"
+                    android:text="-->"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#c0c0c0"
+                android:layout_below="@id/timePicker"/>
+
+            <TextView
+                android:id="@+id/textTarget"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:layout_below="@id/timePicker"
+                android:layout_marginTop="12dp"
+                android:textColor="#000"
+                android:textSize="18dp"
+                android:text="대상" />
+
+            <TextView
+                android:id="@+id/textFee"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:layout_below="@id/textTarget"
+                android:textSize="18dp"
+                android:text="요금"
+                android:textColor="#000" />
+
+            <ImageButton
+                android:id="@+id/mapBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/textFee"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ic_baseline_location_on_24"
+                tools:ignore="MissingConstraints" />
+
+            <EditText
+                android:id="@+id/feeText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textTarget"
+                android:layout_toStartOf="@id/mapBtn"
+               android:layout_toEndOf="@id/textFee"
+                android:layout_marginStart="10dp"
+                android:textAlignment="textStart"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/locateText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textFee"
+                android:layout_toStartOf="@id/mapBtn"
+                android:hint="행사 장소"/>
+
+            <RadioGroup
+                android:id="@+id/groupTarget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/textTarget"
+                android:layout_alignBottom="@id/textTarget"
+                android:layout_toEndOf="@id/textTarget"
+                android:gravity="center"
+                android:layout_marginHorizontal="12dp"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/anybody"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="아무나"/>
+                <RadioButton
+                    android:id="@+id/adult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="성인"/>
+                <RadioButton
+                    android:id="@+id/youth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="청년"/>
+                <RadioButton
+                    android:id="@+id/child"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="어린이"/>
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignEnd="@id/feeText"
+                android:gravity="center_vertical"
+                android:layout_below="@id/groupTarget"
+                android:textSize="22dp"
+                android:text="₩"
+                android:textColor="#000" />
+
+            <ImageButton
+                android:id="@+id/imgBtn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/mapBtn"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/baseline_image_24"
+                tools:ignore="MissingConstraints" />
+
+            <EditText
+                android:id="@+id/imageText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/imgBtn"
+                android:layout_below="@id/mapBtn"
+                android:layout_marginVertical="10dp"
+                android:hint="행사 포스터"/>
+
+            <EditText
+                android:id="@+id/contentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageText"
+                android:layout_alignParentEnd="true"
+                android:inputType="textMultiLine"
+                android:lines="8"
+                android:minLines="10"
+                android:maxLines="14"
+                android:scrollbars="vertical"
+                android:hint="게시물 내용을 작성해주세요"
+                android:gravity="top"
+                android:background="#eee"/>
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

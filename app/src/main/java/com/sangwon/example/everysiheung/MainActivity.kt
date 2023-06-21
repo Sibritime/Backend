@@ -1,21 +1,21 @@
 package com.sangwon.example.everysiheung
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
+import android.os.*
 import android.util.Base64
 import android.util.Log
-import android.view.Menu
+import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
+import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.browser.trusted.sharing.ShareTarget.FileFormField.KEY_NAME
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -26,8 +26,10 @@ import com.sangwon.example.everysiheung.adapter.CalendarAdapter
 import com.sangwon.example.everysiheung.adapter.ImageData
 import com.sangwon.example.everysiheung.adapter.ViewPagerAdapter
 import com.sangwon.example.everysiheung.databinding.ActivityMainBinding
+import com.sangwon.example.everysiheung.databinding.ToolbarHeaderBinding
 import com.sangwon.example.everysiheung.model.CalendarDateModel
 import com.sangwon.example.everysiheung.utils.HorizontalItemDecoration
+import com.sangwon.example.everysiheung.view.activity.DiaryActivity
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -36,14 +38,7 @@ import java.util.*
 private val MIN_SCALE = 0.85f // 뷰가 몇 퍼센트로 줄어들 것인지
 private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
 
-val monthUrlMap = mapOf( // 1 ~ 6월까지 행사 일정표
-    1 to "https://blog.naver.com/csiheung/222970240186",
-    2 to "https://blog.naver.com/csiheung/223003096138",
-    3 to "https://blog.naver.com/csiheung/223032419482",
-    4 to "https://blog.naver.com/siheungblog?Redirect=Log&logNo=223065558869&from=postView",
-    5 to "https://blog.naver.com/PostView.naver?blogId=siheungblog&logNo=223087428882&categoryNo=90&parentCategoryNo=71&viewDate=&currentPage=&postListTopCurrentPage=&isAfterWrite=true",
-    6 to "https://blog.naver.com/siheungblog/223116423530"
-)
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -62,6 +57,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var navigationView: NavigationView
     private lateinit var drawerLayout: DrawerLayout
+
+    private val PREF_NAME = "MyPrefs"
+    private val KEY_NAME = "name"
+
+    private lateinit var sharedPreferences: SharedPreferences
+
+    private var backButtonPressedOnce = false
+
+    /**
+     * 메인화면에서 종료하는 함수.
+     */
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (backButtonPressedOnce) {
+                finishAffinity() // 모든 액티비티 종료
+            } else {
+                backButtonPressedOnce = true
+                Toast.makeText(this, "뒤로 버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show()
+                Handler().postDelayed({ backButtonPressedOnce = false }, 2000)
+            }
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
 
     /**
      * (230602기준) 6월 포스터 표시됨. 이미지 데이터 추가해서 포스터 추가 가능.
@@ -110,11 +129,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return idolList
     }
 
-    //추가한 내용
-    /*private fun getIdolList(): ArrayList<String> {
-        //return arrayListOf<Int>(R.drawable.pic1, R.drawable.pic2, R.drawable.pic3)
-        return arrayListOf<String>("https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c6111c4314f80b6b967aa9fccff04d2e1&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c42076e7d19cdb7974115393f2eb97c1a&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin","https://www.siheung.go.kr/common/imgView.do?attachId=148c15d19a358e7fd81799db36f4771c7564eebd039cc288b9ce14bedce381ab&fileSn=f9a1967c526603d17ab488b9d2747cda&mode=origin")
-    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,8 +136,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         // 네비게이션 바
-        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24_white)
@@ -131,6 +147,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
+
+
+        /**
+         * 상단 네비게이션바 헤더 부분에 이름 출력 및 저장
+         */
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val headerView = navigationView.getHeaderView(0)
+        val headerTextView = headerView.findViewById<TextView>(R.id.text_name)
+        val name = intent.getStringExtra("name")
+
+        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+        val savedName = sharedPreferences.getString(KEY_NAME, "")
+        if (name != null && name.length >= 2) {
+            val editor = sharedPreferences.edit()
+            editor.putString(KEY_NAME, name)
+            editor.apply()
+        }
+        if (savedName != null && savedName.isNotEmpty()) {
+            headerTextView.setText(savedName)
+        } else {
+            headerTextView.setText(name)
+        }
 
 
         // 게시판 등록 버튼 그냥 이동만 담당
@@ -196,12 +234,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.search -> {
-                    // 아이템 3에 대한 동작
                     false
                 }
                 R.id.list -> {
-                    //startActivity(Intent(this, PostUpActivity::class.java))
-                    startActivity(Intent(this, PostListActivity::class.java))
+                    // intent를 통해 돌아가는 함수를 달리함
+                    val intent = Intent(this, PostBoardActivity::class.java)
+                    intent.putExtra("Role","Posts" )
+                    startActivity(intent)
                     false
                 }
                 else -> false
@@ -209,6 +248,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH)-2)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 300) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) finish() else finish()
+            }
+        }
     }
 
     /**
@@ -230,16 +278,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.post-> {
-                Toast.makeText(this,"menu_item1 실행",Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, PostListActivity::class.java))
-                true
+                val intent = Intent(this, PostBoardActivity::class.java)
+                intent.putExtra("Role","Posts" )
+                startActivity(intent)
+
+                return true
             }
-            R.id.bookmark-> Toast.makeText(this,"menu_item2 실행",Toast.LENGTH_SHORT).show()
-            R.id.diary-> Toast.makeText(this,"menu_item3 실행",Toast.LENGTH_SHORT).show()
+            R.id.bookmark-> {
+                val intent = Intent(this, PostBoardActivity::class.java)
+                intent.putExtra("Role","BookMarks" )
+                startActivity(intent)
+            }
+            R.id.diary-> startActivity(Intent(this@MainActivity, DiaryActivity::class.java))
         }
         return false
     }
-
 
     fun getKeyHash() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -256,6 +309,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
     }
+
+
+
     private fun autoScrollStart(intervalTime: Long) {
         myHandler.removeMessages(0) // 이거 안하면 핸들러가 1개, 2개, 3개 ... n개 만큼 계속 늘어남
         myHandler.sendEmptyMessageDelayed(0, intervalTime) // intervalTime 만큼 반복해서 핸들러를 실행하게 함
@@ -270,6 +326,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             super.handleMessage(msg)
 
             if(msg.what == 0) {
+                currentPosition = binding.posterViewpager.currentItem
                 binding.posterViewpager.setCurrentItem(++currentPosition, true) // 다음 페이지로 이동
                 autoScrollStart(intervalTime) // 스크롤을 계속 이어서 한다.
             }
@@ -287,7 +344,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onPause()
         autoScrollStop()
     }
-
 
     private fun moveTable() {
         val url = "https://www.siheung.go.kr/event/main.do?stateFlag=list"
@@ -349,7 +405,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun setUpClickListener() {
         binding.ivCalendarNext.setOnClickListener {
             if (cal.get(Calendar.MONTH) + 1 == 12 && cal.get(Calendar.YEAR) == 2023) {
-                Toast.makeText(applicationContext, "2024년 행사는 확정되지 않았습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "현재 월로 이동합니다.", Toast.LENGTH_SHORT).show()
                 cal.set(Calendar.MONTH, currentDate.get(Calendar.MONTH))
                 setUpCalendar()
             }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -26,7 +26,7 @@
         <activity
             android:name=".PosterActivity"
             android:exported="false" />
-        <activity android:name=".PostListActivity" />
+        <activity android:name=".PostBoardActivity" />
         <activity
             android:name=".MapsActivity"
             android:exported="false" />
@@ -36,6 +36,9 @@
         <activity
             android:name=".SignUpActivity"
             android:exported="false" />
+        <activity
+            android:name="com.sangwon.example.everysiheung.view.activity.DiaryActivity"/>
+
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -67,6 +70,20 @@
             android:name=".MainActivity"
             android:exported="true" />
         <activity android:name=".TableActivity" />
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
+                <data android:host="oauth"
+                    android:scheme="kakao3c11d37a2f25b21423e44277c0af3700" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

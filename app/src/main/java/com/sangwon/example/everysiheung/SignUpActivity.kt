@@ -1,96 +1,89 @@
 package com.sangwon.example.everysiheung
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
+import android.view.View
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.ClientError
+import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.common.util.Utility
+import com.kakao.sdk.user.UserApiClient
+import com.sangwon.example.everysiheung.databinding.ActivitySignUpBinding
 
 
-class SignUpActivity : AppCompatActivity() {
-    private lateinit var auth: FirebaseAuth
+class SignUpActivity : AppCompatActivity(),View. OnClickListener {
+    private lateinit var database: DatabaseReference
+    data class User(val userId: String? = null, val userNickname: String? = null) { }
+    private val binding by lazy { ActivitySignUpBinding.inflate(layoutInflater) }
+    private val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+        if (token != null) {
+            Log.d("login", "로그인 성공 ${token.accessToken}")
+            //nextMainActivity()
+        }else if (error != null) {
+            Log.e("login", "로그인 실패 $error")
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)
+        Log.d("login", "keyhash : ${Utility.getKeyHash(this)}")
 
-        // Initialize Firebase Auth
-        auth = Firebase.auth
+        setContentView(binding.root)
 
-        findViewById<Button>(R.id.SignInBtn).setOnClickListener {
-            singUp()
-            finish()
-        }
-
-        findViewById<Button>(R.id.LoginBtn).setOnClickListener {
-            login()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish() //finish()도 해줘야 하는구나 메모리 정리 느낌??
-        }
+        binding.btnLogin.setOnClickListener(this)
     }
 
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            //reload()
-        }
+    private fun nextMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+    private fun writeNewUser(userId: String, userNickname: String) {
+        val user = User(userId, userNickname)
+        database.child("users").child(userId).setValue(user)
     }
 
-    private fun singUp() {
-        val email = findViewById<EditText>(R.id.emailEditText).text.toString()
-        val password = findViewById<EditText>(R.id.passwordEditText).text.toString()
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Toast.makeText(
-                        baseContext,
-                        "회원가입 성공",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                    val user = auth.currentUser
-                    //updateUI(user)
+    override fun onClick(v: View?) {
+        database = Firebase.database.reference
+        when (v?.id) {
+            binding.btnLogin.id -> {
+                if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+                    UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
+                        if (error != null) {
+                            Log.e("login", "로그인 실패 $error")
+                            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                                return@loginWithKakaoTalk
+                            } else {
+                                UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
+                            }
+                        } else if (token != null) {
+                            Log.d("login", "로그인 성공 ${token.accessToken}")
+                            Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
+                            UserApiClient.instance.me { user, error ->
+                                if (user != null) {
+                                    Log.d("login", "사용자 정보 요청 성공 : $user")
+                                    writeNewUser(user.id.toString(), user.kakaoAccount?.profile?.nickname.toString())
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    intent.putExtra("name", user.kakaoAccount?.profile?.nickname.toString())
+                                    intent.putExtra("profileImg", user.kakaoAccount?.profile?.profileImageUrl.toString())
+                                    startActivity(intent)
+                                } else if (error != null) {
+                                    Log.e("login", "사용자 정보 요청 실패 $error")
+                                }
+                            }
+                            //nextMainActivity()
+                        }
+                    }
                 } else {
-                    // If sign in fails, display a message to the user.
-
-                    Toast.makeText(
-                        baseContext,
-                        "회원가입 실패",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                    //updateUI(null)
+                    UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback)
                 }
             }
+        }
     }
-    private fun login() {
 
-        val email = findViewById<EditText>(R.id.emailEditText).text.toString()
-        val password = findViewById<EditText>(R.id.passwordEditText).text.toString()
 
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("로그인", "signInWithEmail:success")
-                    val user = auth.currentUser
-                    // updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("로그인", "signInWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                    // updateUI(null)
-                }
-            }
-    }
 }

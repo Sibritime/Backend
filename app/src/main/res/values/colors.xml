@@ -13,6 +13,7 @@
     <color name="orange">#FFA500</color>
     <color name="black">#000000</color>
     <color name="skyblue">#87CEEB</color>
+    <color name="background">#FCFCFC</color>
 
 
 </resources>

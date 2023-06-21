@@ -22,7 +22,7 @@ class FestivalLocationActicity : AppCompatActivity(), MapView.MapViewEventListen
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_festival_location_acticity)
+        setContentView(R.layout.activity_festival_location)
 
         mapView = MapView(this)
         val mapLayout = findViewById<RelativeLayout>(R.id.map_view)

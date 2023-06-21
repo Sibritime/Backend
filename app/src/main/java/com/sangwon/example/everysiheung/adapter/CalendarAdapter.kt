@@ -1,26 +1,24 @@
 package com.sangwon.example.everysiheung.adapter
 
 import android.content.Intent
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sangwon.example.everysiheung.R
+import com.sangwon.example.everysiheung.database.DiaryDao
+import com.sangwon.example.everysiheung.database.DiaryDatabase
 import com.sangwon.example.everysiheung.model.CalendarDateModel
+import com.sangwon.example.everysiheung.view.activity.DiaryActivity
+import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-
-
 
 
 class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateModel, position: Int) -> Unit) :
     RecyclerView.Adapter<CalendarAdapter.MyViewHolder>() {
-
 
     private val list = ArrayList<CalendarDateModel>()
     private val current = Calendar.getInstance(Locale.KOREAN)
@@ -29,9 +27,8 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         fun bind(calendarDateModel: CalendarDateModel) {
             val calendarDay = itemView.findViewById<TextView>(R.id.tv_calendar_day) // 월
             val calendarDate = itemView.findViewById<TextView>(R.id.tv_calendar_date) // 일
-            val calendartext = itemView.findViewById<TextView>(R.id.tv_calendar_text)
+            val calendarText = itemView.findViewById<TextView>(R.id.tv_calendar_text)
             val cardView = itemView.findViewById<CardView>(R.id.card_calendar)
-
 
             current.get(Calendar.MONTH) + 1 == 12
 
@@ -115,32 +112,31 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                 )
             }
 
-
             calendarDay.text = calendarDateModel.calendarDay
             calendarDate.text = calendarDateModel.calendarDate
-            calendartext.text = calendarDateModel.calendarMonth
-            calendartext.setTextColor(ContextCompat.getColor(itemView.context, R.color.teal_700))
+            //calendarText.text = calendarDateModel.calendarMonth
+            calendarText.setTextColor(ContextCompat.getColor(itemView.context, R.color.teal_700))
 
-            /*if(calendarDate.text.toString() == "16" && calendarDay.text.toString() == "화") {
-                calendartext.text = "1 건"
-                calendartext.setTextColor(ContextCompat.getColor(itemView.context, R.color.teal_700))
-            }
-            else {
-                calendartext.text = ""
-            }*/
 
 
             cardView.setOnClickListener {
-                /*if(calendarDate.text.toString() == "16" && calendarDay.text.toString() == "화") {
-                    Toast.makeText(it.context, "아이맘카페와 함께하는 [놀이한마당]", Toast.LENGTH_SHORT).show()
-                    val url = "https://blog.naver.com/siheungblog/223078932879" // 이동할 URL
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                }*/
+                val itemCal: Calendar = Calendar.getInstance()
+                itemCal.set(Calendar.DAY_OF_MONTH, list[adapterPosition].calendarDate.toInt())
+                itemCal.set(Calendar.MONTH, calendarDateModel.calendarMonth.toInt() - 1) // 현재 월로 설정
+                val date = SimpleDateFormat("yyyy.MM.dd.").format(itemCal.time)
 
-                listener.invoke(calendarDateModel, adapterPosition)
+                if ((current.get(Calendar.MONTH) + 1) < Integer.parseInt(calendarDateModel.calendarMonth) ||
+                    ((current.get(Calendar.MONTH) + 1) == Integer.parseInt(calendarDateModel.calendarMonth) &&
+                            current.get(Calendar.DAY_OF_MONTH) < Integer.parseInt(calendarDateModel.calendarDate))) {
+                    listener(calendarDateModel, adapterPosition)
+                } else {
+                    val intent = Intent(itemView.context, DiaryActivity::class.java)
+                    intent.putExtra("today", false)
+                    intent.putExtra("date", date)
+                    ContextCompat.startActivity(itemView.context, intent, null)
+                }
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -162,6 +158,5 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         list.addAll(calendarList)
         notifyDataSetChanged()
     }
-
 
 }

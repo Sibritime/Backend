@@ -1,10 +1,15 @@
 package com.sangwon.example.everysiheung.adapter
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +36,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
             val cardView = itemView.findViewById<CardView>(R.id.card_calendar)
 
             current.get(Calendar.MONTH) + 1 == 12
+
 
             if (calendarDateModel.isSelected) {
                 calendarDay.setTextColor(
@@ -114,7 +120,6 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
 
             calendarDay.text = calendarDateModel.calendarDay
             calendarDate.text = calendarDateModel.calendarDate
-            //calendarText.text = calendarDateModel.calendarMonth
             calendarText.setTextColor(ContextCompat.getColor(itemView.context, R.color.teal_700))
 
 
@@ -134,6 +139,8 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                     intent.putExtra("today", false)
                     intent.putExtra("date", date)
                     ContextCompat.startActivity(itemView.context, intent, null)
+                    // 일기 작성 후 업데이트할 아이템의 위치에 해당하는 아이템을 변경했음을 알림
+                    notifyItemChanged(adapterPosition)
                 }
             }
         }
@@ -145,8 +152,43 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         return MyViewHolder(view)
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.bind(list[position])
+        val bookIcon : String = "\uD83D\uDCD6"
+        val calendarDateModel = list[position]
+        holder.bind(calendarDateModel)
+
+        // 해당 날짜에 일기 데이터베이스가 있는지 확인
+        val date = getDateFromCalendarDateModel(calendarDateModel)
+        val isDiaryExists = isDiaryExists(holder.itemView.context, date)
+        // 일기 데이터베이스가 있는 경우
+        if (isDiaryExists) {
+            holder.itemView.findViewById<TextView>(R.id.tv_calendar_text).text = bookIcon
+        } else {
+            // 일기 데이터베이스가 없는 경우
+            holder.itemView.findViewById<TextView>(R.id.tv_calendar_text).text = ""
+        }
+    }
+
+
+    /**
+     * 해당 날짜에 일기 데이터베이스가 있는지 확인
+     */
+    private fun isDiaryExists(context: Context, date: String): Boolean {
+        val database = DiaryDatabase.getInstance(context)
+        val diaryDao = database?.diaryDao()
+        val diaryRecord = diaryDao?.findByDate(date)
+        return diaryRecord != null
+    }
+
+    /**
+     * CalendarDateModel에서 날짜를 가져옴
+     */
+    private fun getDateFromCalendarDateModel(calendarDateModel: CalendarDateModel): String {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.MONTH, calendarDateModel.calendarMonth.toInt() - 1)
+        calendar.set(Calendar.DAY_OF_MONTH, calendarDateModel.calendarDate.toInt())
+        return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.time)
     }
 
     override fun getItemCount(): Int {
@@ -158,5 +200,6 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         list.addAll(calendarList)
         notifyDataSetChanged()
     }
+
 
 }

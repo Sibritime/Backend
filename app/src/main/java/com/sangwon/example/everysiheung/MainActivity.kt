@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.*
 import android.util.Base64
 import android.util.Log
+import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
@@ -57,6 +58,30 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var navigationView: NavigationView
     private lateinit var drawerLayout: DrawerLayout
 
+    private val PREF_NAME = "MyPrefs"
+    private val KEY_NAME = "name"
+
+    private lateinit var sharedPreferences: SharedPreferences
+
+    private var backButtonPressedOnce = false
+
+    /**
+     * 메인화면에서 종료하는 함수.
+     */
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (backButtonPressedOnce) {
+                finishAffinity() // 모든 액티비티 종료
+            } else {
+                backButtonPressedOnce = true
+                Toast.makeText(this, "뒤로 버튼을 한 번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show()
+                Handler().postDelayed({ backButtonPressedOnce = false }, 2000)
+            }
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
     /**
      * (230602기준) 6월 포스터 표시됨. 이미지 데이터 추가해서 포스터 추가 가능.
      */
@@ -104,10 +129,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return idolList
     }
 
-    private val PREF_NAME = "MyPrefs"
-    private val KEY_NAME = "name"
-
-    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,7 +159,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         val savedName = sharedPreferences.getString(KEY_NAME, "")
-        if (name != null) {
+        if (name != null && name.length >= 2) {
             val editor = sharedPreferences.edit()
             editor.putString(KEY_NAME, name)
             editor.apply()

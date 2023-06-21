@@ -1,5 +1,6 @@
 package com.sangwon.example.everysiheung.view.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.sangwon.example.everysiheung.MainActivity
 import com.sangwon.example.everysiheung.R
 import com.sangwon.example.everysiheung.database.Diary
 import com.sangwon.example.everysiheung.database.DiaryDao
@@ -94,10 +96,13 @@ class DiaryActivity : AppCompatActivity() {
         btn_save_back.setOnClickListener {
             if (diaryRecord == null) {
                 insertRecord()
+                Toast.makeText(applicationContext, "저장 완료", Toast.LENGTH_SHORT).show()
             } else {
                 updateRecord()
+                Toast.makeText(applicationContext, "저장 완료", Toast.LENGTH_SHORT).show()
             }
             finish()
+            startActivity(Intent(this, MainActivity::class.java))
         }
 
         btn_diary_options?.setOnClickListener(View.OnClickListener { v: View? ->
@@ -105,6 +110,7 @@ class DiaryActivity : AppCompatActivity() {
             deleteRecord.date = dbFormat.format(date)
             mDiaryDao?.deleteDiary(deleteRecord)
             finish()
+            startActivity(Intent(this, MainActivity::class.java))
         })
 
         iv_photo.setBackground(resources.getDrawable(R.drawable.round_image_border, null))
@@ -123,7 +129,9 @@ class DiaryActivity : AppCompatActivity() {
         } else {
             updateRecord()
         }
+        Toast.makeText(applicationContext, "저장 완료", Toast.LENGTH_SHORT).show()
         finish()
+        startActivity(Intent(this, MainActivity::class.java))
     }
 
     /***
@@ -227,6 +235,7 @@ class DiaryActivity : AppCompatActivity() {
             insertRecord.image = imgInByte
         }
         mDiaryDao.insertDiary(insertRecord)
+
     }
 
     private fun updateRecord() {
@@ -243,4 +252,6 @@ class DiaryActivity : AppCompatActivity() {
             mDiaryDao.updateDiary(updateRecord)
         }
     }
+
+
 }

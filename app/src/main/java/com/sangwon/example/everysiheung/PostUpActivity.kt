@@ -23,6 +23,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import com.kakao.sdk.user.UserApiClient
 import java.util.*
 
 class PostUpActivity : AppCompatActivity() {
@@ -35,6 +36,8 @@ class PostUpActivity : AppCompatActivity() {
     // Reference to an image file in Cloud Storage
     var storageReference = storage.reference
 
+    lateinit var uid : String
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +46,16 @@ class PostUpActivity : AppCompatActivity() {
 
         val user = Firebase.auth.currentUser
 
+        // 카카오 사용자 ID 요청
+        UserApiClient.instance.me { user, error ->
+            if (error != null) {
+                // 사용자 정보 요청 실패
+            } else if (user != null) {
+                uid = user.id.toString()
+            }
+        }
         val timestamp = Timestamp.now() //Date()와 Timestamp는 서로 대입가능한 관계인가?
-        val uid = user?.uid
+
 
         val spinner: Spinner = findViewById<Spinner>(R.id.subscriptSpinner)
         ArrayAdapter.createFromResource(
@@ -81,7 +92,7 @@ class PostUpActivity : AppCompatActivity() {
             val Post = Posts(// 된겨?
                 title,
                 date, // 혹시 날짜 타입으로 변경을 해줘야 할 수도 있겠다 싶어 아니야 그냥 필요 없을 듯
-                locate, // 재밌는거
+                locate, // 재밌는거f
                 target, //no touch
                 fee, //no touch
                 subscript, // 설명 글자 수 제한 정도 추가

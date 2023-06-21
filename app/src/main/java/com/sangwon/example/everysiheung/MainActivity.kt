@@ -207,6 +207,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 else -> false
             }
         }
+
+        binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH)-2)
     }
 
     /**

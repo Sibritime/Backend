@@ -43,17 +43,6 @@ class PostUpActivity : AppCompatActivity() {
 
         val timestamp = Timestamp.now() //Date()와 Timestamp는 서로 대입가능한 관계인가?
 
-
-        val spinner: Spinner = findViewById<Spinner>(R.id.subscriptSpinner)
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.subscript_spinner,
-            android.R.layout.simple_spinner_item
-        ).also {
-            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = it
-        }
-
         findViewById<Button>(R.id.makePostBtn).setOnClickListener {
             // 버튼 누르면 객체를 만들어
             val title = findViewById<EditText>(R.id.titleText).text.toString()
@@ -70,7 +59,7 @@ class PostUpActivity : AppCompatActivity() {
                 findViewById<RadioButton>(R.id.child).text.toString()
             }
             val fee = findViewById<EditText>(R.id.feeText).text.toString()
-            val subscript = findViewById<Spinner>(R.id.subscriptSpinner).selectedItem.toString()
+            val subscript = findViewById<EditText>(R.id.subscriptText).text.toString()
             val image = findViewById<EditText>(R.id.imageText).text.toString()
             val time =
                 findViewById<Button>(R.id.startTime).text.toString() + "~" + findViewById<Button>(R.id.endTime).text.toString()

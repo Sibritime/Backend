@@ -36,7 +36,7 @@ class PostUpActivity : AppCompatActivity() {
     // Reference to an image file in Cloud Storage
     var storageReference = storage.reference
 
-    lateinit var uid : String
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,14 +46,7 @@ class PostUpActivity : AppCompatActivity() {
 
         val user = Firebase.auth.currentUser
 
-        // 카카오 사용자 ID 요청
-        UserApiClient.instance.me { user, error ->
-            if (error != null) {
-                // 사용자 정보 요청 실패
-            } else if (user != null) {
-                uid = user.id.toString()
-            }
-        }
+
         val timestamp = Timestamp.now() //Date()와 Timestamp는 서로 대입가능한 관계인가?
 
 
@@ -98,7 +91,7 @@ class PostUpActivity : AppCompatActivity() {
                 subscript, // 설명 글자 수 제한 정도 추가
                 image, // 재밌는거
                 timestamp, // 딱히 노터치
-                uid, //카톡으로 변경시 얻어오는 방법이 따로 있겠지
+                kakaouid, //카톡으로 변경시 얻어오는 방법이 따로 있겠지
                 latitude,
                 longitude,
                 time,

@@ -255,6 +255,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.search -> {
+                    val intent = Intent(this, PostBoardActivity::class.java)
+                    intent.putExtra("Role","Searching")
+                    startActivity(intent)
                     false
                 }
                 R.id.list -> {

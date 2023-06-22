@@ -33,6 +33,8 @@
             android:layout_height="wrap_content"
             app:labelVisibilityMode="labeled"
             android:background="#fff"
+            app:itemIconTint="@drawable/bottom_icon_color"
+            app:itemTextColor="@drawable/bottom_icon_color"
             app:menu="@menu/footer_menu"
             android:layout_alignParentBottom="true" />
 
@@ -53,9 +55,8 @@
                     <androidx.viewpager2.widget.ViewPager2
                         android:id="@+id/posterViewpager"
                         android:layout_width="377dp"
-                        android:layout_height="498dp"
+                        android:layout_height="301dp"
                         android:layout_marginStart="16dp"
-                        android:layout_marginBottom="16dp"
                         android:clipChildren="false"
                         android:clipToPadding="false"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -116,6 +117,7 @@
                         android:id="@+id/ivCalendarNext"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="32dp"
                         android:contentDescription="@string/cd_next"
                         android:src="@drawable/ic_next"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -173,12 +175,14 @@
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="43dp"
                         android:padding="10dp"
-                        android:background="#eee"
-                        android:textSize="30dp"
+                        android:background="@drawable/roundbar"
+                        android:textSize="17dp"
                         android:textAlignment="center"
                         android:text="오늘의 행사"
+                        android:textColor="#000"
+                        android:textStyle="bold"
                         android:elevation="5dp"/>
 
                     <LinearLayout
@@ -192,7 +196,7 @@
                             android:layout_height="wrap_content"
                             android:text="신현동 새마을부녀회 오이김치 행사"
                             android:textColor="#000"
-                            android:textSize="20dp" />
+                            android:textSize="15dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -202,7 +206,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@android:color/holo_blue_light"
+                                android:background="#7CFEACBC"
                                 android:text="문화-행사" />
 
                             <TextView
@@ -234,7 +238,7 @@
                             android:layout_height="wrap_content"
                             android:text="2023 오이도 유적 1박2일 선사캠프(3회차)"
                             android:textColor="#000"
-                            android:textSize="20dp" />
+                            android:textSize="15dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -244,7 +248,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@color/orange"
+                                android:background="#7CFEACBC"
                                 android:text="문화-행사" />
 
                             <TextView
@@ -256,6 +260,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:background="#90c0c0c0"
                                 android:text="오이도 선사 유적 공원" />
                         </LinearLayout>
                     </LinearLayout>
@@ -263,7 +268,7 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2dp"
-                        android:background="#c0c0c0" />
+                        android:background="#C0C0C0" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -276,7 +281,7 @@
                             android:layout_height="wrap_content"
                             android:text="2023 시흥 물수제비 영화제 상영작 시민투표 결과알림"
                             android:textColor="#000"
-                            android:textSize="20dp" />
+                            android:textSize="15dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -286,7 +291,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@android:color/holo_blue_light"
+                                android:background="#7CFEACBC"
                                 android:text="문화-행사" />
 
                             <TextView
@@ -318,7 +323,7 @@
                             android:layout_height="wrap_content"
                             android:text="2023년 심리지원 마음방역 서포터즈 '시소' 3기 모집"
                             android:textColor="#000"
-                            android:textSize="20dp" />
+                            android:textSize="15dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -328,7 +333,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@android:color/holo_red_light"
+                                android:background="#7CFEACBC"
                                 android:text="문화-행사" />
 
                             <TextView

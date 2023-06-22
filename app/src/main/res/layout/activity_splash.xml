@@ -8,11 +8,11 @@
     tools:context=".SplashActivity">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
         android:src="@mipmap/ic_launcher"
         android:textSize="40dp"
-        android:textColor="#ff7f00"
+        android:textColor="#F9F9F9"
         android:textStyle="bold"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"

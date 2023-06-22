@@ -5,6 +5,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import android.widget.ListView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.Query
@@ -52,10 +54,12 @@ class PostBoardActivity : AppCompatActivity() {
         else if (intent.getStringExtra("Role") == "BookMarks")
         {
             BookMarksList()
+            findViewById<Button>(R.id.posting).visibility = View.GONE
         }
         else if (intent.getStringExtra("Role") == "MyPosts")
         {
             MyPostsList()
+            findViewById<Button>(R.id.posting).visibility = View.GONE
         }
         else if (intent.getStringExtra("Role") == "Searching")
         {

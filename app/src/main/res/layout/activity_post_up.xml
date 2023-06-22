@@ -23,7 +23,7 @@
         android:layout_above="@id/makePostBtn">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="readmatch_parent"
+            android:layout_height="match_parent"
             android:paddingHorizontal="10dp">
 
             <EditText

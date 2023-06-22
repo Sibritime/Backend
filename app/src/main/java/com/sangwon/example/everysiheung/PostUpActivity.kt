@@ -1,30 +1,24 @@
 package com.sangwon.example.everysiheung
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.Spinner
-import android.widget.SpinnerAdapter
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
+import androidx.fragment.app.DialogFragment
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.kakao.sdk.user.UserApiClient
+import com.sangwon.example.everysiheung.view.DatePickerFragment
+import com.sangwon.example.everysiheung.view.TimePicker
 import java.util.*
+
 
 class PostUpActivity : AppCompatActivity() {
     val db = Firebase.firestore
@@ -82,6 +76,8 @@ class PostUpActivity : AppCompatActivity() {
                 findViewById<Button>(R.id.startTime).text.toString() + findViewById<Button>(R.id.endTime).text.toString()
             var bookmark: Int = 0
 
+
+
             val Post = Posts(// 된겨?
                 title,
                 date, // 혹시 날짜 타입으로 변경을 해줘야 할 수도 있겠다 싶어 아니야 그냥 필요 없을 듯
@@ -114,6 +110,35 @@ class PostUpActivity : AppCompatActivity() {
         }
 
 
+        // 시간 버튼 누를 때(처음 시간)
+        findViewById<Button>(R.id.startTime).setOnClickListener {
+            var intent = Intent(application, TimePicker::class.java)
+            startActivityForResult(intent, 1)
+            // finish()
+        }
+
+        // 시간 버튼 누를 때(나중 시간)
+        findViewById<Button>(R.id.endTime).setOnClickListener {
+            var intent = Intent(application, TimePicker::class.java)
+            startActivityForResult(intent, 3)
+            // finish()
+        }
+
+        // 날짜 버튼 누를 때(처음 날짜)
+        findViewById<Button>(R.id.startDate).setOnClickListener {
+            var intent = Intent(application, com.sangwon.example.everysiheung.view.DatePicker::class.java)
+            startActivityForResult(intent, 10)
+            // finish()
+        }
+
+        // 날짜 버튼 누를 때(나중 날짜)
+        findViewById<Button>(R.id.endDate).setOnClickListener {
+            var intent = Intent(application, com.sangwon.example.everysiheung.view.DatePicker::class.java)
+            startActivityForResult(intent, 11)
+            // finish()
+        }
+
+
         //지도 버튼 누를 때
         findViewById<ImageButton>(R.id.mapBtn).setOnClickListener {
             var intent = Intent(application, MapsActivity::class.java)
@@ -128,16 +153,16 @@ class PostUpActivity : AppCompatActivity() {
             // finish()
         }
 
-
-
     }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 0) {
                 latitude = data!!.getDoubleExtra("latitude", 0.0)
-                longitude = data!!.getDoubleExtra("longitude", 0.0)
+                longitude = data.getDoubleExtra("longitude", 0.0)
 
                 var geocoder = Geocoder(this)
                 var addressList = geocoder.getFromLocation(latitude, longitude, 1)
@@ -149,9 +174,26 @@ class PostUpActivity : AppCompatActivity() {
                 var imagePath = data!!.getStringExtra("imagePath")
                 findViewById<EditText>(R.id.imageText).setText("${imagePath}")
             }
-
+            else if (requestCode == 1) { // 처음 시간
+                val selectedTime = data?.getStringExtra("selectedTime")
+                findViewById<Button>(R.id.startTime).text = selectedTime
+            }
+            else if (requestCode == 3) { // 나중 시간
+                val selectedTime = data?.getStringExtra("selectedTime")
+                findViewById<Button>(R.id.endTime).text = selectedTime
+            }
+            else if (requestCode == 10) { // 처음 날짜
+                val selectedDate = data?.getStringExtra("selectedDate")
+                findViewById<Button>(R.id.startDate).text = selectedDate
+            }
+            else if (requestCode == 11) { // 나중 날짜
+                val selectedDate = data?.getStringExtra("selectedDate")
+                findViewById<Button>(R.id.endDate).text = selectedDate
+            }
         }
     }
+
+
 
     //좌표를
     fun geoCoding(address: String): Location {
@@ -170,4 +212,7 @@ class PostUpActivity : AppCompatActivity() {
             geoCoding(address) //재시도
         }
     }
+
+
 }
+

@@ -158,6 +158,7 @@
 
                 <Button
                     android:id="@+id/startTime"
+                    android:onClick="onBtnClicked"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="오전 8:00" />

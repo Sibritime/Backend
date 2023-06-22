@@ -1,4 +1,4 @@
-package com.sangwon.example.everysiheung.view.activity
+package com.sangwon.example.everysiheung.view
 
 import android.app.Activity
 import android.content.Intent

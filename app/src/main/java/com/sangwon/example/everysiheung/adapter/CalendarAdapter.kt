@@ -17,7 +17,7 @@ import com.sangwon.example.everysiheung.R
 import com.sangwon.example.everysiheung.database.DiaryDao
 import com.sangwon.example.everysiheung.database.DiaryDatabase
 import com.sangwon.example.everysiheung.model.CalendarDateModel
-import com.sangwon.example.everysiheung.view.activity.DiaryActivity
+import com.sangwon.example.everysiheung.view.DiaryActivity
 import java.text.SimpleDateFormat
 import java.util.*
 

@@ -37,7 +37,13 @@
             android:name=".SignUpActivity"
             android:exported="false" />
         <activity
-            android:name="com.sangwon.example.everysiheung.view.activity.DiaryActivity"/>
+            android:name="com.sangwon.example.everysiheung.view.TimePicker"
+            android:exported="false" />
+        <activity
+            android:name="com.sangwon.example.everysiheung.view.DatePicker"
+            android:exported="false" />
+        <activity
+            android:name="com.sangwon.example.everysiheung.view.DiaryActivity"/>
 
         <!--
              TODO: Before you run your application, you need a Google Maps API key.

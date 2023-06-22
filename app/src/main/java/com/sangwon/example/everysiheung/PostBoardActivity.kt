@@ -5,10 +5,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageButton
-import android.widget.AdapterView
+import android.view.View
+import android.widget.Button
 import android.widget.ListView
-import android.widget.Toast
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -61,10 +60,12 @@ class PostBoardActivity : AppCompatActivity() {
         else if (intent.getStringExtra("Role") == "BookMarks")
         {
             BookMarksList()
+            findViewById<Button>(R.id.posting).visibility = View.GONE
         }
         else if (intent.getStringExtra("Role") == "MyPosts")
         {
             MyPostsList()
+            findViewById<Button>(R.id.posting).visibility = View.GONE
         }
 
 

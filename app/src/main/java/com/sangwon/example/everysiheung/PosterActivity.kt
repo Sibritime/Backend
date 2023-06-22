@@ -1,17 +1,13 @@
 package com.sangwon.example.everysiheung
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.sangwon.example.everysiheung.model.PostItem
-import java.net.URI
 
 class PosterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

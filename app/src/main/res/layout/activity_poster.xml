@@ -53,16 +53,26 @@
         android:layout_below="@id/startDate"
         android:text=""/>
 -->
-    <RelativeLayout
-        android:id="@+id/imageContainer"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/startTime">
-    </RelativeLayout>
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/imageContainer"
-        android:text="일단은 아무 내용도 없지롱"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:id="@+id/imageContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/startTime">
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/imageContainer"
+                android:text="일단은 아무 내용도 없지롱"/>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

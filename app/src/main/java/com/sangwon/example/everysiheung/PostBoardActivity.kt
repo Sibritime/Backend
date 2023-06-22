@@ -104,7 +104,7 @@ class PostBoardActivity : AppCompatActivity() {
                     imagePath = "images/default.png"
                 }
 
-                val storageReference = firebaseStorage.getReference().child(imagePath.toString())
+
 
                 val storageReference = firebaseStorage.getReference().child(imagePath)
 

@@ -29,7 +29,7 @@ import com.sangwon.example.everysiheung.databinding.ActivityMainBinding
 import com.sangwon.example.everysiheung.databinding.ToolbarHeaderBinding
 import com.sangwon.example.everysiheung.model.CalendarDateModel
 import com.sangwon.example.everysiheung.utils.HorizontalItemDecoration
-import com.sangwon.example.everysiheung.view.activity.DiaryActivity
+import com.sangwon.example.everysiheung.view.DiaryActivity
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat

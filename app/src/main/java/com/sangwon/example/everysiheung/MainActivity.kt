@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private var backButtonPressedOnce = false
 
+
     /**
      * 메인화면에서 종료하는 함수.
      */

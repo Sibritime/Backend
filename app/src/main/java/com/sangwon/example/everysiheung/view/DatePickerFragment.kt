@@ -30,7 +30,7 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
 
         val dpd = DatePickerDialog(
             requireContext(),
-            AlertDialog.THEME_DEVICE_DEFAULT_DARK,
+            android.R.style.Theme_Holo_Light_Dialog_NoActionBar,
             this,
             year,
             month,

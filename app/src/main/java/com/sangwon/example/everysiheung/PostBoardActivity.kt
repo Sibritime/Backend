@@ -111,6 +111,7 @@ class PostBoardActivity : AppCompatActivity() {
                 val location = document.getString("location")
                 val date = document.getString("date")
                 val id = document.id
+                val time = document.getString("time")
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -143,7 +144,7 @@ class PostBoardActivity : AppCompatActivity() {
                             title = title ?: "",
                             location = location ?: "",
                             date = date ?: "",
-                            time = "18:00~20:00",
+                            time = time ?: "",
                             isFavorites = isFavorites,
                             id = id
                         )
@@ -186,6 +187,7 @@ class PostBoardActivity : AppCompatActivity() {
                 val location = document.getString("location")
                 val date = document.getString("date")
                 val id = document.id
+                val time = document.getString("time")
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -218,7 +220,7 @@ class PostBoardActivity : AppCompatActivity() {
                             title = title ?: "",
                             location = location ?: "",
                             date = date ?: "",
-                            time = "18:00~20:00",
+                            time = time ?: "",
                             isFavorites = isFavorites,
                             id = id
                         )
@@ -262,6 +264,7 @@ class PostBoardActivity : AppCompatActivity() {
                 val date = document.getString("date")
                 val id = document.id
                 val owner = document.getString("uid")
+                val time = document.getString("time")
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -293,7 +296,7 @@ class PostBoardActivity : AppCompatActivity() {
                             title = title ?: "",
                             location = location ?: "",
                             date = date ?: "",
-                            time = "18:00~20:00",
+                            time = time ?: "",
                             isFavorites = isFavorites,
                             id = id
                         )
@@ -345,6 +348,7 @@ class PostBoardActivity : AppCompatActivity() {
                 val location = document.getString("location")
                 val date = document.getString("date")
                 val id = document.id
+                val time = document.getString("time")
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -378,14 +382,15 @@ class PostBoardActivity : AppCompatActivity() {
                             title = title ?: "",
                             location = location ?: "",
                             date = date ?: "",
-                            time = "18:00~20:00",
+                            time = time ?: "",
                             isFavorites = isFavorites,
                             id = id
                         )
                         // 검색 결과가 있으면
                         if (isContains == true) {
                             postItems.add(postItem)
-                        } else {
+                        }
+                        else{
                             postItems.add(null)
                         }
 

@@ -73,7 +73,7 @@ class PostUpActivity : AppCompatActivity() {
             val subscript = findViewById<Spinner>(R.id.subscriptSpinner).selectedItem.toString()
             val image = findViewById<EditText>(R.id.imageText).text.toString()
             val time =
-                findViewById<Button>(R.id.startTime).text.toString() + findViewById<Button>(R.id.endTime).text.toString()
+                findViewById<Button>(R.id.startTime).text.toString() + "~" + findViewById<Button>(R.id.endTime).text.toString()
             var bookmark: Int = 0
 
 

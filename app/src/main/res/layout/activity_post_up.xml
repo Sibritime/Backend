@@ -15,6 +15,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:elevation="5dp"
+        android:background="@drawable/roundbar"
         android:text="등록하기" />
 
     <ScrollView
@@ -109,11 +110,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/startDate"
                     android:layout_toStartOf="@id/endDate"
+                    android:layout_toEndOf="@id/startDate"
                     android:gravity="center"
-                    android:textSize="30dp"
-                    android:text="-->"/>
+                    android:text="-"
+                    android:textSize="30dp" />
             </RelativeLayout>
 
             <View
@@ -173,11 +174,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/startTime"
                     android:layout_toStartOf="@id/endTime"
+                    android:layout_toEndOf="@id/startTime"
                     android:gravity="center"
-                    android:textSize="30dp"
-                    android:text="-->"/>
+                    android:text="-"
+                    android:textSize="30dp" />
             </RelativeLayout>
 
             <View
@@ -221,11 +222,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textTarget"
-                android:layout_toStartOf="@id/mapBtn"
-               android:layout_toEndOf="@id/textFee"
-                android:layout_marginStart="10dp"
-                android:textAlignment="textStart"
-                android:inputType="number" />
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="37dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="41dp"
+                android:layout_toEndOf="@id/textFee"
+                android:inputType="number"
+                android:textAlignment="textStart" />
 
             <EditText
                 android:id="@+id/locateText"

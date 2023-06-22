@@ -163,7 +163,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24_white)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         drawerLayout = findViewById(R.id.drawer_layout)
         navigationView = findViewById(R.id.nav_view)

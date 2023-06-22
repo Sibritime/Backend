@@ -30,6 +30,8 @@ class PostBoardActivity : AppCompatActivity() {
     lateinit var listview: ListView
     lateinit var adapter: PostListViewAdapter
     var db = Firebase.firestore
+    private lateinit var firebaseStorage: FirebaseStorage
+    private lateinit var imagePath: String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +41,8 @@ class PostBoardActivity : AppCompatActivity() {
         listview = findViewById(R.id.listview)
         adapter = PostListViewAdapter()
         listview.adapter = adapter
+
+        firebaseStorage = FirebaseStorage.getInstance()
 
         val btnPosting = findViewById<FloatingActionButton>(R.id.posting)
         btnPosting.setOnClickListener {
@@ -80,7 +84,7 @@ class PostBoardActivity : AppCompatActivity() {
             searchEditText.layoutParams = searchEditTextParams
             searchLayout.addView(searchEditText)
 
-            searchButton.setOnClickListener{
+            searchButton.setOnClickListener {
                 adapter = PostListViewAdapter()
                 listview.adapter = adapter
                 SearchList(searchEditText.text.toString())
@@ -89,9 +93,6 @@ class PostBoardActivity : AppCompatActivity() {
     }
 
     private fun addPostList() {
-        val firebaseStorage = FirebaseStorage.getInstance()
-        var imagePath: String = ""
-
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<PostItem>() // 데이터를 임시로 저장할 리스트
 
@@ -102,9 +103,7 @@ class PostBoardActivity : AppCompatActivity() {
                     .await()
             }
             // 순서대로 가져와지는 체크하기 위한 코드
-            for (document in result) {
-                Log.e("document", "${document.id}")
-            }
+
 
             for (document in result) {
                 val title = document.getString("title")
@@ -166,9 +165,6 @@ class PostBoardActivity : AppCompatActivity() {
     }
 
     private fun BookMarksList() {
-        val firebaseStorage = FirebaseStorage.getInstance()
-        var imagePath: String = ""
-
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<PostItem?>() // 데이터를 임시로 저장할 리스트
 
@@ -178,9 +174,7 @@ class PostBoardActivity : AppCompatActivity() {
                     .get()
                     .await()
             }
-            for (document in result) {
-                Log.e("document", "${document.id}")
-            }
+
 
             for (document in result) {
                 val title = document.getString("title")
@@ -245,9 +239,6 @@ class PostBoardActivity : AppCompatActivity() {
     }
 
     private fun MyPostsList() {
-        val firebaseStorage = FirebaseStorage.getInstance()
-        var imagePath: String = ""
-
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<PostItem?>() // 데이터를 임시로 저장할 리스트
 
@@ -322,10 +313,7 @@ class PostBoardActivity : AppCompatActivity() {
     }
 
     // 검색 로직만
-    private fun SearchList(searchKeyword:String) {
-        val firebaseStorage = FirebaseStorage.getInstance()
-        var imagePath: String = ""
-
+    private fun SearchList(searchKeyword: String) {
         GlobalScope.launch(Dispatchers.Main) {
             val postItems = arrayListOf<PostItem?>() // 데이터를 임시로 저장할 리스트
 
@@ -334,10 +322,6 @@ class PostBoardActivity : AppCompatActivity() {
                     .orderBy("timestamp", Query.Direction.DESCENDING)
                     .get()
                     .await()
-            }
-            // 순서대로 가져와지는 체크하기 위한 코드
-            for (document in result) {
-                Log.e("document", "${document.id}")
             }
 
             for (document in result) {
@@ -389,8 +373,7 @@ class PostBoardActivity : AppCompatActivity() {
                         // 검색 결과가 있으면
                         if (isContains == true) {
                             postItems.add(postItem)
-                        }
-                        else{
+                        } else {
                             postItems.add(null)
                         }
 

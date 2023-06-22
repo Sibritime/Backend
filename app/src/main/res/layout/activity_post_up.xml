@@ -210,8 +210,8 @@
 
             <ImageButton
                 android:id="@+id/mapBtn"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_below="@id/textFee"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/ic_baseline_location_on_24"

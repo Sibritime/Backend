@@ -3,6 +3,7 @@ package com.sangwon.example.everysiheung
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -52,7 +53,10 @@ class MapsActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.
             marker.tag = 0
             marker.mapPoint = mapPoint
             marker.markerType = MapPOIItem.MarkerType.BluePin
-            marker.selectedMarkerType = MapPOIItem.MarkerType.RedPin
+            marker.selectedMarkerType
+            val option = BitmapFactory.Options()
+            option.inJustDecodeBounds = true
+            BitmapFactory.decodeFile(marker.customImageBitmap.toString(), option)
 
             latitude = mapPoint?.mapPointGeoCoord?.latitude ?: 0.0
             longitude = mapPoint?.mapPointGeoCoord?.longitude ?: 0.0

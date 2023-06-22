@@ -11,31 +11,41 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.browser.trusted.sharing.ShareTarget.FileFormField.KEY_NAME
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.kakao.sdk.user.UserApiClient
 import com.sangwon.example.everysiheung.adapter.CalendarAdapter
 import com.sangwon.example.everysiheung.adapter.ImageData
+import com.sangwon.example.everysiheung.adapter.TodayEventAdapter
 import com.sangwon.example.everysiheung.adapter.ViewPagerAdapter
 import com.sangwon.example.everysiheung.databinding.ActivityMainBinding
-import com.sangwon.example.everysiheung.databinding.ToolbarHeaderBinding
 import com.sangwon.example.everysiheung.model.CalendarDateModel
+import com.sangwon.example.everysiheung.model.TodayEventItem
 import com.sangwon.example.everysiheung.utils.HorizontalItemDecoration
 import com.sangwon.example.everysiheung.view.DiaryActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
 import java.util.*
-import com.kakao.sdk.user.UserApiClient
+
 
 private val MIN_SCALE = 0.85f // 뷰가 몇 퍼센트로 줄어들 것인지
 private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
@@ -66,8 +76,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var sharedPreferences: SharedPreferences
 
     private var backButtonPressedOnce = false
-
-
 
 
     /**
@@ -158,7 +166,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
 
-
         // 네비게이션 바
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -194,8 +201,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // 게시판 등록 버튼 그냥 이동만 담당
         //findViewById<Button>(R.id.postbtn).setOnClickListener {
-            //startActivity(Intent(this, PostUpActivity::class.java))
-            //finish()
+        //startActivity(Intent(this, PostUpActivity::class.java))
+        //finish()
         //}
 
 
@@ -209,7 +216,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.posterViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.posterViewpager.setCurrentItem(currentPosition, false) // 현재 위치를 지정
         binding.posterViewpager.setPageTransformer(ZoomOutPageTransformer())
-        binding.textViewBanner.text = "[${(currentDate.get(Calendar.MONTH) + 1)}월 행사 포스터]   1 / $numBanner"
+        binding.textViewBanner.text =
+            "[${(currentDate.get(Calendar.MONTH) + 1)}월 행사 포스터]   1 / $numBanner"
 
 
         // 현재 몇번째 배너인지 보여주는 숫자를 변경함
@@ -217,7 +225,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    binding.textViewBanner.text = "[${(currentDate.get(Calendar.MONTH) + 1)}월 행사 포스터]   ${(position % numBanner) + 1} / $numBanner"
+                    binding.textViewBanner.text =
+                        "[${(currentDate.get(Calendar.MONTH) + 1)}월 행사 포스터]   ${(position % numBanner) + 1} / $numBanner"
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
@@ -237,40 +246,93 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setUpCalendar()
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
-        /**
-         * 하단 네비게이션바
-         */
+            /**
+             * 하단 네비게이션바
+             */
             when (item.itemId) {
                 R.id.home -> {
                     // 아이템 1에 대한 동작
                     false
                 }
+
                 R.id.map -> {
                     // 아이템 2에 대한 동작
                     moveMap()
                     false
                 }
+
                 R.id.event -> {
                     moveTable()
                     false
                 }
+
                 R.id.search -> {
                     val intent = Intent(this, PostBoardActivity::class.java)
-                    intent.putExtra("Role","Searching")
+                    intent.putExtra("Role", "Searching")
                     startActivity(intent)
                     false
                 }
+
                 R.id.list -> {
                     // intent를 통해 돌아가는 함수를 달리함
                     val intent = Intent(this, PostBoardActivity::class.java)
-                    intent.putExtra("Role","Posts" )
+                    intent.putExtra("Role", "Posts")
                     startActivity(intent)
                     false
                 }
+
                 else -> false
             }
         }
-        binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH)-2)
+        binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH) - 2)
+
+        val todayAdapter = TodayEventAdapter()
+
+        val listview = binding.todayEventList
+        listview.adapter = todayAdapter
+        val firebaseStorage = FirebaseStorage.getInstance()
+        GlobalScope.launch(Dispatchers.Main) {
+            val result = withContext(Dispatchers.IO) {
+                val db = Firebase.firestore
+                db.collection("event")
+                    .orderBy("index", Query.Direction.DESCENDING)
+                    .get()
+                    .await()
+            }
+
+            for (document in result) {
+                val event = TodayEventItem(
+                    title = document.getString("title")!!,
+                    type = document.getString("type")!!,
+                    time = document.getString("time")!!,
+                    address = document.getString("address")!!,
+                    index = document.getString("index")!!.toInt(),
+                    idx = document.getString("idx")!!.toInt()
+                )
+                todayAdapter.addEvent(event)
+            }
+            todayAdapter.notifyDataSetChanged()
+//            val eventListParams =
+            var totalHeight = 0
+            val desiredWidth =
+                View.MeasureSpec.makeMeasureSpec(listview.getWidth(), View.MeasureSpec.AT_MOST)
+
+            val listItem: View = todayAdapter.getView(0, null, listview)
+            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
+            totalHeight = listItem.measuredHeight * todayAdapter.count
+
+            val params: ViewGroup.LayoutParams = listview.getLayoutParams()
+            params.height = totalHeight + listview.getDividerHeight() * (todayAdapter.count - 1)
+            listview.setLayoutParams(params)
+            listview.requestLayout()
+        }
+        listview.setOnItemClickListener { parent, view, position, id ->
+            val url = "https://www.siheung.go.kr/event/main.do?idx="+(todayAdapter.getItem(position) as TodayEventItem).idx
+            val intent = Intent(this, TableActivity::class.java)
+            intent.putExtra("url", url)
+            startActivity(intent)
+            Toast.makeText(applicationContext, "페이지 로드 중...", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -281,7 +343,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
-        binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH)-2)
+        binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH) - 2)
         //다이어리 현재 날짜가 화면 중간에 오도록 수정
     }
 
@@ -291,8 +353,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     // 툴바 메뉴 버튼이 클릭 됐을 때 실행하는 함수
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // 클릭한 툴바 메뉴 아이템 id 마다 다르게 실행하도록 설정
-        when(item.itemId){
-            android.R.id.home->{
+        when (item.itemId) {
+            android.R.id.home -> {
                 // 햄버거 버튼 클릭시 네비게이션 드로어 열기
                 drawerLayout.openDrawer(GravityCompat.START)
             }
@@ -302,20 +364,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     // 드로어 내 아이템 클릭 이벤트 처리하는 함수
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.post-> {
+        when (item.itemId) {
+            R.id.post -> {
                 val intent = Intent(this, PostBoardActivity::class.java)
-                intent.putExtra("Role","MyPosts" )
+                intent.putExtra("Role", "MyPosts")
                 startActivity(intent)
 
                 return true
             }
-            R.id.bookmark-> {
+
+            R.id.bookmark -> {
                 val intent = Intent(this, PostBoardActivity::class.java)
-                intent.putExtra("Role","BookMarks" )
+                intent.putExtra("Role", "BookMarks")
                 startActivity(intent)
             }
-            R.id.diary-> startActivity(Intent(this@MainActivity, DiaryActivity::class.java))
+
+            R.id.diary -> startActivity(Intent(this@MainActivity, DiaryActivity::class.java))
         }
         return false
     }
@@ -328,7 +392,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 try {
                     val md = MessageDigest.getInstance("SHA")
                     md.update(signature.toByteArray())
-                    Log.d("getKeyHash", "key hash: ${Base64.encodeToString(md.digest(), Base64.NO_WRAP)}")
+                    Log.d(
+                        "getKeyHash",
+                        "key hash: ${Base64.encodeToString(md.digest(), Base64.NO_WRAP)}"
+                    )
                 } catch (e: NoSuchAlgorithmException) {
                     Log.w("getKeyHash", "Unable to get MessageDigest. signature=$signature", e)
                 }
@@ -337,13 +404,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-
     private fun autoScrollStart(intervalTime: Long) {
         myHandler.removeMessages(0) // 이거 안하면 핸들러가 1개, 2개, 3개 ... n개 만큼 계속 늘어남
         myHandler.sendEmptyMessageDelayed(0, intervalTime) // intervalTime 만큼 반복해서 핸들러를 실행하게 함
     }
 
-    private fun autoScrollStop(){
+    private fun autoScrollStop() {
         myHandler.removeMessages(0) // 핸들러를 중지시킴
     }
 
@@ -351,7 +417,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
 
-            if(msg.what == 0) {
+            if (msg.what == 0) {
                 currentPosition = binding.posterViewpager.currentItem
                 binding.posterViewpager.setCurrentItem(++currentPosition, true) // 다음 페이지로 이동
                 autoScrollStart(intervalTime) // 스크롤을 계속 이어서 한다.
@@ -379,7 +445,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Toast.makeText(applicationContext, "페이지 로드 중...", Toast.LENGTH_SHORT).show()
     }
 
-    private fun moveMap(){
+    private fun moveMap() {
         var intent = Intent(this, FestivalLocationActicity::class.java)
         startActivity(intent)
     }
@@ -397,6 +463,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         // This page is way off-screen to the left.
                         alpha = 0f
                     }
+
                     position <= 1 -> { // [-1,1]
                         // Modify the default slide transition to shrink the page as well
                         val scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position))
@@ -416,6 +483,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         alpha = (MIN_ALPHA +
                                 (((scaleFactor - MIN_SCALE) / (1 - MIN_SCALE)) * (1 - MIN_ALPHA)))
                     }
+
                     else -> { // (1,+Infinity]
                         // This page is way off-screen to the right.
                         alpha = 0f
@@ -434,8 +502,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Toast.makeText(applicationContext, "현재 월로 이동합니다.", Toast.LENGTH_SHORT).show()
                 cal.set(Calendar.MONTH, currentDate.get(Calendar.MONTH))
                 setUpCalendar()
-            }
-            else {
+            } else {
                 binding.ivCalendarPrevious.visibility = View.VISIBLE
                 cal.add(Calendar.MONTH, 1)
                 setUpCalendar()
@@ -462,16 +529,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val month = cal.get(Calendar.MONTH) + 1
             val url = monthUrlMap[month]
             if (url != null) {
-                Toast.makeText(applicationContext, "$month 월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "$month 월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT)
+                    .show()
                 val intent = Intent(this, TableActivity::class.java)
                 intent.putExtra("url", url)
                 startActivity(intent)
             }
         }
 
-        binding.iVCalendar.setOnClickListener (calendarClickListener)
+        binding.iVCalendar.setOnClickListener(calendarClickListener)
 
-        binding.tvDateMonth.setOnClickListener (calendarClickListener)
+        binding.tvDateMonth.setOnClickListener(calendarClickListener)
     }
 
 
@@ -497,7 +565,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
      */
     private fun setUpCalendar() {
         val calendarList = ArrayList<CalendarDateModel>()
-        binding.textView.text = SimpleDateFormat("오늘은 MMMM dd일 EEEE입니다.", Locale.KOREAN).format(currentDate.time)
+        binding.textView.text =
+            SimpleDateFormat("오늘은 MMMM dd일 EEEE입니다.", Locale.KOREAN).format(currentDate.time)
         binding.tvDateMonth.text = SimpleDateFormat("yyyy년 MMMM", Locale.KOREAN).format(cal.time)
         val monthCalendar = cal.clone() as Calendar
         val maxDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
@@ -514,10 +583,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         calendarList2.addAll(calendarList)
         adapter.setData(calendarList)
 
-        if (cal.get(Calendar.MONTH) + 1 >= 1 && cal.get(Calendar.MONTH) + 1 <= currentDate.get(Calendar.MONTH) + 1) {
+        if (cal.get(Calendar.MONTH) + 1 >= 1 && cal.get(Calendar.MONTH) + 1 <= currentDate.get(
+                Calendar.MONTH
+            ) + 1
+        ) {
             binding.iVCalendar.visibility = View.VISIBLE;
-        }
-        else {
+        } else {
             binding.iVCalendar.visibility = View.GONE
         }
     }

@@ -172,7 +172,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="50dp"
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"
@@ -186,7 +186,14 @@
                         android:textStyle="bold"
                         android:elevation="5dp"/>
 
-                    <LinearLayout
+                    <ListView
+                        android:id="@+id/todayEventList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </ListView>
+
+                    <!--<LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="10dp"
@@ -347,7 +354,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="정신건강복지센터(5층)" />
                         </LinearLayout>
-                    </LinearLayout>
+                    </LinearLayout>-->
                 </LinearLayout>
             </RelativeLayout>
         </ScrollView>

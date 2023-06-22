@@ -1,9 +1,7 @@
 package com.sangwon.example.everysiheung.adapter
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,18 +10,12 @@ import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.google.firebase.auth.ktx.auth
 import com.sangwon.example.everysiheung.R
 import com.sangwon.example.everysiheung.model.PostItem
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import com.sangwon.example.everysiheung.PosterActivity
-import com.kakao.sdk.user.UserApiClient
 import com.sangwon.example.everysiheung.kakaouid
 
 
@@ -42,7 +34,7 @@ class PostListViewAdapter: BaseAdapter() {
         return p0.toLong()
     }
 
-    override fun getView(p0: Int, view: View?, parent: ViewGroup?): View {
+    override fun getView(position: Int, view: View?, parent: ViewGroup?): View {
         val context = parent?.context
 
         // 카카오 사용자 ID 요청
@@ -62,7 +54,7 @@ class PostListViewAdapter: BaseAdapter() {
         val timeTextView:TextView = convertView.findViewById<TextView>(R.id.time)
         val isFavoriteCheckBox:CheckBox = convertView.findViewById(R.id.isFavorite)
 
-        val item:PostItem = items.get(p0)
+        val item:PostItem = items[position]
 
         Glide.with(context!!)
             .load(item.img)
@@ -96,7 +88,7 @@ class PostListViewAdapter: BaseAdapter() {
             }
         }
         val clickListener = View.OnClickListener {
-            val item = items[p0]
+            val item = items[position]
             val intent:Intent = Intent(context, PosterActivity::class.java)
 
             intent.putExtra("title", item.title)

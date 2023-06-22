@@ -17,7 +17,6 @@ import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import android.Manifest
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 

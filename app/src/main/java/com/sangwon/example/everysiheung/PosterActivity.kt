@@ -30,7 +30,7 @@ class PosterActivity : AppCompatActivity() {
         } else {
             TODO("VERSION.SDK_INT < TIRAMISU")
         }
-        if(src != Uri.parse("images/default.png")){
+        if(src != Uri.parse("https://firebasestorage.googleapis.com/v0/b/everysiheung.appspot.com/o/images%2Fdefault.png?alt=media&token=b14ac346-a6a0-4e05-81e4-767eea07d175")){
             val poster = ImageView(this)
 
             Glide.with(this)

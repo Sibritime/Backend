@@ -103,8 +103,6 @@ class PostBoardActivity : AppCompatActivity() {
                     imagePath = "images/default.png"
                 }
 
-
-
                 val storageReference = firebaseStorage.getReference().child(imagePath)
 
                 val isFavorites = withContext(Dispatchers.IO) {
@@ -203,7 +201,7 @@ class PostBoardActivity : AppCompatActivity() {
                             isFavorites = isFavorites,
                             id = id
                         )
-                        if (isFavorites == true) {
+                        if (isFavorites) {
                             postItems.add(postItem)
                         }
                         else{
@@ -237,9 +235,6 @@ class PostBoardActivity : AppCompatActivity() {
                     .get()
                     .await()
             }
-            for (document in result) {
-                Log.e("document","${document.id}")
-            }
 
             for (document in result) {
                 val title = document.getString("title")
@@ -257,8 +252,7 @@ class PostBoardActivity : AppCompatActivity() {
                 if (imagePath == "") {
                     imagePath = "images/default.png"
                 }
-                Log.e("imgPath", "${imagePath}")
-                val storageReference = firebaseStorage.getReference().child(imagePath.toString())
+                val storageReference = firebaseStorage.getReference().child(imagePath)
 
                 val isFavorites = withContext(Dispatchers.IO) {
                     val bookmarkQuerySnapshot = db.collection("MyPage")

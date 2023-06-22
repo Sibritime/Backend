@@ -92,6 +92,7 @@ class PostBoardActivity : AppCompatActivity() {
                 val location = document.getString("location")
                 val date = document.getString("date")
                 val id = document.id
+                val time = document.getString("time")
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp = document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
@@ -123,7 +124,7 @@ class PostBoardActivity : AppCompatActivity() {
                             title = title ?: "",
                             location = location ?: "",
                             date = date ?: "",
-                            time = "18:00~20:00",
+                            time = time ?: "",
                             isFavorites = isFavorites,
                             id = id
                         )
@@ -166,6 +167,7 @@ class PostBoardActivity : AppCompatActivity() {
                 val location = document.getString("location")
                 val date = document.getString("date")
                 val id = document.id
+                val time = document.getString("time")
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp = document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
@@ -197,7 +199,7 @@ class PostBoardActivity : AppCompatActivity() {
                             title = title ?: "",
                             location = location ?: "",
                             date = date ?: "",
-                            time = "18:00~20:00",
+                            time = time ?: "",
                             isFavorites = isFavorites,
                             id = id
                         )
@@ -242,6 +244,7 @@ class PostBoardActivity : AppCompatActivity() {
                 val date = document.getString("date")
                 val id = document.id
                 val owner = document.getString("uid")
+                val time = document.getString("time")
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp = document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
@@ -272,7 +275,7 @@ class PostBoardActivity : AppCompatActivity() {
                             title = title ?: "",
                             location = location ?: "",
                             date = date ?: "",
-                            time = "18:00~20:00",
+                            time = time ?: "",
                             isFavorites = isFavorites,
                             id = id
                         )
@@ -321,68 +324,69 @@ class PostBoardActivity : AppCompatActivity() {
                 var isContains = document.getString("title")?.contains(searchKeyword)
 
 
-                    val title = document.getString("title")
-                    val location = document.getString("location")
-                    val date = document.getString("date")
-                    val id = document.id
+                val title = document.getString("title")
+                val location = document.getString("location")
+                val date = document.getString("date")
+                val id = document.id
+                val time = document.getString("time")
 
-                    //Timestamp(seconds=1686128427, nanoseconds=894000000)
-                    val timestamp =
-                        document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
-                    Log.e("timestamp", "${timestamp}")
-                    imagePath = document.getString("image").toString()
-                    Log.e("order", "${title}")
-                    // 이미지를 등록하지 않은 경우 default 이미지
-                    if (imagePath == "") {
-                        imagePath = "images/default.png"
-                    }
+                //Timestamp(seconds=1686128427, nanoseconds=894000000)
+                val timestamp =
+                    document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
+                Log.e("timestamp", "${timestamp}")
+                imagePath = document.getString("image").toString()
+                Log.e("order", "${title}")
+                // 이미지를 등록하지 않은 경우 default 이미지
+                if (imagePath == "") {
+                    imagePath = "images/default.png"
+                }
 
 
-                    val storageReference = firebaseStorage.getReference().child(imagePath)
+                val storageReference = firebaseStorage.getReference().child(imagePath)
 
-                    val isFavorites = withContext(Dispatchers.IO) {
-                        val bookmarkQuerySnapshot = db.collection("MyPage")
-                            .document("${kakaouid}")
-                            .collection("BookMarks")
-                            .get()
-                            .await()
+                val isFavorites = withContext(Dispatchers.IO) {
+                    val bookmarkQuerySnapshot = db.collection("MyPage")
+                        .document("${kakaouid}")
+                        .collection("BookMarks")
+                        .get()
+                        .await()
 
-                        bookmarkQuerySnapshot.documents.any { it.id == id }
-                    }
+                    bookmarkQuerySnapshot.documents.any { it.id == id }
+                }
 
-                    storageReference.downloadUrl.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val imageData = task.result
-                            val postItem = PostItem(
-                                img = imageData,
-                                title = title ?: "",
-                                location = location ?: "",
-                                date = date ?: "",
-                                time = "18:00~20:00",
-                                isFavorites = isFavorites,
-                                id = id
-                            )
-                            // 검색 결과가 있으면
-                            if (isContains == true) {
-                                postItems.add(postItem)
-                            }
-                            else{
-                                postItems.add(null)
-                            }
-
-                            // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
-                            if (postItems.size == result.size()) {
-                                for (item in postItems) {
-                                    if (item != null) {
-                                        adapter.addPost(item)
-                                    }
-                                }
-                                adapter.notifyDataSetChanged()
-                            }
-                        } else {
-                            Log.e("downloadUrl", "failed..")
+                storageReference.downloadUrl.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val imageData = task.result
+                        val postItem = PostItem(
+                            img = imageData,
+                            title = title ?: "",
+                            location = location ?: "",
+                            date = date ?: "",
+                            time = time ?: "",
+                            isFavorites = isFavorites,
+                            id = id
+                        )
+                        // 검색 결과가 있으면
+                        if (isContains == true) {
+                            postItems.add(postItem)
                         }
+                        else{
+                            postItems.add(null)
+                        }
+
+                        // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
+                        if (postItems.size == result.size()) {
+                            for (item in postItems) {
+                                if (item != null) {
+                                    adapter.addPost(item)
+                                }
+                            }
+                            adapter.notifyDataSetChanged()
+                        }
+                    } else {
+                        Log.e("downloadUrl", "failed..")
                     }
+                }
 
             }
         }

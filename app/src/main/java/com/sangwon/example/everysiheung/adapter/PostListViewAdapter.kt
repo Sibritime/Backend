@@ -103,7 +103,7 @@ class PostListViewAdapter: BaseAdapter() {
             intent.putExtra("location", item.location)
             intent.putExtra("date", item.date)
             intent.putExtra("time", item.time)
-            intent.putExtra("post", item.img)
+            intent.putExtra("post", item.img.toString())
             context.startActivity(intent)
         }
         convertView.findViewById<View>(R.id.contentPanel).setOnClickListener(clickListener)

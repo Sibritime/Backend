@@ -25,11 +25,7 @@ class PosterActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.startDate).text = intent.getStringExtra("date")
         findViewById<TextView>(R.id.startTime).text = intent.getStringExtra("time")
 
-        val src = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("post", Uri::class.java)
-        } else {
-            TODO("VERSION.SDK_INT < TIRAMISU")
-        }
+        val src = Uri.parse(intent.getStringExtra("post"))
         if(src != Uri.parse("https://firebasestorage.googleapis.com/v0/b/everysiheung.appspot.com/o/images%2Fdefault.png?alt=media&token=b14ac346-a6a0-4e05-81e4-767eea07d175")){
             val poster = ImageView(this)
 

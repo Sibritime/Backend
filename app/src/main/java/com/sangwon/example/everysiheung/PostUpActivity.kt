@@ -103,7 +103,6 @@ class PostUpActivity : AppCompatActivity() {
                 longitude,
                 time,
                 bookmark
-
             )
 
             db.collection("Posts")

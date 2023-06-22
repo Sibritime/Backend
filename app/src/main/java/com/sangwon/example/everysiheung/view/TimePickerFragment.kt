@@ -31,7 +31,7 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
 
         val tpd = TimePickerDialog(
             requireContext(),
-            AlertDialog.THEME_DEVICE_DEFAULT_DARK,
+            AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,
             this,
             hour,
             minute,

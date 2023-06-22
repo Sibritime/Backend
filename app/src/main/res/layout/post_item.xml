@@ -7,18 +7,19 @@
         android:id="@+id/poster"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:scaleType="fitStart" />
     <LinearLayout
+        android:id="@+id/contentPanel"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight="3">
+        android:layout_weight="6">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="horizontal"
-            android:layout_weight="4">
+            android:layout_weight="5">
             <TextView
                 android:id="@+id/title"
                 android:layout_width="0dp"
@@ -27,35 +28,30 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="15sp"/>
-            <CheckBox
-                android:id="@+id/isFavorite"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="3dp"
-                android:button="@null"
-                android:background="@drawable/is_favorite"/>
         </LinearLayout>
         <TextView
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"/>
-        <LinearLayout
+        <TextView
+            android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="horizontal"
-            android:layout_weight="3">
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3"/>
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="7"/>
-        </LinearLayout>
+            android:layout_weight="3"/>
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"/>
     </LinearLayout>
+    <CheckBox
+        android:id="@+id/isFavorite"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:padding="3dp"
+        android:button="@null"
+        android:background="@drawable/is_favorite"/>
+
 </LinearLayout>

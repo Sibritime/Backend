@@ -1,6 +1,8 @@
 package com.sangwon.example.everysiheung.adapter
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +12,8 @@ import android.widget.BaseAdapter
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.ktx.auth
 import com.sangwon.example.everysiheung.R
@@ -18,6 +22,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.sangwon.example.everysiheung.PosterActivity
 import com.kakao.sdk.user.UserApiClient
 
 
@@ -74,7 +79,6 @@ class PostListViewAdapter: BaseAdapter() {
         timeTextView.text = item.time
         isFavoriteCheckBox.isChecked = item.isFavorites
 
-
         // CheckBox의 선택 상태가 변경될 때 실행되는 코드
         isFavoriteCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
             item.isFavorites = isChecked
@@ -95,8 +99,20 @@ class PostListViewAdapter: BaseAdapter() {
                     .addOnSuccessListener { Log.e("delete", "DocumentSnapshot successfully deleted!") }
                     .addOnFailureListener { e -> Log.e("delete", "Error deleting document", e) }
             }
-
         }
+        val clickListener = View.OnClickListener {
+            val item = items[p0]
+            val intent:Intent = Intent(context, PosterActivity::class.java)
+
+            intent.putExtra("title", item.title)
+            intent.putExtra("location", item.location)
+            intent.putExtra("date", item.date)
+            intent.putExtra("time", item.time)
+            intent.putExtra("post", item.img)
+            context.startActivity(intent)
+        }
+        convertView.findViewById<View>(R.id.contentPanel).setOnClickListener(clickListener)
+        convertView.findViewById<View>(R.id.poster).setOnClickListener(clickListener)
 
         return convertView
     }
@@ -104,6 +120,4 @@ class PostListViewAdapter: BaseAdapter() {
     fun addPost(post:PostItem){
         items.add(post)
     }
-
-
 }

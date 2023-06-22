@@ -6,35 +6,58 @@
     android:layout_height="match_parent"
     tools:context=".PosterActivity"
     android:padding="10dp">
+
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text=""/>
+        android:textSize="20dp"
+        android:textColor="#000"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"/>
     <TextView
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:text=""/>
+        android:layout_below="@id/user" />
 
     <TextView
-        android:id="@+id/date"
+        android:id="@+id/startDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/location"
         android:text=""/>
+<!--
     <TextView
-        android:id="@+id/time"
+        android:id="@+id/endDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/date"
+        android:layout_below="@id/location"
         android:text=""/>
+-->
+    <TextView
+        android:id="@+id/startTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/startDate"
+        android:text=""/>
+<!--
+    <TextView
+        android:id="@+id/endTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/startDate"
+        android:text=""/>
+-->
     <RelativeLayout
         android:id="@+id/imageContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/time">
+        android:layout_below="@id/startTime">
     </RelativeLayout>
     <TextView
         android:id="@+id/content"

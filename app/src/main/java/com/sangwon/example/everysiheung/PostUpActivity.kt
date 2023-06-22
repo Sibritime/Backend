@@ -71,9 +71,8 @@ class PostUpActivity : AppCompatActivity() {
             // 버튼 누르면 객체를 만들어
             val title = findViewById<EditText>(R.id.titleText).text.toString()
             val date =
-                findViewById<Button>(R.id.startDate).text.toString() + findViewById<Button>(R.id.endDate).text.toString()
+                findViewById<Button>(R.id.startDate).text.toString() + "~" + findViewById<Button>(R.id.endDate).text.toString()
             val locate = findViewById<EditText>(R.id.locateText).text.toString()
-            val targets = findViewById<RadioGroup>(R.id.groupTarget)
             val target = if (findViewById<RadioButton>(R.id.anybody).isChecked) {
                 findViewById<RadioButton>(R.id.anybody).text.toString()
             } else if (findViewById<RadioButton>(R.id.adult).isChecked) {

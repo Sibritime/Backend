@@ -6,8 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ListView
+import android.widget.RelativeLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -24,25 +27,21 @@ import com.kakao.sdk.user.UserApiClient
 
 
 class PostBoardActivity : AppCompatActivity() {
-    lateinit var listview:ListView
-    lateinit var adapter:PostListViewAdapter
+    lateinit var listview: ListView
+    lateinit var adapter: PostListViewAdapter
     var db = Firebase.firestore
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_board)
 
-
-
-
         listview = findViewById(R.id.listview)
         adapter = PostListViewAdapter()
         listview.adapter = adapter
 
-        findViewById<FloatingActionButton>(R.id.posting).setOnClickListener {
+        val btnPosting = findViewById<FloatingActionButton>(R.id.posting)
+        btnPosting.setOnClickListener {
             val intent: Intent = Intent(this, PostUpActivity::class.java)
             startActivityForResult(intent, 0)
         }
@@ -50,23 +49,43 @@ class PostBoardActivity : AppCompatActivity() {
         val intent = intent
         if (intent.getStringExtra("Role") == "Posts") {
             addPostList()
-        }
-        else if (intent.getStringExtra("Role") == "BookMarks")
-        {
+        } else if (intent.getStringExtra("Role") == "BookMarks") {
             BookMarksList()
-            findViewById<FloatingActionButton>(R.id.posting).visibility = View.GONE
-        }
-        else if (intent.getStringExtra("Role") == "MyPosts")
-        {
+            btnPosting.visibility = View.GONE
+        } else if (intent.getStringExtra("Role") == "MyPosts") {
             MyPostsList()
-            findViewById<FloatingActionButton>(R.id.posting).visibility = View.GONE
-        }
-        else if (intent.getStringExtra("Role") == "Searching")
-        {
-            SearchList()
-        }
+            btnPosting.visibility = View.GONE
+        } else if (intent.getStringExtra("Role") == "Searching") {
+            //SearchList()
+            btnPosting.visibility = View.GONE
+            val searchLayout = findViewById<RelativeLayout>(R.id.searchContainer)
+            val searchButton = Button(this)
 
+            searchButton.text = "검색"
+            val searchButtonParams = RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            searchButtonParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE)
+            searchButton.layoutParams = searchButtonParams
+            searchLayout.addView(searchButton)
 
+            val searchEditText = EditText(this)
+            searchEditText.hint = "검색할 키워드를 입력해주세요."
+            val searchEditTextParams = RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            searchEditTextParams.addRule(RelativeLayout.START_OF, searchButton.id)
+            searchEditText.layoutParams = searchEditTextParams
+            searchLayout.addView(searchEditText)
+
+            searchButton.setOnClickListener{
+                adapter = PostListViewAdapter()
+                listview.adapter = adapter
+                SearchList(searchEditText.text.toString())
+            }
+        }
     }
 
     private fun addPostList() {
@@ -84,7 +103,7 @@ class PostBoardActivity : AppCompatActivity() {
             }
             // 순서대로 가져와지는 체크하기 위한 코드
             for (document in result) {
-                Log.e("document","${document.id}")
+                Log.e("document", "${document.id}")
             }
 
             for (document in result) {
@@ -94,8 +113,9 @@ class PostBoardActivity : AppCompatActivity() {
                 val id = document.id
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
-                val timestamp = document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
-                Log.e("timestamp","${timestamp}")
+                val timestamp =
+                    document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
+                Log.e("timestamp", "${timestamp}")
                 imagePath = document.getString("image").toString()
                 Log.e("order", "${title}")
                 // 이미지를 등록하지 않은 경우 default 이미지
@@ -158,7 +178,7 @@ class PostBoardActivity : AppCompatActivity() {
                     .await()
             }
             for (document in result) {
-                Log.e("document","${document.id}")
+                Log.e("document", "${document.id}")
             }
 
             for (document in result) {
@@ -168,8 +188,9 @@ class PostBoardActivity : AppCompatActivity() {
                 val id = document.id
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
-                val timestamp = document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
-                Log.e("timestamp","${timestamp}")
+                val timestamp =
+                    document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
+                Log.e("timestamp", "${timestamp}")
                 imagePath = document.getString("image").toString()
                 Log.e("order", "${title}")
                 // 이미지를 등록하지 않은 경우 default 이미지
@@ -203,8 +224,7 @@ class PostBoardActivity : AppCompatActivity() {
                         )
                         if (isFavorites) {
                             postItems.add(postItem)
-                        }
-                        else{
+                        } else {
                             postItems.add(null)
                         }
                         // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
@@ -244,8 +264,9 @@ class PostBoardActivity : AppCompatActivity() {
                 val owner = document.getString("uid")
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
-                val timestamp = document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
-                Log.e("timestamp","${timestamp}")
+                val timestamp =
+                    document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
+                Log.e("timestamp", "${timestamp}")
                 imagePath = document.getString("image").toString()
 
                 // 이미지를 등록하지 않은 경우 default 이미지
@@ -279,8 +300,7 @@ class PostBoardActivity : AppCompatActivity() {
                         // 자기가 작성한 게시물이라면 보여준다
                         if (kakaouid == owner) {
                             postItems.add(postItem)
-                        }
-                        else{
+                        } else {
                             postItems.add(null)
                         }
                         // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
@@ -297,8 +317,9 @@ class PostBoardActivity : AppCompatActivity() {
             }
         }
     }
-// 검색 로직만
-    private fun SearchList() {
+
+    // 검색 로직만
+    private fun SearchList(searchKeyword:String) {
         val firebaseStorage = FirebaseStorage.getInstance()
         var imagePath: String = ""
 
@@ -313,92 +334,86 @@ class PostBoardActivity : AppCompatActivity() {
             }
             // 순서대로 가져와지는 체크하기 위한 코드
             for (document in result) {
-                Log.e("document","${document.id}")
+                Log.e("document", "${document.id}")
             }
 
             for (document in result) {
-                var searchKeyword = "파파이스"
                 var isContains = document.getString("title")?.contains(searchKeyword)
 
 
-                    val title = document.getString("title")
-                    val location = document.getString("location")
-                    val date = document.getString("date")
-                    val id = document.id
+                val title = document.getString("title")
+                val location = document.getString("location")
+                val date = document.getString("date")
+                val id = document.id
 
-                    //Timestamp(seconds=1686128427, nanoseconds=894000000)
-                    val timestamp =
-                        document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
-                    Log.e("timestamp", "${timestamp}")
-                    imagePath = document.getString("image").toString()
-                    Log.e("order", "${title}")
-                    // 이미지를 등록하지 않은 경우 default 이미지
-                    if (imagePath == "") {
-                        imagePath = "images/default.png"
-                    }
+                //Timestamp(seconds=1686128427, nanoseconds=894000000)
+                val timestamp =
+                    document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
+                Log.e("timestamp", "${timestamp}")
+                imagePath = document.getString("image").toString()
+                Log.e("order", "${title}")
+                // 이미지를 등록하지 않은 경우 default 이미지
+                if (imagePath == "") {
+                    imagePath = "images/default.png"
+                }
 
 
-                    val storageReference = firebaseStorage.getReference().child(imagePath)
+                val storageReference = firebaseStorage.getReference().child(imagePath)
 
-                    val isFavorites = withContext(Dispatchers.IO) {
-                        val bookmarkQuerySnapshot = db.collection("MyPage")
-                            .document("${kakaouid}")
-                            .collection("BookMarks")
-                            .get()
-                            .await()
+                val isFavorites = withContext(Dispatchers.IO) {
+                    val bookmarkQuerySnapshot = db.collection("MyPage")
+                        .document("${kakaouid}")
+                        .collection("BookMarks")
+                        .get()
+                        .await()
 
-                        bookmarkQuerySnapshot.documents.any { it.id == id }
-                    }
+                    bookmarkQuerySnapshot.documents.any { it.id == id }
+                }
 
-                    storageReference.downloadUrl.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val imageData = task.result
-                            val postItem = PostItem(
-                                img = imageData,
-                                title = title ?: "",
-                                location = location ?: "",
-                                date = date ?: "",
-                                time = "18:00~20:00",
-                                isFavorites = isFavorites,
-                                id = id
-                            )
-                            // 검색 결과가 있으면
-                            if (isContains == true) {
-                                postItems.add(postItem)
-                            }
-                            else{
-                                postItems.add(null)
-                            }
-
-                            // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
-                            if (postItems.size == result.size()) {
-                                for (item in postItems) {
-                                    if (item != null) {
-                                        adapter.addPost(item)
-                                    }
-                                }
-                                adapter.notifyDataSetChanged()
-                            }
+                storageReference.downloadUrl.addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val imageData = task.result
+                        val postItem = PostItem(
+                            img = imageData,
+                            title = title ?: "",
+                            location = location ?: "",
+                            date = date ?: "",
+                            time = "18:00~20:00",
+                            isFavorites = isFavorites,
+                            id = id
+                        )
+                        // 검색 결과가 있으면
+                        if (isContains == true) {
+                            postItems.add(postItem)
                         } else {
-                            Log.e("downloadUrl", "failed..")
+                            postItems.add(null)
                         }
+
+                        // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
+                        if (postItems.size == result.size()) {
+                            for (item in postItems) {
+                                if (item != null) {
+                                    adapter.addPost(item)
+                                }
+                            }
+                            adapter.notifyDataSetChanged()
+                        }
+                    } else {
+                        Log.e("downloadUrl", "failed..")
                     }
+                }
 
             }
         }
     }
 
 
-
-    fun addPostListTemp(){
-
-    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 0) {
                 recreate()
-                Log.e("recreate","True")
+                Log.e("recreate", "True")
             }
         }
     }

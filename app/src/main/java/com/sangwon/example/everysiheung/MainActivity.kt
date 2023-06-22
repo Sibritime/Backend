@@ -39,7 +39,7 @@ import com.kakao.sdk.user.UserApiClient
 private val MIN_SCALE = 0.85f // 뷰가 몇 퍼센트로 줄어들 것인지
 private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
 
-
+var kakaouid: String = ""
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
@@ -65,6 +65,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var sharedPreferences: SharedPreferences
 
     private var backButtonPressedOnce = false
+
+
 
 
     /**
@@ -137,6 +139,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 카카오 사용자 ID 요청
+        UserApiClient.instance.me { user, error ->
+            if (error != null) {
+                // 사용자 정보 요청 실패
+            } else if (user != null) {
+                kakaouid = user.id.toString()
+            }
+        }
 
 
 
@@ -499,6 +510,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             binding.iVCalendar.visibility = View.GONE
         }
     }
+
+
 }
 
 

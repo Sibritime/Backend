@@ -28,7 +28,7 @@ class PostBoardActivity : AppCompatActivity() {
     lateinit var listview:ListView
     lateinit var adapter:PostListViewAdapter
     var db = Firebase.firestore
-    lateinit var uid:String
+
 
 
 
@@ -36,14 +36,8 @@ class PostBoardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_board)
 
-        // 카카오 사용자 ID 요청
-        UserApiClient.instance.me { user, error ->
-            if (error != null) {
-                // 사용자 정보 요청 실패
-            } else if (user != null) {
-                uid = user.id.toString()
-            }
-        }
+
+
 
         listview = findViewById(R.id.listview)
         adapter = PostListViewAdapter()
@@ -114,7 +108,7 @@ class PostBoardActivity : AppCompatActivity() {
 
                 val isFavorites = withContext(Dispatchers.IO) {
                     val bookmarkQuerySnapshot = db.collection("MyPage")
-                        .document("${uid}")
+                        .document("${kakaouid}")
                         .collection("BookMarks")
                         .get()
                         .await()
@@ -188,7 +182,7 @@ class PostBoardActivity : AppCompatActivity() {
 
                 val isFavorites = withContext(Dispatchers.IO) {
                     val bookmarkQuerySnapshot = db.collection("MyPage")
-                        .document("${uid}")
+                        .document("${kakaouid}")
                         .collection("BookMarks")
                         .get()
                         .await()
@@ -267,7 +261,7 @@ class PostBoardActivity : AppCompatActivity() {
 
                 val isFavorites = withContext(Dispatchers.IO) {
                     val bookmarkQuerySnapshot = db.collection("MyPage")
-                        .document("${uid}")
+                        .document("${kakaouid}")
                         .collection("BookMarks")
                         .get()
                         .await()
@@ -288,7 +282,7 @@ class PostBoardActivity : AppCompatActivity() {
                             id = id
                         )
                         // 자기가 작성한 게시물이라면 보여준다
-                        if (uid == owner) {
+                        if (kakaouid == owner) {
                             postItems.add(postItem)
                         }
                         else{
@@ -350,7 +344,7 @@ class PostBoardActivity : AppCompatActivity() {
 
                 val isFavorites = withContext(Dispatchers.IO) {
                     val bookmarkQuerySnapshot = db.collection("MyPage")
-                        .document("${uid}")
+                        .document("${kakaouid}")
                         .collection("BookMarks")
                         .get()
                         .await()

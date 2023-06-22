@@ -260,7 +260,6 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="#90c0c0c0"
                                 android:text="오이도 선사 유적 공원" />
                         </LinearLayout>
                     </LinearLayout>

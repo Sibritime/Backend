@@ -5,10 +5,9 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageButton
-import android.widget.AdapterView
+import android.view.View
+import android.widget.Button
 import android.widget.ListView
-import android.widget.Toast
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -55,10 +54,12 @@ class PostBoardActivity : AppCompatActivity() {
         else if (intent.getStringExtra("Role") == "BookMarks")
         {
             BookMarksList()
+            findViewById<FloatingActionButton>(R.id.posting).visibility = View.GONE
         }
         else if (intent.getStringExtra("Role") == "MyPosts")
         {
             MyPostsList()
+            findViewById<FloatingActionButton>(R.id.posting).visibility = View.GONE
         }
         else if (intent.getStringExtra("Role") == "Searching")
         {
@@ -101,8 +102,6 @@ class PostBoardActivity : AppCompatActivity() {
                 if (imagePath == "") {
                     imagePath = "images/default.png"
                 }
-
-
 
                 val storageReference = firebaseStorage.getReference().child(imagePath)
 
@@ -202,7 +201,7 @@ class PostBoardActivity : AppCompatActivity() {
                             isFavorites = isFavorites,
                             id = id
                         )
-                        if (isFavorites == true) {
+                        if (isFavorites) {
                             postItems.add(postItem)
                         }
                         else{
@@ -236,9 +235,6 @@ class PostBoardActivity : AppCompatActivity() {
                     .get()
                     .await()
             }
-            for (document in result) {
-                Log.e("document","${document.id}")
-            }
 
             for (document in result) {
                 val title = document.getString("title")
@@ -256,8 +252,7 @@ class PostBoardActivity : AppCompatActivity() {
                 if (imagePath == "") {
                     imagePath = "images/default.png"
                 }
-                Log.e("imgPath", "${imagePath}")
-                val storageReference = firebaseStorage.getReference().child(imagePath.toString())
+                val storageReference = firebaseStorage.getReference().child(imagePath)
 
                 val isFavorites = withContext(Dispatchers.IO) {
                     val bookmarkQuerySnapshot = db.collection("MyPage")

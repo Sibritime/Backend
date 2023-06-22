@@ -1,17 +1,13 @@
 package com.sangwon.example.everysiheung
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.sangwon.example.everysiheung.model.PostItem
-import java.net.URI
 
 class PosterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,12 +25,8 @@ class PosterActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.startDate).text = intent.getStringExtra("date")
         findViewById<TextView>(R.id.startTime).text = intent.getStringExtra("time")
 
-        val src = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("post", Uri::class.java)
-        } else {
-            TODO("VERSION.SDK_INT < TIRAMISU")
-        }
-        if(src != Uri.parse("images/default.png")){
+        val src = Uri.parse(intent.getStringExtra("post"))
+        if(src != Uri.parse("https://firebasestorage.googleapis.com/v0/b/everysiheung.appspot.com/o/images%2Fdefault.png?alt=media&token=b14ac346-a6a0-4e05-81e4-767eea07d175")){
             val poster = ImageView(this)
 
             Glide.with(this)

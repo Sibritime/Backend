@@ -1,6 +1,8 @@
 package com.sangwon.example.everysiheung
 
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -8,6 +10,8 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.bumptech.glide.Glide
+import com.sangwon.example.everysiheung.model.PostItem
+import java.net.URI
 
 class PosterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,11 +26,15 @@ class PosterActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.title).text = intent.getStringExtra("title")
         findViewById<TextView>(R.id.location).text = intent.getStringExtra("location")
-        findViewById<TextView>(R.id.date).text = intent.getStringExtra("date")
-        findViewById<TextView>(R.id.time).text = intent.getStringExtra("time")
+        findViewById<TextView>(R.id.startDate).text = intent.getStringExtra("date")
+        findViewById<TextView>(R.id.startTime).text = intent.getStringExtra("time")
 
-        val src = intent.getIntExtra("post", 0)
-        if(src != 0){
+        val src = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("post", Uri::class.java)
+        } else {
+            TODO("VERSION.SDK_INT < TIRAMISU")
+        }
+        if(src != Uri.parse("images/default.png")){
             val poster = ImageView(this)
 
             Glide.with(this)

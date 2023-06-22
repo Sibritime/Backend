@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.AdapterView
 import android.widget.ListView
+import android.widget.Toast
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -65,24 +66,6 @@ class PostBoardActivity : AppCompatActivity() {
         {
             MyPostsList()
         }
-
-        listview.onItemClickListener = AdapterView.OnItemClickListener(){ adapterView, view, i, l ->
-            Toast.makeText(this, "toaofksdfk", Toast.LENGTH_SHORT).show()
-        }
-        listview.setOnItemClickListener { adapterView, view, i, l ->
-            val item = adapterView.getItemAtPosition(i) as PostItem
-
-            val intent = Intent(applicationContext, PosterActivity::class.java)
-
-            intent.putExtra("title", item.title)
-            intent.putExtra("location", item.location)
-            intent.putExtra("date", item.date)
-            intent.putExtra("time", item.time)
-            intent.putExtra("post", item.img)
-            startActivity(intent)
-        }
-
-
     }
 
     private fun addPostList() {
@@ -119,7 +102,7 @@ class PostBoardActivity : AppCompatActivity() {
                     imagePath = "images/default.png"
                 }
 
-                val storageReference = firebaseStorage.getReference().child(imagePath.toString())
+                val storageReference = firebaseStorage.getReference().child(imagePath)
 
                 val isFavorites = withContext(Dispatchers.IO) {
                     val bookmarkQuerySnapshot = db.collection("MyPage")

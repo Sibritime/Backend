@@ -60,12 +60,12 @@ class PostBoardActivity : AppCompatActivity() {
         else if (intent.getStringExtra("Role") == "BookMarks")
         {
             BookMarksList()
-            findViewById<Button>(R.id.posting).visibility = View.GONE
+            findViewById<FloatingActionButton>(R.id.posting).visibility = View.GONE
         }
         else if (intent.getStringExtra("Role") == "MyPosts")
         {
             MyPostsList()
-            findViewById<Button>(R.id.posting).visibility = View.GONE
+            findViewById<FloatingActionButton>(R.id.posting).visibility = View.GONE
         }
 
 

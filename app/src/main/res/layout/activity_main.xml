@@ -182,6 +182,7 @@
                         android:textSize="17dp"
                         android:textAlignment="center"
                         android:text="오늘의 행사"
+                        android:layout_marginBottom="7dp"
                         android:textColor="#000"
                         android:textStyle="bold"
                         android:elevation="5dp"/>

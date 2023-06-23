@@ -105,33 +105,10 @@ class MapsActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.
         mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
     }*/
 
-    /*private fun moveMapToCurrentLocation() {
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
-        while (!isMapMovedToCurrentLocation) {
-            val eventListener = object : MapView.MapViewEventListener {
-                override fun onMapViewInitialized(mapView: MapView) {}
-                override fun onMapViewCenterPointMoved(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewZoomLevelChanged(mapView: MapView, zoomLevel: Int) {}
-                override fun onMapViewSingleTapped(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewDoubleTapped(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewLongPressed(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewDragStarted(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewDragEnded(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewMoveFinished(mapView: MapView, mapPoint: MapPoint) {
-                    isMapMovedToCurrentLocation = true
-                    mapView.currentLocationTrackingMode =
-                        MapView.CurrentLocationTrackingMode.TrackingModeOff
-                }
-            }
-            mapView.setMapViewEventListener(eventListener)
-        }
-    }*/
-
     private fun moveMapToCurrentLocation() {
         if (!isMapMovedToCurrentLocation) {
             mapView.currentLocationTrackingMode =
                 MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
-
             eventListener = object : MapView.MapViewEventListener {
                 override fun onMapViewInitialized(mapView: MapView) {}
                 override fun onMapViewCenterPointMoved(mapView: MapView, mapPoint: MapPoint) {}

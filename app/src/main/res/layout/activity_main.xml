@@ -140,7 +140,7 @@
 
                         app:layout_constraintVertical_bias="1.0" />
 
-                    <ImageView
+                    <!--<ImageView
                         android:id="@+id/iVCalendar"
                         android:layout_width="41dp"
                         android:layout_height="36dp"
@@ -148,7 +148,7 @@
                         app:layout_constraintStart_toEndOf="@id/tvDateMonth"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@android:drawable/ic_menu_today"
-                        app:tint="?attr/colorError" />
+                        app:tint="?attr/colorError" />-->
 
                     <TextView
                         android:id="@+id/textView"

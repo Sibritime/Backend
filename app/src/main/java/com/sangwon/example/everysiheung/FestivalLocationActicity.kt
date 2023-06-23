@@ -81,7 +81,7 @@ class FestivalLocationActicity : AppCompatActivity(), MapView.MapViewEventListen
                         marker.selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                         marker.customImageBitmap = customMarker
                         mapView.addPOIItem(marker)
-                        mapView.setMapCenterPoint(mapPoint, true)
+                        //mapView.setMapCenterPoint(mapPoint, true) // 마커된 포인트로 화면 이동
                     }
 
                 }
@@ -112,7 +112,7 @@ class FestivalLocationActicity : AppCompatActivity(), MapView.MapViewEventListen
         if (!isMapMovedToCurrentLocation) {
             mapView.currentLocationTrackingMode =
                 MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
-
+            mapView.setCustomCurrentLocationMarkerTrackingImage(R.drawable.custom_marker)
             eventListener = object : MapView.MapViewEventListener {
                 override fun onMapViewInitialized(mapView: MapView) {}
                 override fun onMapViewCenterPointMoved(mapView: MapView, mapPoint: MapPoint) {}

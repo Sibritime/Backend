@@ -33,8 +33,6 @@ class PostUpActivity : AppCompatActivity() {
     var storageReference = storage.reference
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_up)
@@ -54,7 +52,9 @@ class PostUpActivity : AppCompatActivity() {
             // 버튼 누르면 객체를 만들어
             val title = findViewById<EditText>(R.id.titleText).text.toString()
             val date =
-                findViewById<Button>(R.id.startDate).text.toString() + " ~ " + findViewById<Button>(R.id.endDate).text.toString()
+                findViewById<Button>(R.id.startDate).text.toString() + " ~ " + findViewById<Button>(
+                    R.id.endDate
+                ).text.toString()
             val locate = findViewById<EditText>(R.id.locateText).text.toString()
             val target = if (findViewById<RadioButton>(R.id.anybody).isChecked) {
                 findViewById<RadioButton>(R.id.anybody).text.toString()
@@ -69,9 +69,10 @@ class PostUpActivity : AppCompatActivity() {
             val subscript = findViewById<EditText>(R.id.subscriptText).text.toString()
             val image = findViewById<EditText>(R.id.imageText).text.toString()
             val time =
-                findViewById<Button>(R.id.startTime).text.toString() + " ~ " + findViewById<Button>(R.id.endTime).text.toString()
+                findViewById<Button>(R.id.startTime).text.toString() + " ~ " + findViewById<Button>(
+                    R.id.endTime
+                ).text.toString()
             var bookmark: Int = 0
-
 
 
             val Post = Posts(// 된겨?
@@ -188,11 +189,12 @@ class PostUpActivity : AppCompatActivity() {
         calendar.time = timeInMillis
 
         if (calendar[Calendar.HOUR_OF_DAY] >= 0 && calendar[Calendar.HOUR_OF_DAY] < 5) {
-                Toast.makeText(this, "자정부터 새벽 5시까지는 설정할 수 없습니다.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "자정부터 새벽 5시까지는 설정할 수 없습니다.", Toast.LENGTH_SHORT).show()
         } else if (isStartTime) {
             findViewById<Button>(R.id.startTime).text = time
         } else {
-            val startTimeInMillis = convertTimeToMillis(findViewById<Button>(R.id.startTime).text.toString())
+            val startTimeInMillis =
+                convertTimeToMillis(findViewById<Button>(R.id.startTime).text.toString())
 
             if (timeInMillis.before(startTimeInMillis)) {
                 Toast.makeText(this, "시작 시각과 종료 시각을 확인바랍니다.", Toast.LENGTH_SHORT).show()
@@ -201,6 +203,7 @@ class PostUpActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun convertTimeToMillis(time: String): Date {
         val format = SimpleDateFormat("a hh:mm", Locale.KOREAN)
         return format.parse(time)
@@ -210,8 +213,8 @@ class PostUpActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            when(requestCode){
-                0 ->{
+            when (requestCode) {
+                0 -> {
                     latitude = data!!.getDoubleExtra("latitude", 0.0)
                     longitude = data.getDoubleExtra("longitude", 0.0)
 
@@ -222,23 +225,28 @@ class PostUpActivity : AppCompatActivity() {
                         Log.e("address", addrres.getAddressLine(0))
                     }
                 }
-                1->{ // 처음 시간
+
+                1 -> { // 처음 시간
                     val selectedTime = data?.getStringExtra("selectedTime")
                     findViewById<Button>(R.id.startTime).text = selectedTime
                 }
-                2->{
+
+                2 -> {
                     var imagePath = data!!.getStringExtra("imagePath")
                     findViewById<EditText>(R.id.imageText).setText("$imagePath")
                 }
-                3->{ // 나중 시간
+
+                3 -> { // 나중 시간
                     val selectedTime = data?.getStringExtra("selectedTime")
                     findViewById<Button>(R.id.endTime).text = selectedTime
                 }
-                10->{ // 처음 날짜
+
+                10 -> { // 처음 날짜
                     val selectedDate = data?.getStringExtra("selectedDate")
                     findViewById<Button>(R.id.startDate).text = selectedDate
                 }
-                11->{ // 나중 날짜
+
+                11 -> { // 나중 날짜
                     val selectedDate = data?.getStringExtra("selectedDate")
                     findViewById<Button>(R.id.endDate).text = selectedDate
                 }

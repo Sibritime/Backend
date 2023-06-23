@@ -24,6 +24,7 @@ class PosterActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.location).text = intent.getStringExtra("location")
         findViewById<TextView>(R.id.startDate).text = intent.getStringExtra("date")
         findViewById<TextView>(R.id.startTime).text = intent.getStringExtra("time")
+        findViewById<TextView>(R.id.user).text = intent.getStringExtra("uid")
         val content = intent.getStringExtra("subscript")
         if (content != "") {
             findViewById<TextView>(R.id.content).text = content

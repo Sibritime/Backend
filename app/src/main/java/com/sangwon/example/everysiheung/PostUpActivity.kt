@@ -149,35 +149,38 @@ class PostUpActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 0) {
-                latitude = data!!.getDoubleExtra("latitude", 0.0)
-                longitude = data.getDoubleExtra("longitude", 0.0)
+            when(requestCode){
+                0 ->{
+                    latitude = data!!.getDoubleExtra("latitude", 0.0)
+                    longitude = data.getDoubleExtra("longitude", 0.0)
 
-                var geocoder = Geocoder(this)
-                var addressList = geocoder.getFromLocation(latitude, longitude, 1)
-                for (addrres in addressList!!) {
-                    findViewById<EditText>(R.id.locateText).setText("${addrres.getAddressLine(0)}")
-                    Log.e("address", "${addrres.getAddressLine(0)}")
+                    var geocoder = Geocoder(this)
+                    var addressList = geocoder.getFromLocation(latitude, longitude, 1)
+                    for (addrres in addressList!!) {
+                        findViewById<EditText>(R.id.locateText).setText(addrres.getAddressLine(0))
+                        Log.e("address", addrres.getAddressLine(0))
+                    }
                 }
-            } else if (requestCode == 2) {
-                var imagePath = data!!.getStringExtra("imagePath")
-                findViewById<EditText>(R.id.imageText).setText("${imagePath}")
-            }
-            else if (requestCode == 1) { // 처음 시간
-                val selectedTime = data?.getStringExtra("selectedTime")
-                findViewById<Button>(R.id.startTime).text = selectedTime
-            }
-            else if (requestCode == 3) { // 나중 시간
-                val selectedTime = data?.getStringExtra("selectedTime")
-                findViewById<Button>(R.id.endTime).text = selectedTime
-            }
-            else if (requestCode == 10) { // 처음 날짜
-                val selectedDate = data?.getStringExtra("selectedDate")
-                findViewById<Button>(R.id.startDate).text = selectedDate
-            }
-            else if (requestCode == 11) { // 나중 날짜
-                val selectedDate = data?.getStringExtra("selectedDate")
-                findViewById<Button>(R.id.endDate).text = selectedDate
+                1->{ // 처음 시간
+                    val selectedTime = data?.getStringExtra("selectedTime")
+                    findViewById<Button>(R.id.startTime).text = selectedTime
+                }
+                2->{
+                    var imagePath = data!!.getStringExtra("imagePath")
+                    findViewById<EditText>(R.id.imageText).setText("$imagePath")
+                }
+                3->{ // 나중 시간
+                    val selectedTime = data?.getStringExtra("selectedTime")
+                    findViewById<Button>(R.id.endTime).text = selectedTime
+                }
+                10->{ // 처음 날짜
+                    val selectedDate = data?.getStringExtra("selectedDate")
+                    findViewById<Button>(R.id.startDate).text = selectedDate
+                }
+                11->{ // 나중 날짜
+                    val selectedDate = data?.getStringExtra("selectedDate")
+                    findViewById<Button>(R.id.endDate).text = selectedDate
+                }
             }
         }
     }

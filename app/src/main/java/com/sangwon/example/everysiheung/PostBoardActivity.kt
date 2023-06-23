@@ -112,6 +112,7 @@ class PostBoardActivity : AppCompatActivity() {
 
 
             for (document in result) {
+                val uid = document.getString("uid")
                 val title = document.getString("title")
                 val location = document.getString("locate")
                 val date = document.getString("date")
@@ -146,6 +147,7 @@ class PostBoardActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val imageData = task.result
                         val postItem = PostItem(
+                            uid = uid ?: "",
                             img = imageData,
                             title = title ?: "",
                             location = location ?: "",
@@ -184,6 +186,7 @@ class PostBoardActivity : AppCompatActivity() {
 
 
             for (document in result) {
+                val uid = document.getString("uid")
                 val title = document.getString("title")
                 val location = document.getString("locate")
                 val date = document.getString("date")
@@ -217,6 +220,7 @@ class PostBoardActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val imageData = task.result
                         val postItem = PostItem(
+                            uid = uid ?: "",
                             img = imageData,
                             title = title ?: "",
                             location = location ?: "",
@@ -257,6 +261,7 @@ class PostBoardActivity : AppCompatActivity() {
             }
 
             for (document in result) {
+                val uid = document.getString("uid")
                 val title = document.getString("title")
                 val location = document.getString("locate")
                 val date = document.getString("date")
@@ -290,6 +295,7 @@ class PostBoardActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val imageData = task.result
                         val postItem = PostItem(
+                            uid = uid ?: "",
                             img = imageData,
                             title = title ?: "",
                             location = location ?: "",
@@ -334,7 +340,7 @@ class PostBoardActivity : AppCompatActivity() {
             for (document in result) {
                 var isContains = document.getString("title")?.contains(searchKeyword)
 
-
+                val uid = document.getString("uid")
                 val title = document.getString("title")
                 val location = document.getString("locate")
                 val date = document.getString("date")
@@ -369,6 +375,7 @@ class PostBoardActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         val imageData = task.result
                         val postItem = PostItem(
+                            uid = uid ?: "",
                             img = imageData,
                             title = title ?: "",
                             location = location ?: "",

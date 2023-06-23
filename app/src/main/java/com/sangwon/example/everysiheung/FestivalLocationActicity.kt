@@ -2,11 +2,13 @@ package com.sangwon.example.everysiheung
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +18,7 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -29,6 +32,8 @@ class FestivalLocationActicity : AppCompatActivity(), MapView.MapViewEventListen
     private var LOCATION_PERMISSION_REQUEST_CODE = 2
     private var isMapMovedToCurrentLocation = false // 현재 위치인가?
     private var eventListener: MapView.MapViewEventListener? = null
+    private lateinit var firebaseStorage: FirebaseStorage
+    private lateinit var imagePath: String
 
 
 
@@ -36,6 +41,8 @@ class FestivalLocationActicity : AppCompatActivity(), MapView.MapViewEventListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_festival_location)
+
+        firebaseStorage = Firebase.storage
 
         mapView = MapView(this)
         val mapLayout = findViewById<RelativeLayout>(R.id.map_view)
@@ -69,21 +76,49 @@ class FestivalLocationActicity : AppCompatActivity(), MapView.MapViewEventListen
                     var latitude = document.getDouble("latitude")?.toDouble()
                     var longitude = document.getDouble("longitude")?.toDouble()
 
-
-                    if (latitude != null && longitude != null ) {
-                        var mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
-
-                        var marker = MapPOIItem()
-                        marker.itemName = "${title}"
-                        marker.tag = 0
-                        marker.mapPoint = mapPoint
-                        marker.markerType = MapPOIItem.MarkerType.CustomImage
-                        marker.selectedMarkerType = MapPOIItem.MarkerType.CustomImage
-                        marker.customImageBitmap = customMarker
-                        mapView.addPOIItem(marker)
-                        //mapView.setMapCenterPoint(mapPoint, true) // 마커된 포인트로 화면 이동
+                    // 마커에 추가 정보 저장
+                    var location = document.getString("locate")
+                    var date = document.getString("date")
+                    var time = document.getString("time")
+                    var subscript = document.getString("subscript")
+                    imagePath = document.getString("image").toString()
+                    Log.e("order", "${title}")
+                    // 이미지를 등록하지 않은 경우 default 이미지
+                    if (imagePath == "") {
+                        imagePath = "images/default.png"
                     }
 
+                    val storageReference = firebaseStorage.getReference().child(imagePath)
+
+                    storageReference.downloadUrl.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val imageData = task.result
+                            if (latitude != null && longitude != null ) {
+                                var mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
+
+                                var marker = MapPOIItem()
+                                marker.itemName = "${title}"
+                                marker.tag = 0
+                                marker.mapPoint = mapPoint
+                                marker.markerType = MapPOIItem.MarkerType.CustomImage
+                                marker.selectedMarkerType = MapPOIItem.MarkerType.CustomImage
+                                marker.customImageBitmap = customMarker
+
+                                // 추가 정보 저장
+                                val additionalInfo = HashMap<String, Any?>()
+                                additionalInfo["location"] = location
+                                additionalInfo["date"] = date
+                                additionalInfo["time"] = time
+                                additionalInfo["post"] = imageData
+                                additionalInfo["subscript"] = subscript
+
+                                marker.userObject = additionalInfo
+
+                                mapView.addPOIItem(marker)
+                                //mapView.setMapCenterPoint(mapPoint, true)
+                            }
+                        }
+                    }
                 }
             }
             .addOnFailureListener { exception ->
@@ -147,11 +182,22 @@ class FestivalLocationActicity : AppCompatActivity(), MapView.MapViewEventListen
         }
     }
 
+    override fun onPOIItemSelected(mapView: MapView?, mapPOIItem: MapPOIItem?) {
+        val intent = Intent(this, PosterActivity::class.java)
+        intent.putExtra("title", mapPOIItem?.itemName)
 
+        val userObject = mapPOIItem?.userObject
+        if (userObject is HashMap<*, *>) {
+            val additionalInfo = userObject as HashMap<String, Any?>
+            intent.putExtra("location", additionalInfo["location"] as? String)
+            intent.putExtra("date", additionalInfo["date"] as? String)
+            intent.putExtra("time", additionalInfo["time"] as? String)
+            intent.putExtra("subscript", additionalInfo["subscript"] as? String)
+            intent.putExtra("post", additionalInfo["post"].toString())
+        }
 
-
-
-
+        startActivity(intent)
+    }
 
 
 
@@ -185,7 +231,7 @@ class FestivalLocationActicity : AppCompatActivity(), MapView.MapViewEventListen
     override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {}
     override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {}
 
-    override fun onPOIItemSelected(p0: MapView?, p1: MapPOIItem?) {}
+    //override fun onPOIItemSelected(p0: MapView?, p1: MapPOIItem?) {}
     override fun onCalloutBalloonOfPOIItemTouched(p0: MapView?, p1: MapPOIItem?) {}
     override fun onCalloutBalloonOfPOIItemTouched(p0: MapView?, p1: MapPOIItem?, p2: MapPOIItem.CalloutBalloonButtonType?, ) {}
     override fun onDraggablePOIItemMoved(p0: MapView?, p1: MapPOIItem?, p2: MapPoint?) {}

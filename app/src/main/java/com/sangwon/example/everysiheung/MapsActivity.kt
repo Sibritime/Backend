@@ -3,22 +3,20 @@ package com.sangwon.example.everysiheung
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import net.daum.mf.map.api.CameraUpdateFactory
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
-import android.Manifest
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
+
 
 
 class MapsActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.POIItemEventListener {
@@ -26,9 +24,6 @@ class MapsActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.
     private var isMarkerAdded = false
     private var latitude : Double = 1.0
     private var longitude : Double= 1.0
-    private var LOCATION_PERMISSION_REQUEST_CODE = 1
-    private var isMapMovedToCurrentLocation = false // 현재 위치인가?
-    private var eventListener: MapView.MapViewEventListener? = null
 
 
     @SuppressLint("MissingInflatedId")
@@ -42,8 +37,12 @@ class MapsActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.
 
         mapView.setMapViewEventListener(this)
         mapView.setPOIItemEventListener(this)
-        // 위치 권한 요청
-        requestLocationPermission()
+
+        val targetPoint = MapPoint.mapPointWithGeoCoord(37.380119, 126.803254)
+        mapView?.moveCamera(CameraUpdateFactory.newMapPoint(targetPoint))
+        val zoomLevel = 14.0 // 원하는 줌 레벨 값 숫자 높으면
+        mapView?.setZoomLevel(zoomLevel.toInt())
+
 
 
         val inIntent = intent
@@ -90,58 +89,6 @@ class MapsActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.
             isMarkerAdded = true
         }
     }
-    private fun requestLocationPermission() {
-        val permission = Manifest.permission.ACCESS_FINE_LOCATION
-        val permissionGranted = PackageManager.PERMISSION_GRANTED
-        if (ContextCompat.checkSelfPermission(this, permission) != permissionGranted) {
-            ActivityCompat.requestPermissions(this, arrayOf(permission), LOCATION_PERMISSION_REQUEST_CODE)
-        } else {
-            // 위치 권한이 이미 허용된 경우, 현재 위치로 지도 이동
-            moveMapToCurrentLocation()
-        }
-    }
-
-    /*private fun moveMapToCurrentLocation() {
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
-    }*/
-
-    private fun moveMapToCurrentLocation() {
-        if (!isMapMovedToCurrentLocation) {
-            mapView.currentLocationTrackingMode =
-                MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading
-            eventListener = object : MapView.MapViewEventListener {
-                override fun onMapViewInitialized(mapView: MapView) {}
-                override fun onMapViewCenterPointMoved(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewZoomLevelChanged(mapView: MapView, zoomLevel: Int) {}
-                override fun onMapViewSingleTapped(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewDoubleTapped(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewLongPressed(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewDragStarted(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewDragEnded(mapView: MapView, mapPoint: MapPoint) {}
-                override fun onMapViewMoveFinished(mapView: MapView, mapPoint: MapPoint) {
-                    isMapMovedToCurrentLocation = true
-                    mapView.currentLocationTrackingMode =
-                        MapView.CurrentLocationTrackingMode.TrackingModeOff
-                    // 이벤트 리스너 해제
-                    eventListener = null
-                }
-            }
-            mapView.setMapViewEventListener(eventListener)
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 위치 권한이 허용된 경우, 현재 위치로 지도 이동
-                moveMapToCurrentLocation()
-            } else {
-                // 위치 권한이 거부된 경우, 사용자에게 메시지 표시 또는 다른 동작 수행
-            }
-        }
-    }
-
 
     override fun onPOIItemSelected(p0: MapView?, p1: MapPOIItem?) {
         mapView?.removePOIItem(p1)
@@ -163,4 +110,8 @@ class MapsActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.
     override fun onCalloutBalloonOfPOIItemTouched(p0: MapView?, p1: MapPOIItem?) {}
     override fun onCalloutBalloonOfPOIItemTouched(p0: MapView?, p1: MapPOIItem?, p2: MapPOIItem.CalloutBalloonButtonType?, ) {}
     override fun onDraggablePOIItemMoved(p0: MapView?, p1: MapPOIItem?, p2: MapPoint?) {}
+}
+
+private fun MapView.setZoomLevel(toInt: Int) {
+
 }

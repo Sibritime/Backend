@@ -22,7 +22,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".FestivalLocationActicity"
+            android:name=".FestivalLocationActivity"
             android:exported="false" />
         <activity
             android:name=".ImgActivity"

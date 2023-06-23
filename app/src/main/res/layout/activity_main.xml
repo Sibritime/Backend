@@ -137,8 +137,8 @@
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/textView"
-
-                        app:layout_constraintVertical_bias="1.0" />
+                        app:layout_constraintVertical_bias="1.0"
+                        android:layout_marginBottom="10dp"/>
 
                     <ImageView
                         android:id="@+id/iVCalendar"

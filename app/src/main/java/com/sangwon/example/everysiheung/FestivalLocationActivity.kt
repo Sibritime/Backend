@@ -22,7 +22,7 @@ import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 
-class FestivalLocationActicity : AppCompatActivity(), MapView.MapViewEventListener, MapView.POIItemEventListener {
+class FestivalLocationActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.POIItemEventListener {
     private lateinit var mapView: MapView
     var storage = Firebase.storage
     val db = Firebase.firestore
@@ -74,7 +74,7 @@ class FestivalLocationActicity : AppCompatActivity(), MapView.MapViewEventListen
                         var mapPoint = MapPoint.mapPointWithGeoCoord(latitude, longitude)
 
                         var marker = MapPOIItem()
-                        marker.itemName = "${title}"
+                        marker.itemName = title
                         marker.tag = 0
                         marker.mapPoint = mapPoint
                         marker.markerType = MapPOIItem.MarkerType.CustomImage

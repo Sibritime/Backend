@@ -22,7 +22,7 @@
 
     <!--diary-->
     <string name="diary_date">yyyy.mm.dd.date</string>
-    <string name="diary_text_hint">오늘 하루는 어땠나요?</string>
+    <string name="diary_text_hint">어떤 일이 있었나요?</string>
     <string name="diary_save">save</string>
     <string name="diary_image">image</string>
     <string name="diary_option">option</string>

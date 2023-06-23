@@ -457,6 +457,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.diary -> startActivity(Intent(this@MainActivity, DiaryActivity::class.java))
+            R.id.blog -> {
+                val dateFormat = SimpleDateFormat("M", Locale.getDefault())
+                val currentMonth = dateFormat.format(Calendar.getInstance().time)
+                val url = "https://m.blog.naver.com/PostSearchList.naver?blogId=siheungblog&orderType=sim&searchText=$currentMonth%EC%9B%94%20%EB%AC%B8%ED%99%94%EC%98%88%EC%88%A0%EB%8B%AC%EB%A0%A5"
+                val intent = Intent(this, TableActivity::class.java)
+                intent.putExtra("url", url)
+                startActivity(intent)
+            }
         }
         return false
     }
@@ -593,7 +601,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             setUpCalendar()
         }
 
-        val monthUrlMap = mapOf( // 1 ~ 6월까지 행사 일정표
+        // 삭제 예정
+        /*val monthUrlMap = mapOf( // 1 ~ 6월까지 행사 일정표
             1 to "https://blog.naver.com/csiheung/222970240186",
             2 to "https://blog.naver.com/csiheung/223003096138",
             3 to "https://blog.naver.com/csiheung/223032419482",
@@ -616,7 +625,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         binding.iVCalendar.setOnClickListener(calendarClickListener)
 
-        binding.tvDateMonth.setOnClickListener(calendarClickListener)
+        binding.tvDateMonth.setOnClickListener(calendarClickListener)*/
     }
 
 
@@ -660,14 +669,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         calendarList2.addAll(calendarList)
         adapter.setData(calendarList)
 
-        if (cal.get(Calendar.MONTH) + 1 >= 1 && cal.get(Calendar.MONTH) + 1 <= currentDate.get(
+
+        // 삭제 예정
+        /*if (cal.get(Calendar.MONTH) + 1 >= 1 && cal.get(Calendar.MONTH) + 1 <= currentDate.get(
                 Calendar.MONTH
             ) + 1
         ) {
             binding.iVCalendar.visibility = View.VISIBLE;
         } else {
             binding.iVCalendar.visibility = View.GONE
-        }
+        }*/
     }
 
 

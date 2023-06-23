@@ -35,36 +35,12 @@
                 android:textSize="18dp"
                 android:hint="제목"/>
 
-            <Spinner
-                android:id="@+id/subscriptSpinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/titleText"
-                android:layout_alignParentEnd="true"
-                android:layout_marginStart="100dp" />
-
-            <TextView
-                android:id="@+id/textSubscript"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:gravity="center_vertical"
-                android:layout_below="@id/titleText"
-                android:textSize="18dp"
-                android:text="행사 종류"
-                android:textColor="#000"
-                android:layout_marginBottom="5dp" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#c0c0c0"
-                android:layout_below="@id/textSubscript"/>
 
             <TextView
                 android:id="@+id/textDate"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_below="@id/textSubscript"
+                android:layout_below="@id/titleText"
                 android:gravity="center_vertical"
                 android:textSize="18dp"
                 android:text="행사 기간"
@@ -210,8 +186,8 @@
 
             <ImageButton
                 android:id="@+id/mapBtn"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_below="@id/textFee"
                 android:layout_alignParentEnd="true"
                 android:background="@drawable/ic_baseline_location_on_24"
@@ -286,6 +262,7 @@
                 android:layout_height="50dp"
                 android:layout_below="@id/mapBtn"
                 android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/baseline_image_24"
                 tools:ignore="MissingConstraints" />
 
@@ -299,7 +276,7 @@
                 android:hint="행사 포스터"/>
 
             <EditText
-                android:id="@+id/contentText"
+                android:id="@+id/subscriptText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imageText"

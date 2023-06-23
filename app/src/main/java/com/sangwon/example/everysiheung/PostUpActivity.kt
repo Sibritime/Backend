@@ -2,6 +2,7 @@ package com.sangwon.example.everysiheung
 
 import android.app.Activity
 import android.content.Intent
+import android.icu.text.SimpleDateFormat
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
@@ -16,7 +17,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.kakao.sdk.user.UserApiClient
 import com.sangwon.example.everysiheung.view.DatePickerFragment
-import com.sangwon.example.everysiheung.view.TimePicker
+import com.sangwon.example.everysiheung.view.TimePickerFragment
+import java.sql.Time
 import java.util.*
 
 
@@ -40,25 +42,19 @@ class PostUpActivity : AppCompatActivity() {
 
         val user = Firebase.auth.currentUser
 
+        // 종료 날짜를 오늘 날짜로 설정
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy년 MM월 dd일", Locale.getDefault())
+        findViewById<Button>(R.id.endDate).text = "종료 날짜"
+        findViewById<Button>(R.id.startDate).text = "시작 날짜"
 
         val timestamp = Timestamp.now() //Date()와 Timestamp는 서로 대입가능한 관계인가?
-
-
-        val spinner: Spinner = findViewById<Spinner>(R.id.subscriptSpinner)
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.subscript_spinner,
-            android.R.layout.simple_spinner_item
-        ).also {
-            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = it
-        }
 
         findViewById<Button>(R.id.makePostBtn).setOnClickListener {
             // 버튼 누르면 객체를 만들어
             val title = findViewById<EditText>(R.id.titleText).text.toString()
             val date =
-                findViewById<Button>(R.id.startDate).text.toString() + "~" + findViewById<Button>(R.id.endDate).text.toString()
+                findViewById<Button>(R.id.startDate).text.toString() + " ~ " + findViewById<Button>(R.id.endDate).text.toString()
             val locate = findViewById<EditText>(R.id.locateText).text.toString()
             val target = if (findViewById<RadioButton>(R.id.anybody).isChecked) {
                 findViewById<RadioButton>(R.id.anybody).text.toString()
@@ -70,10 +66,10 @@ class PostUpActivity : AppCompatActivity() {
                 findViewById<RadioButton>(R.id.child).text.toString()
             }
             val fee = findViewById<EditText>(R.id.feeText).text.toString()
-            val subscript = findViewById<Spinner>(R.id.subscriptSpinner).selectedItem.toString()
+            val subscript = findViewById<EditText>(R.id.subscriptText).text.toString()
             val image = findViewById<EditText>(R.id.imageText).text.toString()
             val time =
-                findViewById<Button>(R.id.startTime).text.toString() + "~" + findViewById<Button>(R.id.endTime).text.toString()
+                findViewById<Button>(R.id.startTime).text.toString() + " ~ " + findViewById<Button>(R.id.endTime).text.toString()
             var bookmark: Int = 0
 
 
@@ -112,32 +108,30 @@ class PostUpActivity : AppCompatActivity() {
 
         // 시간 버튼 누를 때(처음 시간)
         findViewById<Button>(R.id.startTime).setOnClickListener {
-            var intent = Intent(application, TimePicker::class.java)
-            startActivityForResult(intent, 1)
+            val fragment = TimePickerFragment.newInstance(true) // DatePicker가 있는 Fragment 생성
+            fragment.show(supportFragmentManager, "StartTimePickerFragment") // Fragment를 표시
             // finish()
         }
 
         // 시간 버튼 누를 때(나중 시간)
         findViewById<Button>(R.id.endTime).setOnClickListener {
-            var intent = Intent(application, TimePicker::class.java)
-            startActivityForResult(intent, 3)
+            val fragment = TimePickerFragment.newInstance(false) // DatePicker가 있는 Fragment 생성
+            fragment.show(supportFragmentManager, "EndTimePickerFragment") // Fragment를 표시
             // finish()
         }
 
         // 날짜 버튼 누를 때(처음 날짜)
         findViewById<Button>(R.id.startDate).setOnClickListener {
-            var intent = Intent(application, com.sangwon.example.everysiheung.view.DatePicker::class.java)
-            startActivityForResult(intent, 10)
-            // finish()
+            val fragment = DatePickerFragment.newInstance(true) // DatePicker가 있는 Fragment 생성
+            fragment.show(supportFragmentManager, "StartDatePickerFragment") // Fragment를 표시
         }
 
         // 날짜 버튼 누를 때(나중 날짜)
         findViewById<Button>(R.id.endDate).setOnClickListener {
-            var intent = Intent(application, com.sangwon.example.everysiheung.view.DatePicker::class.java)
-            startActivityForResult(intent, 11)
+            val fragment = DatePickerFragment.newInstance(false) // DatePicker가 있는 Fragment 생성
+            fragment.show(supportFragmentManager, "EndDatePickerFragment") // Fragment를 표시
             // finish()
         }
-
 
         //지도 버튼 누를 때
         findViewById<ImageButton>(R.id.mapBtn).setOnClickListener {
@@ -155,6 +149,62 @@ class PostUpActivity : AppCompatActivity() {
 
     }
 
+    // 프래그먼트에서 날짜 받아오는 함수
+    fun onDateSelected(isStartDate: Boolean, selectedDate: String) {
+        val startDate = findViewById<TextView>(R.id.startDate).text.toString()
+        val endDate = findViewById<TextView>(R.id.endDate).text.toString()
+
+        if (isStartDate) {
+            // 시작날짜를 선택한 경우
+            if (endDate != "종료 날짜") {
+                // 종료날짜가 이미 선택된 경우 비교합니다.
+                if (selectedDate > endDate) {
+                    Toast.makeText(this, "시작 날짜는 종료 날짜 이전이어야 합니다.", Toast.LENGTH_SHORT).show()
+                } else {
+                    findViewById<TextView>(R.id.startDate).text = selectedDate
+                }
+            } else {
+                findViewById<TextView>(R.id.startDate).text = selectedDate
+            }
+        } else {
+            // 종료날짜를 선택한 경우
+            if (startDate != "시작 날짜") {
+                // 시작날짜가 이미 선택된 경우 비교합니다.
+                if (selectedDate < startDate) {
+                    Toast.makeText(this, "종료 날짜는 시작 날짜 이후여야 합니다.", Toast.LENGTH_SHORT).show()
+                } else {
+                    findViewById<TextView>(R.id.endDate).text = selectedDate
+                }
+            } else {
+                findViewById<TextView>(R.id.endDate).text = selectedDate
+            }
+        }
+    }
+
+
+    // 프래그먼트에서 시간 받아오는 함수
+    fun onTimeSelected(isStartTime: Boolean, time: String, timeInMillis: Date) {
+        val calendar = Calendar.getInstance()
+        calendar.time = timeInMillis
+
+        if (calendar[Calendar.HOUR_OF_DAY] >= 0 && calendar[Calendar.HOUR_OF_DAY] < 5) {
+                Toast.makeText(this, "자정부터 새벽 5시까지는 설정할 수 없습니다.", Toast.LENGTH_SHORT).show()
+        } else if (isStartTime) {
+            findViewById<Button>(R.id.startTime).text = time
+        } else {
+            val startTimeInMillis = convertTimeToMillis(findViewById<Button>(R.id.startTime).text.toString())
+
+            if (timeInMillis.before(startTimeInMillis)) {
+                Toast.makeText(this, "시작 시각과 종료 시각을 확인바랍니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                findViewById<Button>(R.id.endTime).text = time
+            }
+        }
+    }
+    private fun convertTimeToMillis(time: String): Date {
+        val format = SimpleDateFormat("a hh:mm", Locale.KOREAN)
+        return format.parse(time)
+    }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -182,17 +232,8 @@ class PostUpActivity : AppCompatActivity() {
                 val selectedTime = data?.getStringExtra("selectedTime")
                 findViewById<Button>(R.id.endTime).text = selectedTime
             }
-            else if (requestCode == 10) { // 처음 날짜
-                val selectedDate = data?.getStringExtra("selectedDate")
-                findViewById<Button>(R.id.startDate).text = selectedDate
-            }
-            else if (requestCode == 11) { // 나중 날짜
-                val selectedDate = data?.getStringExtra("selectedDate")
-                findViewById<Button>(R.id.endDate).text = selectedDate
-            }
         }
     }
-
 
 
     //좌표를

@@ -17,16 +17,20 @@ class PosterActivity : AppCompatActivity() {
         start()
     }
 
-    private fun start(){
+    private fun start() {
         val intent = intent
 
         findViewById<TextView>(R.id.title).text = intent.getStringExtra("title")
         findViewById<TextView>(R.id.location).text = intent.getStringExtra("location")
         findViewById<TextView>(R.id.startDate).text = intent.getStringExtra("date")
         findViewById<TextView>(R.id.startTime).text = intent.getStringExtra("time")
+        val content = intent.getStringExtra("subscript")
+        if (content != "") {
+            findViewById<TextView>(R.id.content).text = content
+        }
 
         val src = Uri.parse(intent.getStringExtra("post"))
-        if(src != Uri.parse("https://firebasestorage.googleapis.com/v0/b/everysiheung.appspot.com/o/images%2Fdefault.png?alt=media&token=b14ac346-a6a0-4e05-81e4-767eea07d175")){
+        if (src != Uri.parse("https://firebasestorage.googleapis.com/v0/b/everysiheung.appspot.com/o/images%2Fdefault.png?alt=media&token=b14ac346-a6a0-4e05-81e4-767eea07d175")) {
             val poster = ImageView(this)
 
             Glide.with(this)

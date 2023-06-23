@@ -1,70 +1,44 @@
 package com.sangwon.example.everysiheung.view
 
-import android.R
-import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
-import android.content.DialogInterface
-import android.content.Intent
-import android.graphics.Color
+import android.icu.text.DateFormat
+import android.icu.text.SimpleDateFormat
 import android.os.Bundle
-import android.text.format.DateFormat
-import android.util.Log
-import android.view.Gravity
-import android.view.View
-import android.widget.TextView
 import android.widget.TimePicker
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
-import com.sangwon.example.everysiheung.ImgActivity
-import java.text.SimpleDateFormat
+import com.sangwon.example.everysiheung.PostUpActivity
 import java.util.*
-
 
 class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
+    private var isStartTime: Boolean = true
+
+    companion object {
+        fun newInstance(isStartTime: Boolean): TimePickerFragment {
+            val fragment = TimePickerFragment()
+            fragment.isStartTime = isStartTime
+            return fragment
+        }
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val c: Calendar = Calendar.getInstance()
-        val hour: Int = c.get(Calendar.HOUR_OF_DAY)
-        val minute: Int = c.get(Calendar.MINUTE)
+        // 현재 시간을 기본값으로 설정합니다.
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
 
-        val tpd = TimePickerDialog(
-            requireContext(),
-            AlertDialog.THEME_DEVICE_DEFAULT_LIGHT,
-            this,
-            hour,
-            minute,
-            DateFormat.is24HourFormat(requireContext())
-        )
-
-        // Set the custom title for the TimePickerDialog
-        val tvTitle = TextView(requireContext())
-        tvTitle.text = "시간을 선택해주세요."
-        tvTitle.setBackgroundColor(Color.parseColor("#ffEEE8AA"))
-        tvTitle.setPadding(5, 3, 5, 3)
-        tvTitle.gravity = Gravity.CENTER_HORIZONTAL
-        tpd.setCustomTitle(tvTitle)
-
-        return tpd
+        // TimePickerDialog를 생성하고 반환합니다.
+        return TimePickerDialog(requireActivity(), this, hour, minute, false)
     }
 
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        // 선택한 시간을 가지고 옵니다.
         val selectedTime = formatTime(hourOfDay, minute)
+        val selectedRealTime = convertTimeToDate(selectedTime)
 
-        val intent = Intent().apply {
-            putExtra("selectedTime", selectedTime)
-        }
-
-        intent.putExtra("selectedTime", selectedTime)
-
-        activity?.setResult(Activity.RESULT_OK, intent)
-        activity?.finish()
-    }
-
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        activity?.finish()
+        // postupactivity로 선택한 시간과 시작/종료 여부를 전달합니다.
+        (requireActivity() as? PostUpActivity)?.onTimeSelected(isStartTime, selectedTime, selectedRealTime)
     }
 
     private fun formatTime(hourOfDay: Int, minute: Int): String {
@@ -72,10 +46,16 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
         calendar.set(Calendar.MINUTE, minute)
 
-        val is24HourFormat = DateFormat.is24HourFormat(requireContext())
-        val timeFormat = if (is24HourFormat) "HH:mm" else "a hh:mm"
+        val is24HourFormat = android.text.format.DateFormat.is24HourFormat(requireContext())
+        val timeFormat = if (is24HourFormat) "a hh:mm" else "a hh:mm"
         val simpleDateFormat = SimpleDateFormat(timeFormat, Locale.getDefault())
 
         return simpleDateFormat.format(calendar.time)
     }
+
+    private fun convertTimeToDate(time: String): Date {
+        val timeFormat = SimpleDateFormat("a hh:mm", Locale.getDefault())
+        return timeFormat.parse(time)
+    }
 }
+

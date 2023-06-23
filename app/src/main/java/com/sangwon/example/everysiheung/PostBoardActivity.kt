@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
@@ -23,7 +24,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import com.kakao.sdk.user.UserApiClient
 
 
 class PostBoardActivity : AppCompatActivity() {
@@ -56,16 +56,21 @@ class PostBoardActivity : AppCompatActivity() {
         } else if (intent.getStringExtra("Role") == "BookMarks") {
             BookMarksList()
             btnPosting.visibility = View.GONE
+            findViewById<TextView>(R.id.head).text = "북마크"
         } else if (intent.getStringExtra("Role") == "MyPosts") {
             MyPostsList()
             btnPosting.visibility = View.GONE
+            findViewById<TextView>(R.id.head).text = "내 게시물"
         } else if (intent.getStringExtra("Role") == "Searching") {
             //SearchList()
+            findViewById<TextView>(R.id.head).text = "검색"
             btnPosting.visibility = View.GONE
             val searchLayout = findViewById<RelativeLayout>(R.id.searchContainer)
             val searchButton = Button(this)
 
             searchButton.text = "검색"
+            searchButton.id = R.id.searchButton
+            searchButton.setBackgroundResource(R.drawable.roundbar)
             val searchButtonParams = RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -77,10 +82,11 @@ class PostBoardActivity : AppCompatActivity() {
             val searchEditText = EditText(this)
             searchEditText.hint = "검색할 키워드를 입력해주세요."
             val searchEditTextParams = RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             searchEditTextParams.addRule(RelativeLayout.START_OF, searchButton.id)
+            searchEditTextParams.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE)
             searchEditText.layoutParams = searchEditTextParams
             searchLayout.addView(searchEditText)
 
@@ -107,10 +113,11 @@ class PostBoardActivity : AppCompatActivity() {
 
             for (document in result) {
                 val title = document.getString("title")
-                val location = document.getString("location")
+                val location = document.getString("locate")
                 val date = document.getString("date")
                 val id = document.id
                 val time = document.getString("time")
+                val subscript = document.getString("subscript")
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -178,7 +185,7 @@ class PostBoardActivity : AppCompatActivity() {
 
             for (document in result) {
                 val title = document.getString("title")
-                val location = document.getString("location")
+                val location = document.getString("locate")
                 val date = document.getString("date")
                 val id = document.id
                 val time = document.getString("time")
@@ -251,7 +258,7 @@ class PostBoardActivity : AppCompatActivity() {
 
             for (document in result) {
                 val title = document.getString("title")
-                val location = document.getString("location")
+                val location = document.getString("locate")
                 val date = document.getString("date")
                 val id = document.id
                 val owner = document.getString("uid")
@@ -329,7 +336,7 @@ class PostBoardActivity : AppCompatActivity() {
 
 
                 val title = document.getString("title")
-                val location = document.getString("location")
+                val location = document.getString("locate")
                 val date = document.getString("date")
                 val id = document.id
                 val time = document.getString("time")

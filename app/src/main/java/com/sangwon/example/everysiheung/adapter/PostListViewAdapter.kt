@@ -74,7 +74,7 @@ class PostListViewAdapter: BaseAdapter() {
             var Mypage = db.collection("MyPage")
                 .document("${kakaouid}") //없으면 만드는 걸까?
             //북마크 추가
-            if(isChecked == true) {
+            if (isChecked) {
                 //Mypage 컬렉션 안에 uid 문서 안에 BookMarks 컬렉션안에 있는 북마크 문서(게시물 ID)
                 Mypage.collection("BookMarks").document(documentId)
                     .set(emptyData)
@@ -96,6 +96,7 @@ class PostListViewAdapter: BaseAdapter() {
             intent.putExtra("date", item.date)
             intent.putExtra("time", item.time)
             intent.putExtra("post", item.img.toString())
+            intent.putExtra("subscript", item.subscript)
             context.startActivity(intent)
         }
         convertView.findViewById<View>(R.id.contentPanel).setOnClickListener(clickListener)

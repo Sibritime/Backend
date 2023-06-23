@@ -1,9 +1,15 @@
 package com.sangwon.example.everysiheung
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
+import android.net.Uri
 import android.os.*
 import android.util.Base64
 import android.util.Log
@@ -36,11 +42,15 @@ import com.sangwon.example.everysiheung.model.CalendarDateModel
 import com.sangwon.example.everysiheung.model.TodayEventItem
 import com.sangwon.example.everysiheung.utils.HorizontalItemDecoration
 import com.sangwon.example.everysiheung.view.DiaryActivity
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.InputStream
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -76,6 +86,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var sharedPreferences: SharedPreferences
 
     private var backButtonPressedOnce = false
+
+    private lateinit var header_image: CircleImageView
 
 
     /**
@@ -178,7 +190,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         /**
-         * 상단 네비게이션바 헤더 부분에 이름 출력 및 저장
+         * 상단 네비게이션바 헤더 부분에 이름/프로필 사진 출력 및 저장
          */
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         val headerView = navigationView.getHeaderView(0)
@@ -196,6 +208,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             headerTextView.setText(savedName)
         } else {
             headerTextView.setText(name)
+        }
+
+        header_image = headerView.findViewById<CircleImageView>(R.id.image_profile)
+        header_image.setOnClickListener {
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(intent, 0)
+        }
+
+        val storedBitmap = loadImageFromSharedPreferences()
+        if (storedBitmap != null) {
+            header_image.setImageBitmap(storedBitmap)
         }
 
 
@@ -335,6 +360,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 300) {
@@ -343,8 +369,59 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
+            val selectedImage: Uri? = data.data
+            if (selectedImage != null) {
+                var inputStream: InputStream? = null
+                try {
+                    inputStream = contentResolver.openInputStream(selectedImage)
+                    val bitmap = BitmapFactory.decodeStream(inputStream)
+                    header_image.setImageBitmap(bitmap)
+                    saveImageToSharedPreferences(bitmap)
+                } finally {
+                    try {
+                        inputStream?.close()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+
         binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH) - 2)
         //다이어리 현재 날짜가 화면 중간에 오도록 수정
+    }
+
+    // 이미지를 SharedPreferences에 저장하는 함수
+    private fun saveImageToSharedPreferences(bitmap: Bitmap) {
+        val sharedPreferences = getSharedPreferences("ImagePreferences", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        // Bitmap을 ByteArray로 변환
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        val byteArray = stream.toByteArray()
+
+        // ByteArray를 Base64로 인코딩하여 저장
+        val encodedString = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        editor.putString("image", encodedString)
+        editor.apply()
+    }
+
+    // SharedPreferences에서 이미지를 가져오는 함수
+    private fun loadImageFromSharedPreferences(): Bitmap? {
+        val sharedPreferences = getSharedPreferences("ImagePreferences", Context.MODE_PRIVATE)
+        val encodedString = sharedPreferences.getString("image", null)
+
+        if (encodedString != null) {
+            // Base64로 인코딩된 문자열을 ByteArray로 디코딩
+            val byteArray = Base64.decode(encodedString, Base64.DEFAULT)
+
+            // ByteArray를 Bitmap으로 변환하여 반환
+            return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+        }
+
+        return null
     }
 
     /**

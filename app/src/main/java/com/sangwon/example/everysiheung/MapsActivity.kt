@@ -12,6 +12,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
+import net.daum.mf.map.api.CameraUpdateFactory
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -36,6 +37,12 @@ class MapsActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.
 
         mapView.setMapViewEventListener(this)
         mapView.setPOIItemEventListener(this)
+
+        val targetPoint = MapPoint.mapPointWithGeoCoord(37.380119, 126.803254)
+        mapView?.moveCamera(CameraUpdateFactory.newMapPoint(targetPoint))
+        val zoomLevel = 14.0 // 원하는 줌 레벨 값 숫자 높으면
+        mapView?.setZoomLevel(zoomLevel.toInt())
+
 
 
         val inIntent = intent
@@ -103,4 +110,8 @@ class MapsActivity : AppCompatActivity(), MapView.MapViewEventListener, MapView.
     override fun onCalloutBalloonOfPOIItemTouched(p0: MapView?, p1: MapPOIItem?) {}
     override fun onCalloutBalloonOfPOIItemTouched(p0: MapView?, p1: MapPOIItem?, p2: MapPOIItem.CalloutBalloonButtonType?, ) {}
     override fun onDraggablePOIItemMoved(p0: MapView?, p1: MapPOIItem?, p2: MapPoint?) {}
+}
+
+private fun MapView.setZoomLevel(toInt: Int) {
+
 }

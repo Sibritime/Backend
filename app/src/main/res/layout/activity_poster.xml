@@ -14,16 +14,29 @@
         android:textSize="20dp"
         android:textColor="#000"
         android:textStyle="bold" />
+
     <TextView
         android:id="@+id/user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"/>
+        android:textAlignment="textEnd"
+        android:layout_below="@id/title" />
+
+    <ImageButton
+        android:id="@+id/mapBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@id/user"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/ic_baseline_location_on_24"
+        tools:ignore="MissingConstraints" />
+
     <TextView
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user" />
+        android:layout_alignBottom="@id/mapBtn"
+        android:layout_toLeftOf="@id/mapBtn"/>
 
     <TextView
         android:id="@+id/startDate"
@@ -72,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imageContainer"
-                android:text="일단은 아무 내용도 없지롱"/>
+                android:text="내용이 없습니다."/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

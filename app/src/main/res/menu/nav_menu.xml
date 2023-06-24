@@ -6,7 +6,6 @@
             android:icon="@drawable/baseline_article_24"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:title="내 게시물" />
-
         <item
             android:id="@+id/bookmark"
             android:icon="@drawable/baseline_article_24"

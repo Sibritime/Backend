@@ -2,12 +2,14 @@ package com.sangwon.example.everysiheung
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
@@ -79,6 +81,7 @@ class PostBoardActivity : AppCompatActivity() {
 
             val searchEditText = EditText(this)
             searchEditText.hint = "검색할 키워드를 입력해주세요."
+            searchEditText.setTextColor(ContextCompat.getColor(this, R.color.black))
             val searchEditTextParams = RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT

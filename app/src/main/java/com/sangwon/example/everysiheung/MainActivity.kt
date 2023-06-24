@@ -7,8 +7,6 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.*
 import android.util.Base64
@@ -346,9 +344,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
             totalHeight = listItem.measuredHeight * todayAdapter.count
 
-            val params: ViewGroup.LayoutParams = listview.getLayoutParams()
-            params.height = totalHeight + listview.getDividerHeight() * (todayAdapter.count - 1)
-            listview.setLayoutParams(params)
+            val params: ViewGroup.LayoutParams = listview.layoutParams
+            params.height = totalHeight + listview.dividerHeight * (todayAdapter.count - 1)
+            listview.layoutParams = params
             listview.requestLayout()
         }
         listview.setOnItemClickListener { parent, view, position, id ->
@@ -531,7 +529,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun moveMap() {
-        var intent = Intent(this, FestivalLocationActicity::class.java)
+        var intent = Intent(this, FestivalLocationActivity::class.java)
         startActivity(intent)
     }
 

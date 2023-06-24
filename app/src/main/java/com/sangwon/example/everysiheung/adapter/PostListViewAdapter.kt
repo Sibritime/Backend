@@ -19,7 +19,7 @@ import com.sangwon.example.everysiheung.PosterActivity
 import com.sangwon.example.everysiheung.kakaouid
 
 
-class PostListViewAdapter: BaseAdapter() {
+class PostListViewAdapter : BaseAdapter() {
     var db = Firebase.firestore
     private val items = ArrayList<PostItem>()
     override fun getCount(): Int {
@@ -40,21 +40,22 @@ class PostListViewAdapter: BaseAdapter() {
         // 카카오 사용자 ID 요청
 
 
-        val convertView:View = if(view==null) {
-            val inflater:LayoutInflater = context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val convertView: View = if (view == null) {
+            val inflater: LayoutInflater =
+                context?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             inflater.inflate(R.layout.post_item, parent, false)
-        }else{
+        } else {
             view
         }
 
-        val iconImageView:ImageView = convertView.findViewById<ImageView>(R.id.poster)
-        val titleTextView:TextView = convertView.findViewById<TextView>(R.id.title)
-        val locationTextView:TextView = convertView.findViewById<TextView>(R.id.location)
-        val dateTextView:TextView = convertView.findViewById<TextView>(R.id.date)
-        val timeTextView:TextView = convertView.findViewById<TextView>(R.id.time)
-        val isFavoriteCheckBox:CheckBox = convertView.findViewById(R.id.isFavorite)
+        val iconImageView: ImageView = convertView.findViewById<ImageView>(R.id.poster)
+        val titleTextView: TextView = convertView.findViewById<TextView>(R.id.title)
+        val locationTextView: TextView = convertView.findViewById<TextView>(R.id.location)
+        val dateTextView: TextView = convertView.findViewById<TextView>(R.id.date)
+        val timeTextView: TextView = convertView.findViewById<TextView>(R.id.time)
+        val isFavoriteCheckBox: CheckBox = convertView.findViewById(R.id.isFavorite)
 
-        val item:PostItem = items[position]
+        val item: PostItem = items[position]
 
         Glide.with(context!!)
             .load(item.img)
@@ -83,13 +84,18 @@ class PostListViewAdapter: BaseAdapter() {
             else {
                 Mypage.collection("BookMarks").document(documentId)
                     .delete()
-                    .addOnSuccessListener { Log.e("delete", "DocumentSnapshot successfully deleted!") }
+                    .addOnSuccessListener {
+                        Log.e(
+                            "delete",
+                            "DocumentSnapshot successfully deleted!"
+                        )
+                    }
                     .addOnFailureListener { e -> Log.e("delete", "Error deleting document", e) }
             }
         }
         val clickListener = View.OnClickListener {
             val item = items[position]
-            val intent:Intent = Intent(context, PosterActivity::class.java)
+            val intent: Intent = Intent(context, PosterActivity::class.java)
 
             intent.putExtra("title", item.title)
             intent.putExtra("location", item.location)
@@ -97,6 +103,7 @@ class PostListViewAdapter: BaseAdapter() {
             intent.putExtra("time", item.time)
             intent.putExtra("post", item.img.toString())
             intent.putExtra("subscript", item.subscript)
+            intent.putExtra("uid", item.uid)
             context.startActivity(intent)
         }
         convertView.findViewById<View>(R.id.contentPanel).setOnClickListener(clickListener)
@@ -105,7 +112,7 @@ class PostListViewAdapter: BaseAdapter() {
         return convertView
     }
 
-    fun addPost(post:PostItem){
+    fun addPost(post: PostItem) {
         items.add(post)
     }
 }

@@ -153,7 +153,9 @@ class PostBoardActivity : AppCompatActivity() {
                             date = date ?: "",
                             time = time ?: "",
                             isFavorites = isFavorites,
-                            id = id
+                            id = id,
+                            subscript = subscript ?: ""
+
                         )
                         postItems.add(postItem)
 
@@ -190,6 +192,8 @@ class PostBoardActivity : AppCompatActivity() {
                 val date = document.getString("date")
                 val id = document.id
                 val time = document.getString("time")
+                val subscript = document.getString("subscript")
+
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -224,7 +228,8 @@ class PostBoardActivity : AppCompatActivity() {
                             date = date ?: "",
                             time = time ?: "",
                             isFavorites = isFavorites,
-                            id = id
+                            id = id,
+                            subscript = subscript ?: ""
                         )
                         if (isFavorites) {
                             postItems.add(postItem)
@@ -264,6 +269,8 @@ class PostBoardActivity : AppCompatActivity() {
                 val id = document.id
                 val owner = document.getString("uid")
                 val time = document.getString("time")
+                val subscript = document.getString("subscript")
+
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -297,7 +304,8 @@ class PostBoardActivity : AppCompatActivity() {
                             date = date ?: "",
                             time = time ?: "",
                             isFavorites = isFavorites,
-                            id = id
+                            id = id,
+                            subscript = subscript ?: ""
                         )
                         // 자기가 작성한 게시물이라면 보여준다
                         if (kakaouid == owner) {
@@ -341,6 +349,8 @@ class PostBoardActivity : AppCompatActivity() {
                 val date = document.getString("date")
                 val id = document.id
                 val time = document.getString("time")
+                val subscript = document.getString("subscript")
+
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -376,7 +386,8 @@ class PostBoardActivity : AppCompatActivity() {
                             date = date ?: "",
                             time = time ?: "",
                             isFavorites = isFavorites,
-                            id = id
+                            id = id,
+                            subscript = subscript ?: ""
                         )
                         // 검색 결과가 있으면
                         if (isContains == true) {

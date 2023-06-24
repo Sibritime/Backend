@@ -2,17 +2,16 @@ package com.sangwon.example.everysiheung
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ListView
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -37,6 +36,7 @@ class PostBoardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_board)
+
 
         listview = findViewById(R.id.listview)
         adapter = PostListViewAdapter()
@@ -81,6 +81,7 @@ class PostBoardActivity : AppCompatActivity() {
 
             val searchEditText = EditText(this)
             searchEditText.hint = "검색할 키워드를 입력해주세요."
+            searchEditText.setTextColor(ContextCompat.getColor(this, R.color.black))
             val searchEditTextParams = RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -154,7 +155,9 @@ class PostBoardActivity : AppCompatActivity() {
                             date = date ?: "",
                             time = time ?: "",
                             isFavorites = isFavorites,
-                            id = id
+                            id = id,
+                            subscript = subscript ?: ""
+
                         )
                         postItems.add(postItem)
 
@@ -192,6 +195,8 @@ class PostBoardActivity : AppCompatActivity() {
                 val date = document.getString("date")
                 val id = document.id
                 val time = document.getString("time")
+                val subscript = document.getString("subscript")
+
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -227,7 +232,8 @@ class PostBoardActivity : AppCompatActivity() {
                             date = date ?: "",
                             time = time ?: "",
                             isFavorites = isFavorites,
-                            id = id
+                            id = id,
+                            subscript = subscript ?: ""
                         )
                         if (isFavorites) {
                             postItems.add(postItem)
@@ -268,6 +274,8 @@ class PostBoardActivity : AppCompatActivity() {
                 val id = document.id
                 val owner = document.getString("uid")
                 val time = document.getString("time")
+                val subscript = document.getString("subscript")
+
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -302,7 +310,8 @@ class PostBoardActivity : AppCompatActivity() {
                             date = date ?: "",
                             time = time ?: "",
                             isFavorites = isFavorites,
-                            id = id
+                            id = id,
+                            subscript = subscript ?: ""
                         )
                         // 자기가 작성한 게시물이라면 보여준다
                         if (kakaouid == owner) {
@@ -346,6 +355,8 @@ class PostBoardActivity : AppCompatActivity() {
                 val date = document.getString("date")
                 val id = document.id
                 val time = document.getString("time")
+                val subscript = document.getString("subscript")
+
 
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
@@ -382,7 +393,8 @@ class PostBoardActivity : AppCompatActivity() {
                             date = date ?: "",
                             time = time ?: "",
                             isFavorites = isFavorites,
-                            id = id
+                            id = id,
+                            subscript = subscript ?: ""
                         )
                         // 검색 결과가 있으면
                         if (isContains == true) {

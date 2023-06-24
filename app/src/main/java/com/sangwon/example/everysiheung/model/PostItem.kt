@@ -12,5 +12,5 @@ data class PostItem(
     var time: String,
     var isFavorites: Boolean,
     var id: String, //게시물의 고유값 저장
-    var subscript: String = ""
+    var subscript: String
 )

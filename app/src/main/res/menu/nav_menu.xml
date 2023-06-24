@@ -6,7 +6,6 @@
             android:icon="@drawable/baseline_article_24"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:title="내 게시물" />
-
         <item
             android:id="@+id/bookmark"
             android:icon="@drawable/baseline_article_24"
@@ -18,5 +17,10 @@
             android:icon="@drawable/baseline_article_24"
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:title="오늘의 다이어리" />
+        <item
+            android:id="@+id/blog"
+            android:icon="@drawable/baseline_article_24"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:title="시흥시 문화예술달력" />
     </group>
 </menu>

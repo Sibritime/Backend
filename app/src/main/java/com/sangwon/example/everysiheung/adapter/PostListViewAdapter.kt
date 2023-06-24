@@ -68,14 +68,14 @@ class PostListViewAdapter : BaseAdapter() {
         isFavoriteCheckBox.isChecked = item.isFavorites
 
         // CheckBox의 선택 상태가 변경될 때 실행되는 코드
-        isFavoriteCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
-            item.isFavorites = isChecked
+        isFavoriteCheckBox.setOnClickListener {
+            item.isFavorites = !item.isFavorites // 반대가 되야죠?
             val emptyData = hashMapOf<String, Any>() // 빈 데이터 맵
             var documentId = item.id
             var Mypage = db.collection("MyPage")
                 .document("${kakaouid}") //없으면 만드는 걸까?
             //북마크 추가
-            if (isChecked) {
+            if (item.isFavorites) {
                 //Mypage 컬렉션 안에 uid 문서 안에 BookMarks 컬렉션안에 있는 북마크 문서(게시물 ID)
                 Mypage.collection("BookMarks").document(documentId)
                     .set(emptyData)

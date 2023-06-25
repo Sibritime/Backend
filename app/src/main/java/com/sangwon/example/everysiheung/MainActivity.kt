@@ -49,6 +49,7 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
+import java.lang.Exception
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -60,7 +61,7 @@ private val MIN_ALPHA = 0.5f // 어두워지는 정도를 나타낸 듯 하다.
 
 var kakaouid: String = ""
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, OnClickListener {
     private lateinit var binding: ActivityMainBinding
     private val cal = Calendar.getInstance(Locale.KOREAN)
     private val currentDate = Calendar.getInstance(Locale.KOREAN)
@@ -70,12 +71,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val idolList: ArrayList<ImageData> = getIdolList()
     private val numBanner: Int = idolList.size
-    private var currentPosition = numBanner * 1000
+    private var currentPosition = numBanner
 
     private var myHandler = MyHandler()
     private val intervalTime = 5000.toLong() // 몇초 간격으로 페이지를 넘길것인지 (1500 = 1.5초)
 
-    private lateinit var navigationView: NavigationView
     private lateinit var drawerLayout: DrawerLayout
 
     private val PREF_NAME = "MyPrefs"
@@ -112,30 +112,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val idolList = ArrayList<ImageData>()
 
         // 아까워서 잠시 주석 처리.
-        /*val imageData1 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c42076e7d19cdb7974115393f2eb97c1a&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6277&year=2023&month=6&stateFlag=calendar", 0)
-        val imageData2 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c91995d2aad34f5a69ce6a53d0e720bb6&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6276&year=2023&month=6&stateFlag=calendar",0)
-        val imageData3 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c37415ce797b610c5d717a5b8e6d87f74&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6275&year=2023&month=6&stateFlag=calendar",0)
-        val imageData4 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c23d5d53603818a0c7bc591e475634fbc&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6215&year=2023&month=6&stateFlag=calendar",0)
-        val imageData5 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c7564eebd039cc288b9ce14bedce381ab&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6098&year=2023&month=6&stateFlag=calendar",0)
-        val imageData6 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771cab62a6bdb36afc5d7135aef1ef6c8580&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6304&year=2023&month=6&stateFlag=calendar",0)
-        val imageData7 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c676b5464ed1b6ea919802b8a931af345&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6251&year=2023&month=6&stateFlag=calendar",0)
-        val imageData8 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c8972f79b8c4c374bf9e4420bc35a0f6c&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6133&year=2023&month=6&stateFlag=calendar",0)
-        val imageData9 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c39ea3d9ce5696b8dc08e7dd5aadcfbae&fileSn=3743fa93046d4584eb9e93f9fe62c66e",
-            "https://www.siheung.go.kr/event/main.do?idx=6115&year=2023&month=6&stateFlag=calendar",0)
-        val imageData10 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c87abc44a2384319b02953a94634a14b4&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6062&year=2023&month=6&stateFlag=calendar",0)
-        val imageData11 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771c2f754a6fb67d873b1c3245380485b46b&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6111&year=2023&month=6&stateFlag=calendar",0)
-        val imageData12 = ImageData("https://www.siheung.go.kr/cmm/fms/FileDown.do?atchFileId=148c15d19a358e7fd81799db36f4771ce730bf53712b80a331263ef6e9d56931&fileSn=f9a1967c526603d17ab488b9d2747cda",
-            "https://www.siheung.go.kr/event/main.do?idx=6075&year=2023&month=6&stateFlag=calendar",0)*/
         val imageData1 = ImageData(
             "", // imageUrl 비어있음
             "https://www.siheung.go.kr/event/main.do?idx=6215&year=2023&month=6&stateFlag=calendar",
@@ -183,8 +159,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar?.setHomeAsUpIndicator(R.drawable.baseline_menu_24)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         drawerLayout = findViewById(R.id.drawer_layout)
-        navigationView = findViewById(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener(this)
 
 
         /**
@@ -195,6 +169,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val headerTextView = headerView.findViewById<TextView>(R.id.text_name)
         val name = intent.getStringExtra("name")
 
+        navigationView.setNavigationItemSelectedListener(this)
+
         sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
         val savedName = sharedPreferences.getString(KEY_NAME, "")
         if (name != null && name.length >= 2) {
@@ -202,40 +178,24 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             editor.putString(KEY_NAME, name)
             editor.apply()
         }
-        if (savedName != null && savedName.isNotEmpty()) {
-            headerTextView.setText(savedName)
+        headerTextView.text = if (!savedName.isNullOrEmpty()) {
+            savedName
         } else {
-            headerTextView.setText(name)
+            name
         }
 
         header_image = headerView.findViewById<CircleImageView>(R.id.image_profile)
-        header_image.setOnClickListener {
-            val intent = Intent()
-            intent.type = "image/*"
-            intent.action = Intent.ACTION_GET_CONTENT
-            startActivityForResult(intent, 0)
-        }
+        header_image.setOnClickListener(this)
 
         val storedBitmap = loadImageFromSharedPreferences()
         if (storedBitmap != null) {
             header_image.setImageBitmap(storedBitmap)
         }
 
-
-        // 게시판 등록 버튼 그냥 이동만 담당
-        //findViewById<Button>(R.id.postbtn).setOnClickListener {
-        //startActivity(Intent(this, PostUpActivity::class.java))
-        //finish()
-        //}
-
-
         getKeyHash()
-        // 게시물 확인 버튼 일단 위에 꺼 먼저 구현하면서 파이어베이스 데이터 삽입, 이거는 데이터 탐색
-        //findViewById<Button>(R.id.checkpostbtn).setOnClickListener {
-        //}
 
         //추가한 내용
-        binding.posterViewpager.adapter = ViewPagerAdapter(getIdolList())
+        binding.posterViewpager.adapter = ViewPagerAdapter(idolList)
         binding.posterViewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         binding.posterViewpager.setCurrentItem(currentPosition, false) // 현재 위치를 지정
         binding.posterViewpager.setPageTransformer(ZoomOutPageTransformer())
@@ -256,17 +216,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     super.onPageScrollStateChanged(state)
                     when (state) {
                         // 뷰페이저에서 손 떼었을때 / 뷰페이저 멈춰있을 때
-                        ViewPager2.SCROLL_STATE_IDLE -> autoScrollStart(intervalTime)
+                        ViewPager2.SCROLL_STATE_IDLE -> myHandler.autoScrollStart()
                         // 뷰페이저 움직이는 중
-                        ViewPager2.SCROLL_STATE_DRAGGING -> autoScrollStop()
+                        ViewPager2.SCROLL_STATE_DRAGGING -> myHandler.autoScrollStop()
                     }
                 }
             })
         }
 
         setUpAdapter()
-        setUpClickListener()
         setUpCalendar()
+
+        binding.ivCalendarNext.setOnClickListener(this)
+        binding.ivCalendarPrevious.setOnClickListener(this)
+
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             /**
@@ -285,7 +248,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
 
                 R.id.event -> {
-                    moveTable()
+                    moveTable("https://www.siheung.go.kr/event/main.do?stateFlag=list")
                     false
                 }
 
@@ -307,57 +270,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 else -> false
             }
         }
-        binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH) - 2)
+        binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH) - 3)
 
-        val todayAdapter = TodayEventAdapter()
-
-        val listview = binding.todayEventList
-        listview.adapter = todayAdapter
-        val firebaseStorage = FirebaseStorage.getInstance()
-        GlobalScope.launch(Dispatchers.Main) {
-            val result = withContext(Dispatchers.IO) {
-                val db = Firebase.firestore
-                db.collection("event")
-                    .orderBy("index", Query.Direction.DESCENDING)
-                    .get()
-                    .await()
-            }
-
-            for (document in result) {
-                val event = TodayEventItem(
-                    title = document.getString("title")!!,
-                    type = document.getString("type")!!,
-                    time = document.getString("time")!!,
-                    address = document.getString("address")!!,
-                    index = document.getString("index")!!.toInt(),
-                    idx = document.getString("idx")!!.toInt()
-                )
-                todayAdapter.addEvent(event)
-            }
-            todayAdapter.notifyDataSetChanged()
-//            val eventListParams =
-            var totalHeight = 0
-            val desiredWidth =
-                View.MeasureSpec.makeMeasureSpec(listview.getWidth(), View.MeasureSpec.AT_MOST)
-
-            val listItem: View = todayAdapter.getView(0, null, listview)
-            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
-            totalHeight = listItem.measuredHeight * todayAdapter.count
-
-            val params: ViewGroup.LayoutParams = listview.layoutParams
-            params.height = totalHeight + listview.dividerHeight * (todayAdapter.count - 1)
-            listview.layoutParams = params
-            listview.requestLayout()
-        }
-        listview.setOnItemClickListener { parent, view, position, id ->
-            val url = "https://www.siheung.go.kr/event/main.do?idx="+(todayAdapter.getItem(position) as TodayEventItem).idx
-            val intent = Intent(this, TableActivity::class.java)
-            intent.putExtra("url", url)
-            startActivity(intent)
-            Toast.makeText(applicationContext, "페이지 로드 중...", Toast.LENGTH_SHORT).show()
-        }
+        setUpTodayEvent()
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -376,18 +292,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val bitmap = BitmapFactory.decodeStream(inputStream)
                     header_image.setImageBitmap(bitmap)
                     saveImageToSharedPreferences(bitmap)
+                }catch (e:Exception){
+                    e.printStackTrace()
                 } finally {
-                    try {
-                        inputStream?.close()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
+                    inputStream?.close()
                 }
             }
         }
 
-        binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH) - 2)
         //다이어리 현재 날짜가 화면 중간에 오도록 수정
+        binding.recyclerView.scrollToPosition(currentDate.get(Calendar.DAY_OF_MONTH) - 3)
     }
 
     // 이미지를 SharedPreferences에 저장하는 함수
@@ -444,8 +358,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val intent = Intent(this, PostBoardActivity::class.java)
                 intent.putExtra("Role", "MyPosts")
                 startActivity(intent)
-
-                return true
             }
 
             R.id.bookmark -> {
@@ -455,45 +367,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
             R.id.diary -> startActivity(Intent(this@MainActivity, DiaryActivity::class.java))
+
             R.id.blog -> {
                 val dateFormat = SimpleDateFormat("M", Locale.getDefault())
                 val currentMonth = dateFormat.format(Calendar.getInstance().time)
                 val url = "https://m.blog.naver.com/PostSearchList.naver?blogId=siheungblog&orderType=sim&searchText=$currentMonth%EC%9B%94%20%EB%AC%B8%ED%99%94%EC%98%88%EC%88%A0%EB%8B%AC%EB%A0%A5"
-                val intent = Intent(this, TableActivity::class.java)
-                intent.putExtra("url", url)
-                startActivity(intent)
+                moveTable(url)
             }
         }
         return false
     }
 
-    fun getKeyHash() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val packageInfo =
-                packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
-            for (signature in packageInfo.signingInfo.apkContentsSigners) {
-                try {
-                    val md = MessageDigest.getInstance("SHA")
-                    md.update(signature.toByteArray())
-                    Log.d(
-                        "getKeyHash",
-                        "key hash: ${Base64.encodeToString(md.digest(), Base64.NO_WRAP)}"
-                    )
-                } catch (e: NoSuchAlgorithmException) {
-                    Log.w("getKeyHash", "Unable to get MessageDigest. signature=$signature", e)
-                }
+    private fun getKeyHash() {
+        val packageInfo =
+            packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+        for (signature in packageInfo.signingInfo.apkContentsSigners) {
+            try {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.d(
+                    "getKeyHash",
+                    "key hash: ${Base64.encodeToString(md.digest(), Base64.NO_WRAP)}"
+                )
+            } catch (e: NoSuchAlgorithmException) {
+                Log.w("getKeyHash", "Unable to get MessageDigest. signature=$signature", e)
             }
         }
-    }
-
-
-    private fun autoScrollStart(intervalTime: Long) {
-        myHandler.removeMessages(0) // 이거 안하면 핸들러가 1개, 2개, 3개 ... n개 만큼 계속 늘어남
-        myHandler.sendEmptyMessageDelayed(0, intervalTime) // intervalTime 만큼 반복해서 핸들러를 실행하게 함
-    }
-
-    private fun autoScrollStop() {
-        myHandler.removeMessages(0) // 핸들러를 중지시킴
     }
 
     private inner class MyHandler : Handler() {
@@ -503,25 +402,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (msg.what == 0) {
                 currentPosition = binding.posterViewpager.currentItem
                 binding.posterViewpager.setCurrentItem(++currentPosition, true) // 다음 페이지로 이동
-                autoScrollStart(intervalTime) // 스크롤을 계속 이어서 한다.
+                autoScrollStart() // 스크롤을 계속 이어서 한다.
             }
+        }
+        fun autoScrollStop() {
+            this.removeMessages(0) // 핸들러를 중지시킴
+        }
+        fun autoScrollStart() {
+            autoScrollStop() // 이거 안하면 핸들러가 1개, 2개, 3개 ... n개 만큼 계속 늘어남
+            this.sendEmptyMessageDelayed(0, intervalTime) // intervalTime 만큼 반복해서 핸들러를 실행하게 함
         }
     }
 
     // 다른 페이지 갔다가 돌아오면 다시 스크롤 시작
     override fun onResume() {
         super.onResume()
-        autoScrollStart(intervalTime)
+        myHandler.autoScrollStart()
     }
 
     // 다른 페이지로 떠나있는 동안 스크롤이 동작할 필요는 없음. 정지
     override fun onPause() {
         super.onPause()
-        autoScrollStop()
+        myHandler.autoScrollStop()
     }
 
-    private fun moveTable() {
-        val url = "https://www.siheung.go.kr/event/main.do?stateFlag=list"
+    private fun moveTable(url:String) {
         val intent = Intent(this, TableActivity::class.java)
         intent.putExtra("url", url)
         startActivity(intent)
@@ -529,7 +434,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun moveMap() {
-        var intent = Intent(this, FestivalLocationActivity::class.java)
+        val intent = Intent(this, FestivalLocationActivity::class.java)
         startActivity(intent)
     }
 
@@ -577,57 +482,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     /**
-     * Set up click listener
-     */
-    private fun setUpClickListener() {
-        binding.ivCalendarNext.setOnClickListener {
-            if (cal.get(Calendar.MONTH) + 1 == 12 && cal.get(Calendar.YEAR) == 2023) {
-                Toast.makeText(applicationContext, "현재 월로 이동합니다.", Toast.LENGTH_SHORT).show()
-                cal.set(Calendar.MONTH, currentDate.get(Calendar.MONTH))
-                setUpCalendar()
-            } else {
-                binding.ivCalendarPrevious.visibility = View.VISIBLE
-                cal.add(Calendar.MONTH, 1)
-                setUpCalendar()
-            }
-        }
-        binding.ivCalendarPrevious.setOnClickListener {
-            cal.add(Calendar.MONTH, -1)
-            if (cal.get(Calendar.MONTH) + 1 == 1) {
-                binding.ivCalendarPrevious.visibility = View.GONE
-            }
-            setUpCalendar()
-        }
-
-        // 삭제 예정
-        /*val monthUrlMap = mapOf( // 1 ~ 6월까지 행사 일정표
-            1 to "https://blog.naver.com/csiheung/222970240186",
-            2 to "https://blog.naver.com/csiheung/223003096138",
-            3 to "https://blog.naver.com/csiheung/223032419482",
-            4 to "https://blog.naver.com/siheungblog?Redirect=Log&logNo=223065558869&from=postView",
-            5 to "https://blog.naver.com/PostView.naver?blogId=siheungblog&logNo=223087428882&categoryNo=90&parentCategoryNo=71&viewDate=&currentPage=&postListTopCurrentPage=&isAfterWrite=true",
-            6 to "https://blog.naver.com/siheungblog/223116423530"
-        )
-
-        val calendarClickListener = OnClickListener {
-            val month = cal.get(Calendar.MONTH) + 1
-            val url = monthUrlMap[month]
-            if (url != null) {
-                Toast.makeText(applicationContext, "$month 월 행사 일정표로 이동합니다.", Toast.LENGTH_SHORT)
-                    .show()
-                val intent = Intent(this, TableActivity::class.java)
-                intent.putExtra("url", url)
-                startActivity(intent)
-            }
-        }
-
-        binding.iVCalendar.setOnClickListener(calendarClickListener)
-
-        binding.tvDateMonth.setOnClickListener(calendarClickListener)*/
-    }
-
-
-    /**
      * Setting up adapter for recyclerview
      */
     private fun setUpAdapter() {
@@ -666,20 +520,86 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         calendarList2.clear()
         calendarList2.addAll(calendarList)
         adapter.setData(calendarList)
-
-
-        // 삭제 예정
-        /*if (cal.get(Calendar.MONTH) + 1 >= 1 && cal.get(Calendar.MONTH) + 1 <= currentDate.get(
-                Calendar.MONTH
-            ) + 1
-        ) {
-            binding.iVCalendar.visibility = View.VISIBLE;
-        } else {
-            binding.iVCalendar.visibility = View.GONE
-        }*/
     }
 
+    /**
+     * Function to setup listview for displaying today event
+     */
+    private fun setUpTodayEvent() {
+        val todayAdapter = TodayEventAdapter()
 
+        val listview = binding.todayEventList
+        listview.adapter = todayAdapter
+        val firebaseStorage = FirebaseStorage.getInstance()
+        GlobalScope.launch(Dispatchers.Main) {
+            val result = withContext(Dispatchers.IO) {
+                val db = Firebase.firestore
+                db.collection("event")
+                    .orderBy("index", Query.Direction.DESCENDING)
+                    .get()
+                    .await()
+            }
+
+            for (document in result) {
+                val event = TodayEventItem(
+                    title = document.getString("title")!!,
+                    type = document.getString("type")!!,
+                    time = document.getString("time")!!,
+                    address = document.getString("address")!!,
+                    index = document.getString("index")!!.toInt(),
+                    idx = document.getString("idx")!!.toInt()
+                )
+                todayAdapter.addEvent(event)
+            }
+            todayAdapter.notifyDataSetChanged()
+//            val eventListParams =
+            var totalHeight = 0
+            val desiredWidth =
+                View.MeasureSpec.makeMeasureSpec(listview.width, View.MeasureSpec.AT_MOST)
+
+            val listItem: View = todayAdapter.getView(0, null, listview)
+            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED)
+            totalHeight = listItem.measuredHeight * todayAdapter.count
+
+            val params: ViewGroup.LayoutParams = listview.layoutParams
+            params.height = totalHeight + listview.dividerHeight * (todayAdapter.count - 1)
+            listview.layoutParams = params
+            listview.requestLayout()
+        }
+        listview.setOnItemClickListener { parent, view, position, id ->
+            val url = "https://www.siheung.go.kr/event/main.do?idx="+(todayAdapter.getItem(position) as TodayEventItem).idx
+            moveTable(url)
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.ivCalendarNext->{
+                if (cal.get(Calendar.MONTH) + 1 == 12 && cal.get(Calendar.YEAR) == 2023) {
+                    Toast.makeText(applicationContext, "현재 월로 이동합니다.", Toast.LENGTH_SHORT).show()
+                    cal.set(Calendar.MONTH, currentDate.get(Calendar.MONTH))
+                    setUpCalendar()
+                } else {
+                    binding.ivCalendarPrevious.visibility = View.VISIBLE
+                    cal.add(Calendar.MONTH, 1)
+                    setUpCalendar()
+                }
+            }
+            R.id.ivCalendarPrevious->{
+                cal.add(Calendar.MONTH, -1)
+                if (cal.get(Calendar.MONTH) + 1 == 1) {
+                    binding.ivCalendarPrevious.visibility = View.GONE
+                }
+                setUpCalendar()
+            }
+            R.id.image_profile-> {
+                val intent = Intent()
+                intent.type = "image/*"
+                intent.action = Intent.ACTION_GET_CONTENT
+                startActivityForResult(intent, 0)
+            }
+        }
+    }
 }
 
 

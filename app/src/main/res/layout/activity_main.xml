@@ -140,16 +140,6 @@
                         app:layout_constraintVertical_bias="1.0"
                         android:layout_marginBottom="10dp"/>
 
-                    <!--<ImageView
-                        android:id="@+id/iVCalendar"
-                        android:layout_width="41dp"
-                        android:layout_height="36dp"
-                        android:layout_marginStart="52dp"
-                        app:layout_constraintStart_toEndOf="@id/tvDateMonth"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@android:drawable/ic_menu_today"
-                        app:tint="?attr/colorError" />-->
-
                     <TextView
                         android:id="@+id/textView"
                         android:layout_width="wrap_content"
@@ -186,17 +176,14 @@
                         android:textColor="#000"
                         android:textStyle="bold"
                         android:elevation="5dp"/>
-
                     <ListView
                         android:id="@+id/todayEventList"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
                     </ListView>
                 </LinearLayout>
             </RelativeLayout>
         </ScrollView>
-
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView

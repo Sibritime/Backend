@@ -28,80 +28,47 @@ import kotlinx.coroutines.withContext
 class PostBoardActivity : AppCompatActivity() {
     lateinit var listview: ListView
     lateinit var adapter: PostListViewAdapter
-    var db = Firebase.firestore
-    private lateinit var firebaseStorage: FirebaseStorage
-    private lateinit var imagePath: String
+    lateinit var key:String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_board)
 
-
         listview = findViewById(R.id.listview)
-        adapter = PostListViewAdapter()
         listview.adapter = adapter
-
-        firebaseStorage = FirebaseStorage.getInstance()
 
         val btnPosting = findViewById<FloatingActionButton>(R.id.posting)
         btnPosting.setOnClickListener {
             val intent: Intent = Intent(this, PostUpActivity::class.java)
             startActivityForResult(intent, 0)
         }
-        //어떤 함수 사용해야 하는지 정하기
-        val intent = intent
-        if (intent.getStringExtra("Role") == "Posts") {
-            addPostList()
-        } else if (intent.getStringExtra("Role") == "BookMarks") {
-            BookMarksList()
-            btnPosting.visibility = View.GONE
-            findViewById<TextView>(R.id.head).text = "북마크"
-        } else if (intent.getStringExtra("Role") == "MyPosts") {
-            MyPostsList()
-            btnPosting.visibility = View.GONE
-            findViewById<TextView>(R.id.head).text = "내 게시물"
-        } else if (intent.getStringExtra("Role") == "Searching") {
-            //SearchList()
-            findViewById<TextView>(R.id.head).text = "검색"
-            btnPosting.visibility = View.GONE
-            val searchLayout = findViewById<RelativeLayout>(R.id.searchContainer)
-            val searchButton = Button(this)
 
-            searchButton.text = "검색"
-            searchButton.id = R.id.searchButton
-            searchButton.setBackgroundResource(R.drawable.roundbar)
-            val searchButtonParams = RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            searchButtonParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE)
-            searchButton.layoutParams = searchButtonParams
-            searchLayout.addView(searchButton)
-
-            val searchEditText = EditText(this)
-            searchEditText.hint = "검색할 키워드를 입력해주세요."
-            searchEditText.setTextColor(ContextCompat.getColor(this, R.color.black))
-            val searchEditTextParams = RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-            searchEditTextParams.addRule(RelativeLayout.START_OF, searchButton.id)
-            searchEditTextParams.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE)
-            searchEditText.layoutParams = searchEditTextParams
-            searchLayout.addView(searchEditText)
-
-            searchButton.setOnClickListener {
-                adapter = PostListViewAdapter()
-                listview.adapter = adapter
-                SearchList(searchEditText.text.toString())
+        key = intent.getStringExtra("Role").toString()
+        if (key != "Posts") {
+            btnPosting.visibility = View.GONE
+            findViewById<TextView>(R.id.head).text = when(key){
+                "Bookmarks" ->
+                    "북마크"
+                "MyPosts" ->
+                    "내 게시물"
+                else ->
+                    "검색"
             }
         }
+
+        addPostList()
     }
 
     private fun addPostList() {
+        val postItems = arrayListOf<PostItem>() // 데이터를 임시로 저장할 리스트
+        var size = 0
+        adapter = PostListViewAdapter()
+
+        val firebaseStorage = FirebaseStorage.getInstance()
+        val db = Firebase.firestore
+
         GlobalScope.launch(Dispatchers.Main) {
-            val postItems = arrayListOf<PostItem>() // 데이터를 임시로 저장할 리스트
 
             val result = withContext(Dispatchers.IO) {
                 db.collection("Posts")
@@ -124,19 +91,19 @@ class PostBoardActivity : AppCompatActivity() {
                 //Timestamp(seconds=1686128427, nanoseconds=894000000)
                 val timestamp =
                     document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
-                Log.e("timestamp", "${timestamp}")
-                imagePath = document.getString("image").toString()
-                Log.e("order", "${title}")
+                Log.e("timestamp", timestamp.toString())
+                var imagePath = document.getString("image").toString()
+                Log.e("order", title.toString())
                 // 이미지를 등록하지 않은 경우 default 이미지
                 if (imagePath == "") {
                     imagePath = "images/default.png"
                 }
 
-                val storageReference = firebaseStorage.getReference().child(imagePath)
+                val storageReference = firebaseStorage.reference.child(imagePath)
 
                 val isFavorites = withContext(Dispatchers.IO) {
                     val bookmarkQuerySnapshot = db.collection("MyPage")
-                        .document("${kakaouid}")
+                        .document(kakaouid)
                         .collection("BookMarks")
                         .get()
                         .await()
@@ -163,8 +130,16 @@ class PostBoardActivity : AppCompatActivity() {
 
                         // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
                         if (postItems.size == result.size()) {
-                            for (item in postItems) {
-                                adapter.addPost(item)
+                            //어떤 함수 사용해야 하는지 정하기
+                            when(key){
+                                "Posts"->
+                                    callAllList(postItems)
+                                "BookMarks"->
+                                    callBookMarksList(postItems)
+                                "MyPosts"->
+                                    callMyPostsList(postItems)
+                                "Searching"->
+                                    createSearchingBar(postItems)
                             }
                             adapter.notifyDataSetChanged()
                         }
@@ -176,251 +151,68 @@ class PostBoardActivity : AppCompatActivity() {
         }
     }
 
-    private fun BookMarksList() {
-        GlobalScope.launch(Dispatchers.Main) {
-            val postItems = arrayListOf<PostItem?>() // 데이터를 임시로 저장할 리스트
+    private fun callAllList(list: ArrayList<PostItem>) {
+        for (item in list) {
+            adapter.addPost(item)
+        }
+    }
 
-            val result = withContext(Dispatchers.IO) {
-                db.collection("Posts")
-                    .orderBy("timestamp", Query.Direction.DESCENDING)
-                    .get()
-                    .await()
-            }
-
-
-            for (document in result) {
-                val uid = document.getString("uid")
-                val title = document.getString("title")
-                val location = document.getString("locate")
-                val date = document.getString("date")
-                val id = document.id
-                val time = document.getString("time")
-                val subscript = document.getString("subscript")
-
-
-                //Timestamp(seconds=1686128427, nanoseconds=894000000)
-                val timestamp =
-                    document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
-                Log.e("timestamp", "${timestamp}")
-                imagePath = document.getString("image").toString()
-                Log.e("order", "${title}")
-                // 이미지를 등록하지 않은 경우 default 이미지
-                if (imagePath == "") {
-                    imagePath = "images/default.png"
-                }
-                Log.e("imgPath", "${imagePath}")
-                val storageReference = firebaseStorage.getReference().child(imagePath.toString())
-
-                val isFavorites = withContext(Dispatchers.IO) {
-                    val bookmarkQuerySnapshot = db.collection("MyPage")
-                        .document("${kakaouid}")
-                        .collection("BookMarks")
-                        .get()
-                        .await()
-
-                    bookmarkQuerySnapshot.documents.any { it.id == id }
-                }
-
-                storageReference.downloadUrl.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val imageData = task.result
-                        val postItem = PostItem(
-                            uid = uid ?: "",
-                            img = imageData,
-                            title = title ?: "",
-                            location = location ?: "",
-                            date = date ?: "",
-                            time = time ?: "",
-                            isFavorites = isFavorites,
-                            id = id,
-                            subscript = subscript ?: ""
-                        )
-                        if (isFavorites) {
-                            postItems.add(postItem)
-                        } else {
-                            postItems.add(null)
-                        }
-                        // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
-                        if (postItems.size == result.size()) {
-                            for (item in postItems) {
-                                item?.let { adapter.addPost(it) } //널이 아니면 넣는다
-                            }
-                            adapter.notifyDataSetChanged()
-                        }
-                    } else {
-                        Log.e("downloadUrl", "failed..")
-                    }
-                }
+    private fun callBookMarksList(list: ArrayList<PostItem>) {
+        for (item in list) {
+            if (item.isFavorites) {
+                adapter.addPost(item)
             }
         }
     }
 
-    private fun MyPostsList() {
-        GlobalScope.launch(Dispatchers.Main) {
-            val postItems = arrayListOf<PostItem?>() // 데이터를 임시로 저장할 리스트
-
-            val result = withContext(Dispatchers.IO) {
-                db.collection("Posts")
-                    .orderBy("timestamp", Query.Direction.DESCENDING)
-                    .get()
-                    .await()
-            }
-
-            for (document in result) {
-                val uid = document.getString("uid")
-                val title = document.getString("title")
-                val location = document.getString("locate")
-                val date = document.getString("date")
-                val id = document.id
-                val owner = document.getString("uid")
-                val time = document.getString("time")
-                val subscript = document.getString("subscript")
-
-
-                //Timestamp(seconds=1686128427, nanoseconds=894000000)
-                val timestamp =
-                    document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
-                Log.e("timestamp", "${timestamp}")
-                imagePath = document.getString("image").toString()
-
-                // 이미지를 등록하지 않은 경우 default 이미지
-                if (imagePath == "") {
-                    imagePath = "images/default.png"
-                }
-                val storageReference = firebaseStorage.getReference().child(imagePath)
-
-                val isFavorites = withContext(Dispatchers.IO) {
-                    val bookmarkQuerySnapshot = db.collection("MyPage")
-                        .document("${kakaouid}")
-                        .collection("BookMarks")
-                        .get()
-                        .await()
-
-                    bookmarkQuerySnapshot.documents.any { it.id == id }
-                }
-
-                storageReference.downloadUrl.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val imageData = task.result
-                        val postItem = PostItem(
-                            uid = uid ?: "",
-                            img = imageData,
-                            title = title ?: "",
-                            location = location ?: "",
-                            date = date ?: "",
-                            time = time ?: "",
-                            isFavorites = isFavorites,
-                            id = id,
-                            subscript = subscript ?: ""
-                        )
-                        // 자기가 작성한 게시물이라면 보여준다
-                        if (kakaouid == owner) {
-                            postItems.add(postItem)
-                        } else {
-                            postItems.add(null)
-                        }
-                        // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
-                        if (postItems.size == result.size()) {
-                            for (item in postItems) {
-                                item?.let { adapter.addPost(it) } //널이 아니면 넣는다
-                            }
-                            adapter.notifyDataSetChanged()
-                        }
-                    } else {
-                        Log.e("downloadUrl", "failed..")
-                    }
-                }
+    private fun callMyPostsList(list: ArrayList<PostItem>) {
+        for (item in list) {
+            if (item.uid == kakaouid) {
+                adapter.addPost(item)
             }
         }
     }
+    private fun createSearchingBar(postItems:ArrayList<PostItem>){
+        val searchLayout = findViewById<RelativeLayout>(R.id.searchContainer)
+        val searchButton = Button(this)
 
-    // 검색 로직만
-    private fun SearchList(searchKeyword: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val postItems = arrayListOf<PostItem?>() // 데이터를 임시로 저장할 리스트
+        searchButton.text = "검색"
+        searchButton.id = R.id.searchButton
+        searchButton.setBackgroundResource(R.drawable.roundbar)
+        val searchButtonParams = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        searchButtonParams.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE)
+        searchButton.layoutParams = searchButtonParams
+        searchLayout.addView(searchButton)
 
-            val result = withContext(Dispatchers.IO) {
-                db.collection("Posts")
-                    .orderBy("timestamp", Query.Direction.DESCENDING)
-                    .get()
-                    .await()
-            }
+        val searchEditText = EditText(this)
+        searchEditText.hint = "검색할 키워드를 입력해주세요."
+        searchEditText.setTextColor(ContextCompat.getColor(this, R.color.black))
+        val searchEditTextParams = RelativeLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        searchEditTextParams.addRule(RelativeLayout.START_OF, searchButton.id)
+        searchEditTextParams.addRule(RelativeLayout.ALIGN_PARENT_START, RelativeLayout.TRUE)
+        searchEditText.layoutParams = searchEditTextParams
+        searchLayout.addView(searchEditText)
 
-            for (document in result) {
-                var isContains = document.getString("title")?.contains(searchKeyword)
-
-                val uid = document.getString("uid")
-                val title = document.getString("title")
-                val location = document.getString("locate")
-                val date = document.getString("date")
-                val id = document.id
-                val time = document.getString("time")
-                val subscript = document.getString("subscript")
-
-
-                //Timestamp(seconds=1686128427, nanoseconds=894000000)
-                val timestamp =
-                    document.getTimestamp("timestamp")// 2023년 6월 2일 오전 11시 15분 31초 UTC+9
-                Log.e("timestamp", "${timestamp}")
-                imagePath = document.getString("image").toString()
-                Log.e("order", "${title}")
-                // 이미지를 등록하지 않은 경우 default 이미지
-                if (imagePath == "") {
-                    imagePath = "images/default.png"
-                }
-
-
-                val storageReference = firebaseStorage.getReference().child(imagePath)
-
-                val isFavorites = withContext(Dispatchers.IO) {
-                    val bookmarkQuerySnapshot = db.collection("MyPage")
-                        .document("${kakaouid}")
-                        .collection("BookMarks")
-                        .get()
-                        .await()
-
-                    bookmarkQuerySnapshot.documents.any { it.id == id }
-                }
-
-                storageReference.downloadUrl.addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val imageData = task.result
-                        val postItem = PostItem(
-                            uid = uid ?: "",
-                            img = imageData,
-                            title = title ?: "",
-                            location = location ?: "",
-                            date = date ?: "",
-                            time = time ?: "",
-                            isFavorites = isFavorites,
-                            id = id,
-                            subscript = subscript ?: ""
-                        )
-                        // 검색 결과가 있으면
-                        if (isContains == true) {
-                            postItems.add(postItem)
-                        } else {
-                            postItems.add(null)
-                        }
-
-                        // 모든 데이터를 가져왔을 때 어댑터에 추가하고 화면 업데이트
-                        if (postItems.size == result.size()) {
-                            for (item in postItems) {
-                                if (item != null) {
-                                    adapter.addPost(item)
-                                }
-                            }
-                            adapter.notifyDataSetChanged()
-                        }
-                    } else {
-                        Log.e("downloadUrl", "failed..")
-                    }
-                }
-
+        searchButton.setOnClickListener {
+            adapter = PostListViewAdapter()
+            listview.adapter = adapter
+            callSearchList(searchEditText.text.toString(), postItems)
+        }
+    }
+    private fun callSearchList(searchKeyword: String, list: ArrayList<PostItem>) {
+        for (item in list) {
+            val isContains = item.title.contains(searchKeyword)
+            if (isContains) {
+                adapter.addPost(item)
             }
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
